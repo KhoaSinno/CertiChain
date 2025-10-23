@@ -4,11 +4,12 @@ export interface Certificate {
   studentId: string;
   courseName: string;
   fileHash: string;
-  ipfsHash: string;
-  issuer: string;
+  ipfsHash?: string;
+  issuer?: string;
   issuedAt: Date;
-  status: 'pending' | 'verified';
+  status: 'verified' | 'pending';
   transactionHash?: string;
+  isVerified: boolean;
 }
 
 export interface CreateCertificateRequest {
@@ -24,4 +25,5 @@ export interface VerifyResult {
   issuer?: string;
   issuedAt?: Date;
   transactionHash?: string;
+  error?: string;
 }

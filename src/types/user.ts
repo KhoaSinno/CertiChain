@@ -1,9 +1,10 @@
 export interface User {
   id: string;
-  address: string;
+  name: string;
+  email: string;
   role: 'issuer' | 'holder' | 'verifier';
-  name?: string;
-  email?: string;
+  walletAddress?: string;
+  organization?: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
-
-export type UserRole = 'issuer' | 'holder' | 'verifier';

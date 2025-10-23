@@ -1,74 +1,43 @@
-import { Certificate } from '@/types/certificate';
 import { create } from 'zustand';
+import { Certificate } from '@/types/certificate';
 
 interface DataState {
-  // Certificate data
-  certList: Certificate[];
+  certificates: Certificate[];
   selectedCertificate: Certificate | null;
-  
-  // Actions
-  setCertificates: (certificates: Certificate[]) => void;
-  addCertificate: (certificate: Certificate) => void;
-  updateCertificate: (id: string, updates: Partial<Certificate>) => void;
-  setSelectedCertificate: (certificate: Certificate | null) => void;
-  
-  // Filters and search
   searchTerm: string;
   filterStatus: 'all' | 'verified' | 'pending';
+  setCertificates: (certs: Certificate[]) => void;
+  addCertificate: (cert: Certificate) => void;
+  updateCertificate: (cert: Certificate) => void;
+  removeCertificate: (id: string) => void;
+  setSelectedCertificate: (cert: Certificate | null) => void;
   setSearchTerm: (term: string) => void;
   setFilterStatus: (status: 'all' | 'verified' | 'pending') => void;
-  
-  // Clear all data
   clearData: () => void;
 }
 
-export const useDataStore = create<DataState>((set, get) => ({
-  // Initial state
-  certList: [],
+export const useDataStore = create<DataState>((set) => ({
+  certificates: [],
   selectedCertificate: null,
   searchTerm: '',
   filterStatus: 'all',
-  
-  // Actions
-  setCertificates: (certificates) => {
-    set({ certList: certificates });
-  },
-  
-  addCertificate: (certificate) => {
+  setCertificates: (certs) => set({ certificates: certs }),
+  addCertificate: (cert) => set((state) => ({ certificates: [...state.certificates, cert] })),
+  updateCertificate: (updatedCert) =>
     set((state) => ({
-      certList: [...state.certList, certificate]
-    }));
-  },
-  
-  updateCertificate: (id, updates) => {
-    set((state) => ({
-      certList: state.certList.map(cert => 
-        cert.id === id ? { ...cert, ...updates } : cert
+      certificates: state.certificates.map((cert) =>
+        cert.id === updatedCert.id ? updatedCert : cert
       ),
-      selectedCertificate: state.selectedCertificate?.id === id 
-        ? { ...state.selectedCertificate, ...updates }
-        : state.selectedCertificate
-    }));
-  },
-  
-  setSelectedCertificate: (certificate) => {
-    set({ selectedCertificate: certificate });
-  },
-  
-  setSearchTerm: (term) => {
-    set({ searchTerm: term });
-  },
-  
-  setFilterStatus: (status) => {
-    set({ filterStatus: status });
-  },
-  
-  clearData: () => {
-    set({
-      certList: [],
-      selectedCertificate: null,
-      searchTerm: '',
-      filterStatus: 'all'
-    });
-  }
+      selectedCertificate:
+        state.selectedCertificate?.id === updatedCert.id ? updatedCert : state.selectedCertificate,
+    })),
+  removeCertificate: (id) =>
+    set((state) => ({
+      certificates: state.certificates.filter((cert) => cert.id !== id),
+      selectedCertificate: state.selectedCertificate?.id === id ? null : state.selectedCertificate,
+    })),
+  setSelectedCertificate: (cert) => set({ selectedCertificate: cert }),
+  setSearchTerm: (term) => set({ searchTerm: term }),
+  setFilterStatus: (status) => set({ filterStatus: status }),
+  clearData: () => set({ certificates: [], selectedCertificate: null, searchTerm: '', filterStatus: 'all' }),
 }));

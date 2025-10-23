@@ -1,6 +1,6 @@
 'use client';
 
-import { Layout } from '../../src/components/Layout';
+import { Layout } from '@/components/Layout';
 import { mockCertificates } from '../../mockData/certificates';
 
 export default function DashboardPage() {

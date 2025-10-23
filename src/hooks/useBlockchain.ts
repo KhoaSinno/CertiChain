@@ -1,21 +1,22 @@
+import React from 'react';
+import { useAccount, useWriteContract, useReadContract } from 'wagmi';
 import { CERTIFICATE_REGISTRY_ABI, CERTIFICATE_REGISTRY_ADDRESS } from '@/lib/wagmiConfig';
 import { useUIStore } from '@/state/ui';
-import React from 'react';
-import { useAccount, useReadContract, useWriteContract } from 'wagmi';
 
 export function useBlockchain() {
   const { address, isConnected } = useAccount();
   const { setWalletConnected } = useUIStore();
 
-  // Update wallet connection status
   React.useEffect(() => {
     setWalletConnected(isConnected);
   }, [isConnected, setWalletConnected]);
 
+  const truncatedAddress = address ? `${address.slice(0, 6)}...${address.slice(-4)}` : 'N/A';
+
   return {
     address,
     isConnected,
-    truncatedAddress: address ? `${address.slice(0, 6)}...${address.slice(-4)}` : '',
+    truncatedAddress,
   };
 }
 

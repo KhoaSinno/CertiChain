@@ -1,60 +1,61 @@
 import { useState } from 'react';
-import { useUIStore } from '@/state/ui';
+
+interface UploadProgress {
+  progress: number;
+  status: 'idle' | 'uploading' | 'success' | 'error';
+  error?: string;
+}
 
 export function useUpload() {
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [uploadError, setUploadError] = useState<string | null>(null);
-  const { setUploadStatus } = useUIStore();
+  const [uploadProgress, setUploadProgress] = useState<UploadProgress>({
+    progress: 0,
+    status: 'idle'
+  });
 
-  const uploadFile = async (file: File): Promise<string> => {
+  const uploadFile = async (file: File): Promise<{ hash: string; ipfsHash: string }> => {
+    setUploadProgress({ progress: 0, status: 'uploading' });
+
     try {
-      setUploadStatus('uploading');
-      setUploadError(null);
-      setUploadProgress(0);
-
-      // Simulate upload progress
+      // Simulate file upload progress
       const progressInterval = setInterval(() => {
-        setUploadProgress(prev => Math.min(prev + 10, 90));
-      }, 100);
+        setUploadProgress(prev => {
+          if (prev.progress >= 90) {
+            clearInterval(progressInterval);
+            return { ...prev, progress: 90 };
+          }
+          return { ...prev, progress: prev.progress + 10 };
+        });
+      }, 200);
 
-      // Create FormData
-      const formData = new FormData();
-      formData.append('file', file);
-
-      // Upload to backend API
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
       clearInterval(progressInterval);
-      setUploadProgress(100);
+      
+      // Generate mock hash and IPFS hash
+      const hash = `0x${Math.random().toString(16).substr(2, 64)}`;
+      const ipfsHash = `Qm${Math.random().toString(16).substr(2, 64)}`;
 
-      if (!response.ok) {
-        throw new Error('Upload failed');
-      }
+      setUploadProgress({ progress: 100, status: 'success' });
 
-      const result = await response.json();
-      setUploadStatus('success');
-      return result.hash;
-
+      return { hash, ipfsHash };
     } catch (error) {
-      setUploadStatus('error');
-      setUploadError(error instanceof Error ? error.message : 'Upload failed');
+      setUploadProgress({ 
+        progress: 0, 
+        status: 'error', 
+        error: error instanceof Error ? error.message : 'Upload failed' 
+      });
       throw error;
     }
   };
 
   const resetUpload = () => {
-    setUploadProgress(0);
-    setUploadError(null);
-    setUploadStatus('idle');
+    setUploadProgress({ progress: 0, status: 'idle' });
   };
 
   return {
-    uploadFile,
     uploadProgress,
-    uploadError,
-    resetUpload,
+    uploadFile,
+    resetUpload
   };
 }
