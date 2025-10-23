@@ -1,4 +1,4 @@
-import { Certificate } from '../types/certificate';
+import { Certificate } from '@/src/types/certificate';
 
 export const mockCertificates: Certificate[] = [
   {

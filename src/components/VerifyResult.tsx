@@ -1,9 +1,9 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { VerifyResult as VerifyResultType } from '@/types/certificate';
-import { CheckCircle, XCircle, ExternalLink, Calendar, User, Shield } from 'lucide-react';
-import { formatDate, truncateAddress } from '@/lib/utils';
+import { Badge } from '@/src/components/ui/badge';
+import { Button } from '@/src/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/card';
+import { formatDate, truncateAddress } from '@/src/lib/utils';
+import { VerifyResult as VerifyResultType } from '@/src/types/certificate';
+import { Calendar, CheckCircle, ExternalLink, Shield, User, XCircle } from 'lucide-react';
 
 interface VerifyResultProps {
   data: VerifyResultType;

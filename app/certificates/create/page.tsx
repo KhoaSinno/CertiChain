@@ -1,9 +1,9 @@
 'use client';
 
-import { Layout } from '@/components/Layout';
-import { CertificateForm } from '@/components/CertificateForm';
-import { useCreateCertificate } from '@/hooks/useCertificates';
-import { CreateCertificateRequest } from '@/types/certificate';
+import { Layout } from '@/src/components/Layout';
+import { CertificateForm } from '@/src/components/CertificateForm';
+import { useCreateCertificate } from '@/src/hooks/useCertificates';
+import { CreateCertificateRequest } from '@/src/types/certificate';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 

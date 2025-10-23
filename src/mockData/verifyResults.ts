@@ -1,4 +1,4 @@
-import { VerifyResult } from '../types/certificate';
+import { VerifyResult } from '@/src/types/certificate';
 
 export const mockVerifyResults: Record<string, VerifyResult> = {
   '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef': {

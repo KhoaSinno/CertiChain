@@ -1,7 +1,7 @@
-import { api } from '@/lib/api';
-import { Certificate, CreateCertificateRequest } from '@/types/certificate';
+import { api } from '@/src/lib/api';
+import { useDataStore } from '@/src/state/data';
+import { Certificate, CreateCertificateRequest } from '@/src/types/certificate';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useDataStore } from '@/state/data';
 import { useRegisterCertificate as useBlockchainRegisterCertificate } from './useBlockchain'; // Alias to avoid conflict
 
 export function useCertificates() {
@@ -53,7 +53,15 @@ export function useCreateCertificate() {
   const { addCertificate } = useDataStore();
 
   return useMutation({
-    mutationFn: (data: FormData) => api.certificates.create(data),
+    mutationFn: (data: CreateCertificateRequest) => {
+      // Convert CreateCertificateRequest to FormData
+      const formData = new FormData();
+      formData.append('studentName', data.studentName);
+      formData.append('studentId', data.studentId);
+      formData.append('courseName', data.courseName);
+      formData.append('file', data.file);
+      return api.certificates.create(formData);
+    },
     onSuccess: (newCert) => {
       queryClient.invalidateQueries({ queryKey: ['certificates'] });
       addCertificate(newCert);

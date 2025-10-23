@@ -1,7 +1,7 @@
+import { CERTIFICATE_REGISTRY_ABI, CERTIFICATE_REGISTRY_ADDRESS } from '@/src/lib/wagmiConfig';
+import { useUIStore } from '@/src/state/ui';
 import React from 'react';
-import { useAccount, useWriteContract, useReadContract } from 'wagmi';
-import { CERTIFICATE_REGISTRY_ABI, CERTIFICATE_REGISTRY_ADDRESS } from '@/lib/wagmiConfig';
-import { useUIStore } from '@/state/ui';
+import { useAccount, useReadContract, useWriteContract } from 'wagmi';
 
 export function useBlockchain() {
   const { address, isConnected } = useAccount();

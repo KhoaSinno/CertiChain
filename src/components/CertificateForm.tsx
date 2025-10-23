@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useRef } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Progress } from '@/components/ui/progress';
-import { CreateCertificateRequest } from '@/types/certificate';
-import { Upload, FileText, User, BookOpen, Hash } from 'lucide-react';
+import { Button } from '@/src/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/card';
+import { Input } from '@/src/components/ui/input';
+import { Progress } from '@/src/components/ui/progress';
+import { Textarea } from '@/src/components/ui/textarea';
+import { CreateCertificateRequest } from '@/src/types/certificate';
+import { BookOpen, FileText, Hash, Upload, User } from 'lucide-react';
+import { useRef, useState } from 'react';
 
 interface CertificateFormProps {
   onSubmit: (data: CreateCertificateRequest) => void;

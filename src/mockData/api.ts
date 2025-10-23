@@ -1,4 +1,4 @@
-import { Certificate, CreateCertificateRequest, VerifyResult } from '../types/certificate';
+import { Certificate, CreateCertificateRequest, VerifyResult } from '@/src/types/certificate';
 import { mockCertificates } from './certificates';
 import { mockVerifyResults } from './verifyResults';
 

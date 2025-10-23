@@ -1,11 +1,11 @@
 'use client';
 
-import { Layout } from '@/components/Layout';
-import { VerifyResult } from '@/components/VerifyResult';
-import { useVerifyCertificate } from '@/hooks/useVerify';
+import { Layout } from '@/src/components/Layout';
+import { VerifyResult } from '@/src/components/VerifyResult';
+import { useVerifyCertificate } from '@/src/hooks/useVerify';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button } from '@/src/components/ui/button';
+import { Input } from '@/src/components/ui/input';
 import { Search, Hash } from 'lucide-react';
 
 export default function VerifyPage() {

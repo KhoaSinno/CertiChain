@@ -1,9 +1,9 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Certificate } from '@/types/certificate';
-import { GraduationCap, Calendar, User, BookOpen, ExternalLink, Copy } from 'lucide-react';
-import { formatDate, truncateAddress } from '@/lib/utils';
+import { Badge } from '@/src/components/ui/badge';
+import { Button } from '@/src/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/card';
+import { formatDate, truncateAddress } from '@/src/lib/utils';
+import { Certificate } from '@/src/types/certificate';
+import { BookOpen, Calendar, Copy, ExternalLink, GraduationCap, User } from 'lucide-react';
 
 interface CertificateCardProps {
   certificate: Certificate;

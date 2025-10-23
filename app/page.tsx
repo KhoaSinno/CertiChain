@@ -1,8 +1,8 @@
-import { CTA } from '@/components/CTA';
-import { Features } from '@/components/Features';
-import { Hero } from '@/components/Hero';
-import { Layout } from '@/components/Layout';
-import { Process } from '@/components/Process';
+import { CTA } from '@/src/components/CTA';
+import { Features } from '@/src/components/Features';
+import { Hero } from '@/src/components/Hero';
+import { Layout } from '@/src/components/Layout';
+import { Process } from '@/src/components/Process';
 
 export default function Home() {
   return (

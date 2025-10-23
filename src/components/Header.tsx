@@ -1,7 +1,7 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { useBlockchain } from '@/hooks/useBlockchain';
+import { Button } from '@/src/components/ui/button';
+import { useBlockchain } from '@/src/hooks/useBlockchain';
 import { GraduationCap, Menu, Wallet, X } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';

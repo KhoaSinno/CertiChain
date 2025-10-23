@@ -1,6 +1,6 @@
+import { api } from '@/src/lib/api';
+import { VerifyResult } from '@/src/types/certificate';
 import { useQuery } from '@tanstack/react-query';
-import { api } from '../lib/api';
-import { VerifyResult } from '../types/certificate';
 
 // Query keys
 export const verifyKeys = {
@@ -31,6 +31,7 @@ export function useVerifyCertificate(hash: string) {
               issuer: '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6',
               issuedAt: new Date('2024-01-15'),
               status: 'verified' as const,
+              isVerified: true,
               transactionHash: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'
             },
             issuer: '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6',

@@ -1,10 +1,10 @@
 'use client';
 
-import { Layout } from '@/components/Layout';
-import { QRDisplay } from '@/components/QRDisplay';
-import { useCertificate } from '@/hooks/useCertificates';
+import { Layout } from '@/src/components/Layout';
+import { QRDisplay } from '@/src/components/QRDisplay';
+import { useCertificate } from '@/src/hooks/useCertificates';
 import { notFound } from 'next/navigation';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/src/components/ui/button';
 import { ArrowLeft, Download, Share2, ExternalLink } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 

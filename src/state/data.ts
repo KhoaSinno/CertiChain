@@ -1,5 +1,5 @@
+import { Certificate } from '@/src/types/certificate';
 import { create } from 'zustand';
-import { Certificate } from '@/types/certificate';
 
 interface DataState {
   certificates: Certificate[];

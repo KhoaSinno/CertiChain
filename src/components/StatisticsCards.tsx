@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Certificate } from '@/types/certificate';
+import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/card';
+import { Certificate } from '@/src/types/certificate';
 import { CheckCircle, Clock, GraduationCap, TrendingUp } from 'lucide-react';
 
 interface StatisticsCardsProps {

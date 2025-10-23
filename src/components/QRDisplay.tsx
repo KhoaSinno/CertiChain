@@ -1,11 +1,11 @@
 'use client';
 
+import { Button } from '@/src/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/card';
+import { copyToClipboard } from '@/src/lib/utils';
+import { Copy, Download, Share2 } from 'lucide-react';
+import { QRCodeCanvas } from 'qrcode.react';
 import { useState } from 'react';
-import QRCode from 'qrcode.react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Download, Copy, Share2 } from 'lucide-react';
-import { copyToClipboard } from '@/lib/utils';
 
 interface QRDisplayProps {
   value: string;
@@ -78,12 +78,11 @@ export function QRDisplay({
       <CardContent className="space-y-4">
         {/* QR Code */}
         <div className="flex justify-center p-4 bg-white rounded-lg border-2 border-dashed border-muted">
-          <QRCode
+          <QRCodeCanvas
             value={value}
             size={size}
             level="M"
             includeMargin={true}
-            renderAs="canvas"
           />
         </div>
 
