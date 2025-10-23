@@ -1,19 +1,7 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin", "vietnamese"],
-  display: "swap",
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin", "vietnamese"],
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "CertiChain - Hệ thống xác thực chứng chỉ dựa trên blockchain",
@@ -28,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang="vi">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`antialiased`}
       >
         <Providers>
           {children}
