@@ -1,11 +1,12 @@
+'use client';
+
+import { useState } from 'react';
 import { Certificate } from '@/types/certificate';
 import { CertificateCard } from './CertificateCard';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { GraduationCap, Filter, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { useState } from 'react';
+import { GraduationCap, Search, Filter } from 'lucide-react';
 
 interface CertificateListProps {
   certificates: Certificate[];

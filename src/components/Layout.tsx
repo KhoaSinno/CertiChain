@@ -1,7 +1,7 @@
 'use client';
 
 import { Footer } from './Footer';
-import { SimpleHeader } from './SimpleHeader';
+import { Header } from './Header';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -17,7 +17,7 @@ export function Layout({ children }: LayoutProps) {
       margin: 0,
       padding: 0
     }}>
-      <SimpleHeader />
+      <Header />
       <main style={{ 
         flex: 1, 
         width: '100%',
