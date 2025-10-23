@@ -1,10 +1,10 @@
+import { Github, GraduationCap, Linkedin, Twitter } from 'lucide-react';
 import Link from 'next/link';
-import { GraduationCap, Github, Twitter, Linkedin } from 'lucide-react';
 
 export function Footer() {
   return (
     <footer className="border-t bg-background">
-      <div className="container py-8">
+      <div className="container mx-auto px-6 py-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo & Description */}
           <div className="space-y-4">

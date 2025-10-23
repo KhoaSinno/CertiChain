@@ -116,7 +116,53 @@
   * {
     @apply border-border outline-ring/50;
   }
+  
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
+    box-sizing: border-box;
+  }
+  
+  html {
+    overflow-x: hidden;
+  }
+  
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-geist-sans), system-ui, sans-serif;
+    line-height: 1.6;
+  }
+  
+  /* Ensure proper spacing for all sections */
+  section {
+    width: 100%;
+    min-height: fit-content;
+    box-sizing: border-box;
+    display: block;
+  }
+  
+  .container {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  @media (min-width: 640px) {
+    .container {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .container {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
   }
 }

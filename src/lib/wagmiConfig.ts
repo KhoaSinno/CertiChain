@@ -13,7 +13,7 @@ export const config = createConfig({
       dappMetadata: {
         name: 'CertiChain',
         url: 'https://certichain.edu.vn',
-        iconUrl: '/logo.png',
+        iconUrl: 'https://certichain.edu.vn/logo.png',
       },
     }),
   ],
@@ -63,8 +63,7 @@ export const CERTIFICATE_REGISTRY_ABI = [
 ] as const;
 
 // Contract address trên Base Sepolia (sẽ được deploy)
-export const CERTIFICATE_REGISTRY_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || 
-  '0x0000000000000000000000000000000000000000'; // Placeholder
+export const CERTIFICATE_REGISTRY_ADDRESS = '0x0000000000000000000000000000000000000000' as `0x${string}`; // Placeholder
 
 // Chain configuration
 export const CHAIN_CONFIG = {
