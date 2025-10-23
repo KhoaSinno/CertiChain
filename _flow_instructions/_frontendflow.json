@@ -1,0 +1,343 @@
+{
+  "project": {
+    "name": "CertiChain",
+    "studio": "NKD Studio",
+    "version": "v1.0.0",
+    "date": "2025-10-23",
+    "description": "CertiChain là hệ thống xác thực chứng chỉ dựa trên blockchain, kết hợp IPFS để lưu trữ và Base Sepolia để xác minh. Dự án gồm dashboard quản trị cho nhà trường, giao diện người dùng cho sinh viên, và trang xác minh công khai cho nhà tuyển dụng.",
+    "objective": {
+      "issuer": "Cung cấp giao diện cho Nhà trường để upload, tạo, đăng ký chứng chỉ on-chain",
+      "holder": "Cung cấp giao diện công khai cho Sinh viên để xem & chia sẻ chứng chỉ",
+      "verifier": "Cung cấp trang xác minh cho Nhà tuyển dụng để quét QR / xác thực chứng chỉ"
+    },
+    "architecture": "Frontend thông minh nhưng nhẹ — kết nối trực tiếp cả API backend và smart contract thông qua wagmi + ethers.js"
+  },
+  "techStack": {
+    "framework": "Next.js 15 (App Router)",
+    "ui": "Tailwind CSS + shadcn/ui + QRCode.react",
+    "state": "React Query (TanStack Query) + Zustand",
+    "wallet": "wagmi + MetaMask + Base Sepolia",
+    "api": "Axios + native fetch",
+    "blockchain": "ethers.js (via wagmi hooks)",
+    "storage": "web3.storage (thông qua backend)",
+    "database": "Prisma ORM",
+    "routing": "App Router (/app/*)",
+    "deploy": "Vercel"
+  },
+  "structure": {
+    "src": {
+      "app": [
+        "page.tsx",
+        "layout.tsx",
+        "globals.css",
+        "dashboard/page.tsx",
+        "certificates/create/page.tsx",
+        "certificates/[id]/page.tsx",
+        "verify/[hash]/page.tsx"
+      ],
+      "components": [
+        "CertificateForm.tsx",
+        "CertificateCard.tsx",
+        "CertificateList.tsx",
+        "VerifyResult.tsx",
+        "QRDisplay.tsx",
+        "Header.tsx",
+        "Footer.tsx"
+      ],
+      "hooks": [
+        "useCertificates.ts",
+        "useUpload.ts",
+        "useVerify.ts",
+        "useBlockchain.ts"
+      ],
+      "lib": [
+        "api.ts",
+        "wagmiConfig.ts",
+        "utils.ts"
+      ],
+      "state": [
+        "ui.ts",
+        "data.ts"
+      ],
+      "types": [
+        "certificate.ts",
+        "user.ts"
+      ]
+    },
+    "public": [
+      "logo.png"
+    ]
+  },
+  "actors": [
+    {
+      "name": "🏫 Nhà trường (Issuer)",
+      "routes": ["/dashboard", "/certificates/create"],
+      "description": "Tạo chứng chỉ, upload, ghi on-chain"
+    },
+    {
+      "name": "👩‍🎓 Sinh viên (Holder)",
+      "routes": ["/certificates/[id]"],
+      "description": "Xem chi tiết, copy link, QR"
+    },
+    {
+      "name": "🏢 Nhà tuyển dụng (Verifier)",
+      "routes": ["/verify/[hash]"],
+      "description": "Quét QR / verify hash trực tiếp"
+    }
+  ],
+  "frontend": {
+    "routes": [
+      {
+        "path": "/",
+        "component": "LandingPage",
+        "role": "Public",
+        "description": "Giới thiệu hệ thống"
+      },
+      {
+        "path": "/dashboard",
+        "component": "DashboardPage",
+        "role": "Issuer",
+        "description": "Danh sách chứng chỉ, quản lý"
+      },
+      {
+        "path": "/certificates/create",
+        "component": "CreateCertificatePage",
+        "role": "Issuer",
+        "description": "Tạo chứng chỉ, upload"
+      },
+      {
+        "path": "/certificates/[id]",
+        "component": "CertificateDetailPage",
+        "role": "Holder",
+        "description": "Xem và copy link"
+      },
+      {
+        "path": "/verify/[hash]",
+        "component": "VerifyPage",
+        "role": "Public",
+        "description": "Xác minh chứng chỉ"
+      }
+    ],
+    "states": [
+      "walletConnected",
+      "uploadStatus",
+      "verificationResult",
+      "certList",
+      "userRole"
+    ],
+    "api_endpoints": [
+      {
+        "name": "createCertificate",
+        "method": "POST",
+        "path": "/api/certificates",
+        "description": "Tạo chứng chỉ mới, upload IPFS, lưu hash"
+      },
+      {
+        "name": "getCertificates",
+        "method": "GET",
+        "path": "/api/certificates",
+        "description": "Lấy danh sách chứng chỉ của nhà trường"
+      },
+      {
+        "name": "getCertificateDetail",
+        "method": "GET",
+        "path": "/api/certificates/[id]",
+        "description": "Lấy chi tiết chứng chỉ"
+      },
+      {
+        "name": "registerOnChain",
+        "method": "POST",
+        "path": "/api/certificates/register",
+        "description": "Ghi chứng chỉ lên blockchain, tạo transaction"
+      },
+      {
+        "name": "verifyCertificate",
+        "method": "GET",
+        "path": "/api/certificates/verify",
+        "description": "Xác minh chứng chỉ dựa trên hash"
+      }
+    ],
+    "data_flows": [
+      "User selects certificate file → UploadForm → IPFS → returns hash",
+      "Hash + metadata → Smart Contract write → transaction success → update UI state",
+      "Verifier inputs hash → VerifyPanel → fetch contract data → display verification result",
+      "Create Certificate Flow: Form submission → API POST /api/certificates → IPFS upload → returns hash → show preview → Register button",
+      "Dashboard Flow: API GET /api/certificates → render CertificateList → filter by status (pending/verified) → Register on-chain action",
+      "Certificate Detail Flow: API GET /api/certificates/[id] → show student info + QR code → copy link/share options",
+      "Verify Flow: API GET /api/certificates/verify?hash=... → show verification result + issuer + date + IPFS/BaseScan links"
+    ],
+    "integration": {
+      "wagmi": {
+        "used_hooks": [
+          "useAccount",
+          "useContractWrite",
+          "useContractRead"
+        ],
+        "network": "Base Sepolia Testnet",
+        "config_file": "src/lib/wagmiConfig.ts"
+      },
+      "ipfs": {
+        "provider": "Infura",
+        "methods": [
+          "uploadFile",
+          "getFile"
+        ],
+        "returns": "IPFS hash (CID)"
+      }
+    },
+    "ui_components": [
+      {
+        "name": "CertificateForm",
+        "description": "Form upload, nhập thông tin chứng chỉ",
+        "props": ["onSubmit"]
+      },
+      {
+        "name": "CertificateList",
+        "description": "Danh sách chứng chỉ (table hoặc grid)",
+        "props": ["certificates[]"]
+      },
+      {
+        "name": "CertificateCard",
+        "description": "Thẻ hiển thị chứng chỉ riêng",
+        "props": ["certificate"]
+      },
+      {
+        "name": "QRDisplay",
+        "description": "Tạo mã QR cho link verify",
+        "props": ["value"]
+      },
+      {
+        "name": "VerifyResult",
+        "description": "Hiển thị kết quả xác thực on-chain",
+        "props": ["data"]
+      }
+    ],
+    "react_query_hooks": [
+      {
+        "name": "useCertificates",
+        "functionality": "Lấy danh sách chứng chỉ",
+        "api": "GET /api/certificates"
+      },
+      {
+        "name": "useCreateCertificate",
+        "functionality": "Tạo chứng chỉ mới",
+        "api": "POST /api/certificates"
+      },
+      {
+        "name": "useRegisterCertificate",
+        "functionality": "Ghi lên blockchain",
+        "api": "POST /api/certificates/register"
+      },
+      {
+        "name": "useVerify",
+        "functionality": "Xác minh chứng chỉ",
+        "api": "GET /api/certificates/verify?hash=..."
+      }
+    ],
+    "ui_logic": [
+      "Nếu wallet chưa kết nối → hiện nút Connect Wallet",
+      "Khi upload thành công → hiển thị hash + nút Verify",
+      "Nếu verify thành công → hiện badge 'Verified on-chain'"
+    ]
+  },
+  "ux_states": [
+    "Idle",
+    "Uploading",
+    "UploadSuccess",
+    "Verifying",
+    "Verified",
+    "Error"
+  ],
+  "frontend_flows": {
+    "create_certificate": {
+      "path": "/certificates/create",
+      "role": "Issuer",
+      "steps": [
+        "Form nhập: Tên sinh viên, Mã sinh viên, Tên khóa học",
+        "Upload file PDF (Drag & Drop)",
+        "Khi nhấn 'Tạo chứng chỉ' → gọi API POST /api/certificates",
+        "Hiển thị trạng thái 'Đang upload…'",
+        "API trả về → hiển thị preview + nút 'Ghi lên blockchain'",
+        "Hiển thị: ✅ Certificate created (pending on-chain), File Hash: 0x123abc..."
+      ],
+      "hooks": ["useCreateCertificate", "useMutation"]
+    },
+    "dashboard": {
+      "path": "/dashboard",
+      "role": "Issuer",
+      "steps": [
+        "FE gọi API GET /api/certificates",
+        "Hiển thị danh sách: Họ tên, Tên khóa học, Ngày cấp, Trạng thái (pending/verified)",
+        "Nút 'Đăng ký on-chain' (nếu pending)",
+        "Khi bấm: FE gọi POST /api/certificates/register với certificateId",
+        "BE gọi smart contract → cập nhật trạng thái → FE refetch list"
+      ],
+      "hooks": ["useCertificates", "useQuery", "useRegisterCertificate"]
+    },
+    "register_blockchain": {
+      "path": "Dashboard hoặc Certificate Detail",
+      "role": "Issuer",
+      "steps": [
+        "User kết nối MetaMask (wagmi hook useAccount)",
+        "FE hiển thị ví nhà trường đang dùng",
+        "Khi nhấn 'Register on-chain': gọi API /api/certificates/register → trả txHash",
+        "Hiển thị toast: 🟢 Registered on Blockchain! Tx: 0xabc123... (View on BaseScan)"
+      ],
+      "hooks": ["useAccount", "useWriteContract", "useBlockchain"]
+    },
+    "certificate_detail": {
+      "path": "/certificates/[id]",
+      "role": "Holder",
+      "steps": [
+        "Gọi API GET /api/certificates/[id]",
+        "Hiển thị: Thông tin sinh viên, khóa học, hash",
+        "Nút 'Sao chép link' → copy đường dẫn https://verify.edu.vn/verify/<hash>",
+        "Nút 'Tải QR Code' → lưu ảnh QR từ component QRCode.react",
+        "Component: <QRCode value={`https://verify.edu.vn/verify/${fileHash}`} size={180} />"
+      ],
+      "hooks": ["useQuery"]
+    },
+    "verify_certificate": {
+      "path": "/verify/[hash]",
+      "role": "Verifier",
+      "steps": [
+        "Khi mở trang → FE gọi API GET /api/certificates/verify?hash=...",
+        "Hiển thị: Hash, Trạng thái (✅ Verified / ❌ Not Found), Issuer, Ngày cấp",
+        "Nút 'Xem chứng chỉ trên IPFS' → https://ipfs.io/ipfs/Qm123...",
+        "Nút 'Xem giao dịch trên BaseScan' → https://basescan.org/tx/0xabc...",
+        "Component: {data.verified ? <VerifiedBadge /> : <UnverifiedAlert />}"
+      ],
+      "hooks": ["useVerify", "useQuery"]
+    }
+  },
+  "react_query_mapping": {
+    "useCertificates": {
+      "functionality": "Lấy danh sách chứng chỉ",
+      "api": "GET /api/certificates"
+    },
+    "useCreateCertificate": {
+      "functionality": "Tạo chứng chỉ mới",
+      "api": "POST /api/certificates"
+    },
+    "useRegisterCertificate": {
+      "functionality": "Ghi lên blockchain",
+      "api": "POST /api/certificates/register"
+    },
+    "useVerify": {
+      "functionality": "Xác minh chứng chỉ",
+      "api": "GET /api/certificates/verify?hash=..."
+    }
+  },
+  "wagmi_integration": {
+    "config_file": "src/lib/wagmiConfig.ts",
+    "example": "import { createConfig, http } from 'wagmi'; import { baseSepolia } from 'wagmi/chains'; import { metaMask } from 'wagmi/connectors'; export const config = createConfig({ chains: [baseSepolia], connectors: [metaMask()], transports: { [baseSepolia.id]: http('https://base-sepolia.g.alchemy.com/v2/yourKey') } });",
+    "hooks_usage": ["useAccount()", "useWriteContract()", "useContractRead()"]
+  },
+  "ui_state_flow": [
+    "[Upload] → 'Đang xử lý hash & IPFS' → 'Đã tạo (pending)'",
+    "[Register] → 'Đang gửi giao dịch' → 'Đã verified ✅'",
+    "[Share link/QR] → 'Copied ✅'",
+    "[Verifier] → 'Verified ✅ / Invalid ❌'"
+  ],
+  "notes": "File này giúp Agent hiểu toàn bộ flow frontend CertiChain để tự triển khai UI, kết nối IPFS và Base chain. Mọi thành phần đều tối ưu cho Next.js + wagmi + TypeScript. Bổ sung đầy đủ: Tech Stack chi tiết, 3 actors (Issuer/Holder/Verifier), 5 routes chính, React Query hooks, Wagmi integration, UX state flow, và Frontend flows chi tiết cho từng màn hình."
+}
