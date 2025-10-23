@@ -1,7 +1,7 @@
 'use client';
 
 import { Layout } from '@/components/Layout';
-import { mockCertificates } from '../../mockData/certificates';
+import { mockCertificates } from '@/mockData/certificates';
 
 export default function DashboardPage() {
   return (

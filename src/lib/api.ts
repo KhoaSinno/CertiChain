@@ -1,4 +1,4 @@
-import { mockApi } from '../../mockData/api';
+import { mockApi } from '../mockData/api';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 const USE_MOCK_DATA = process.env.NODE_ENV === 'development' || !process.env.NEXT_PUBLIC_API_URL;
