@@ -2,21 +2,16 @@
 
 import { Layout } from '@/src/components/Layout';
 import { QRDisplay } from '@/src/components/QRDisplay';
-import { useCertificate } from '@/src/hooks/useCertificates';
-import { notFound } from 'next/navigation';
 import { Button } from '@/src/components/ui/button';
-import { ArrowLeft, Download, Share2, ExternalLink } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useCertificate } from '@/src/hooks/useCertificates';
+import { ArrowLeft, ExternalLink, FileText, Share2 } from 'lucide-react';
+import { notFound, useParams, useRouter } from 'next/navigation';
 
-interface CertificateDetailPageProps {
-  params: {
-    id: string;
-  };
-}
-
-export default function CertificateDetailPage({ params }: CertificateDetailPageProps) {
+export default function CertificateDetailPage() {
+  const params = useParams();
+  const id = params.id as string;
   const router = useRouter();
-  const { data: certificate, isLoading, error } = useCertificate(params.id);
+  const { data: certificate, isLoading, error } = useCertificate(id);
 
   if (isLoading) {
     return (
@@ -101,6 +96,15 @@ export default function CertificateDetailPage({ params }: CertificateDetailPageP
 
             {/* Actions */}
             <div className="flex flex-wrap gap-3">
+                             <Button
+                 variant="default"
+                 onClick={() => router.push(`/certificates/view/${id}`)}
+                 className="gap-2"
+               >
+                 <FileText className="h-4 w-4" />
+                 Xem chứng chỉ
+               </Button>
+
               {certificate.ipfsHash && (
                 <Button
                   variant="outline"

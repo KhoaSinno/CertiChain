@@ -109,7 +109,7 @@ export function CertificateCard({
             className="flex-1"
           >
             <ExternalLink className="h-4 w-4 mr-2" />
-            Xem chi tiết
+            Chi tiết
           </Button>
           
           {isPending && onRegister && (
