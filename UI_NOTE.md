@@ -94,6 +94,5 @@ Mock data được lưu tại: `src/mockData/`
 - Footer có link xác minh và hash để tra cứu
 
 ## 🛠️ Libraries sử dụng
-- `react-to-print`: Xuất chứng chỉ ra PDF
 - `qrcode.react`: Tạo mã QR code
-- `jspdf` & `html2canvas`: Backup PDF export (nếu cần)
+- `jspdf` & `html2canvas`: PDF export (nếu cần)

@@ -9,21 +9,9 @@ interface LayoutProps {
 
 export function Layout({ children }: LayoutProps) {
   return (
-    <div style={{ 
-      minHeight: '100vh', 
-      display: 'flex', 
-      flexDirection: 'column',
-      width: '100%',
-      margin: 0,
-      padding: 0
-    }}>
+    <div className="min-h-screen flex flex-col w-full m-0 p-0">
       <Header />
-      <main style={{ 
-        flex: 1, 
-        width: '100%',
-        margin: 0,
-        padding: 0
-      }}>
+      <main className="flex-1 w-full m-0 p-0">
         {children}
       </main>
       <Footer />

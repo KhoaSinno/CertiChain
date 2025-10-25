@@ -37,7 +37,7 @@ export function CertificateDisplay({ certificate, verificationUrl }: Certificate
         <Button
           variant="outline"
           onClick={handlePrint}
-          className="gap-2"
+          className="gap-2 transition-transform hover:scale-105 active:scale-95"
         >
           <Download className="h-4 w-4" />
           Tải PDF
@@ -47,7 +47,7 @@ export function CertificateDisplay({ certificate, verificationUrl }: Certificate
           <Button
             variant="outline"
             onClick={handleShare}
-            className="gap-2"
+            className="gap-2 transition-transform hover:scale-105 active:scale-95"
           >
             <Share2 className="h-4 w-4" />
             Chia sẻ
@@ -74,12 +74,10 @@ export function CertificateDisplay({ certificate, verificationUrl }: Certificate
       {/* Certificate Content */}
       <div
         ref={componentRef}
-        className="bg-gradient-to-br from-blue-50 via-white to-indigo-50 border-8 border-blue-900 rounded-2xl shadow-2xl overflow-hidden relative"
+        className="bg-gradient-to-br from-blue-50 via-white to-indigo-50 border-8 border-blue-900 rounded-2xl shadow-2xl overflow-hidden relative mx-auto my-0 py-7.5 px-12.5"
         style={{
           width: '297mm',  // A4 landscape width
           minHeight: '210mm',  // A4 landscape height
-          margin: '0 auto',
-          padding: '30px 50px',
         }}
       >
         {/* Guilloche Pattern Background */}

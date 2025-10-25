@@ -1,4 +1,5 @@
 import { api } from '@/src/lib/api';
+import { mockVerifyResults } from '@/src/mockData/verifyResults';
 import { VerifyResult } from '@/src/types/certificate';
 import { useQuery } from '@tanstack/react-query';
 
@@ -17,30 +18,8 @@ export function useVerifyCertificate(hash: string) {
         // Simulate API delay
         await new Promise(resolve => setTimeout(resolve, 800));
         
-        // Return mock verification result
-        const mockResults = {
-          '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef': {
-            verified: true,
-            certificate: {
-              id: '1',
-              studentName: 'Nguyễn Văn An',
-              studentId: 'SV001',
-              courseName: 'Khóa học Blockchain Development',
-              fileHash: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
-              ipfsHash: 'QmXyz1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
-              issuer: '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6',
-              issuedAt: new Date('2024-01-15'),
-              status: 'verified' as const,
-              isVerified: true,
-              transactionHash: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'
-            },
-            issuer: '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6',
-            issuedAt: new Date('2024-01-15'),
-            transactionHash: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'
-          }
-        };
-
-        return mockResults[hash as keyof typeof mockResults] || { verified: false };
+        // Return mock verification result from mockVerifyResults
+        return mockVerifyResults[hash] || { verified: false, error: 'Certificate not found' };
       }
       
       return api.certificates.verify(hash);

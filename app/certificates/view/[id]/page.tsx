@@ -43,7 +43,7 @@ export default function CertificateViewPage() {
         <Button
           variant="outline"
           onClick={() => router.back()}
-          className="mb-6"
+          className="mb-6 transition-transform hover:scale-105 active:scale-95"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Quay lại

@@ -1,12 +1,12 @@
 'use client';
 
 import { Layout } from '@/src/components/Layout';
-import { VerifyResult } from '@/src/components/VerifyResult';
-import { useVerifyCertificate } from '@/src/hooks/useVerify';
-import { useState } from 'react';
 import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
-import { Search, Hash } from 'lucide-react';
+import { VerifyResult } from '@/src/components/VerifyResult';
+import { useVerifyCertificate } from '@/src/hooks/useVerify';
+import { Hash, Search } from 'lucide-react';
+import { useState } from 'react';
 
 export default function VerifyPage() {
   const [hash, setHash] = useState('');
@@ -55,7 +55,7 @@ export default function VerifyPage() {
 
         {/* Verification Result */}
         {searchHash && (
-          <div className="max-w-4xl mx-auto">
+          <div className="w-full">
             {isLoading && (
               <div className="text-center py-12">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
@@ -64,19 +64,21 @@ export default function VerifyPage() {
             )}
 
             {error && (
-              <div className="text-center py-12">
+              <div className="text-center py-12 max-w-2xl mx-auto">
                 <div className="text-red-600 mb-4">
                   <p className="text-lg font-semibold">Lỗi xác minh</p>
                   <p className="text-sm">Không thể xác minh chứng chỉ. Vui lòng kiểm tra lại hash.</p>
                 </div>
-                <Button onClick={() => setSearchHash('')} variant="outline">
+                <Button onClick={() => setSearchHash('')} variant="outline" className="transition-transform hover:scale-105 active:scale-95">
                   Thử lại
                 </Button>
               </div>
             )}
 
             {verifyResult && !isLoading && !error && (
-              <VerifyResult data={verifyResult} hash={searchHash} />
+              <div className="max-w-6xl mx-auto">
+                <VerifyResult data={verifyResult} hash={searchHash} />
+              </div>
             )}
           </div>
         )}

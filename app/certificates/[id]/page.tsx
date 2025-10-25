@@ -41,7 +41,7 @@ export default function CertificateDetailPage() {
         <Button
           variant="outline"
           onClick={() => router.back()}
-          className="mb-6"
+          className="mb-6 transition-transform hover:scale-105 active:scale-95"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Quay lại
@@ -99,7 +99,7 @@ export default function CertificateDetailPage() {
                              <Button
                  variant="default"
                  onClick={() => router.push(`/certificates/view/${id}`)}
-                 className="gap-2"
+                 className="gap-2 transition-transform hover:scale-105 active:scale-95"
                >
                  <FileText className="h-4 w-4" />
                  Xem chứng chỉ
@@ -109,6 +109,7 @@ export default function CertificateDetailPage() {
                 <Button
                   variant="outline"
                   onClick={() => window.open(`https://ipfs.io/ipfs/${certificate.ipfsHash}`, '_blank')}
+                  className="transition-transform hover:scale-105 active:scale-95"
                 >
                   <ExternalLink className="h-4 w-4 mr-2" />
                   Xem file gốc
@@ -119,6 +120,7 @@ export default function CertificateDetailPage() {
                 <Button
                   variant="outline"
                   onClick={() => window.open(`https://sepolia.basescan.org/tx/${certificate.transactionHash}`, '_blank')}
+                  className="transition-transform hover:scale-105 active:scale-95"
                 >
                   <ExternalLink className="h-4 w-4 mr-2" />
                   Xem trên BaseScan
@@ -132,6 +134,7 @@ export default function CertificateDetailPage() {
                   text: `Chứng chỉ ${certificate.courseName} của ${certificate.studentName}`,
                   url: verificationUrl 
                 })}
+                className="transition-transform hover:scale-105 active:scale-95"
               >
                 <Share2 className="h-4 w-4 mr-2" />
                 Chia sẻ
