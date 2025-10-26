@@ -19,17 +19,14 @@ export function Navigation({ className }: NavigationProps) {
   ];
 
   return (
-    <nav className={cn('flex space-x-6', className)}>
+    <nav className={cn('flex space-x-8', className)}>
       {navigation.map((item) => {
         const isActive = pathname === item.href;
         return (
           <Link
             key={item.name}
             href={item.href}
-            className={cn(
-              'text-sm font-medium transition-colors hover:text-primary',
-              isActive ? 'text-primary' : 'text-muted-foreground'
-            )}
+            className={`navbar-link ${isActive ? 'active' : ''}`}
           >
             {item.name}
           </Link>

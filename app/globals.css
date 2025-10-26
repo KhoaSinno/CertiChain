@@ -484,6 +484,58 @@
     line-clamp: 3;
     -webkit-box-orient: vertical;
   }
+
+  /* Navbar specific styles */
+  .navbar-link {
+    position: relative;
+    font-weight: 600;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    color: oklch(0.4 0.01 106.423);
+  }
+
+  .dark .navbar-link {
+    color: oklch(0.8 0.005 106.423);
+  }
+
+  .navbar-link:hover {
+    color: var(--primary);
+    transform: translateY(-1px);
+  }
+
+  .navbar-link.active {
+    color: var(--primary);
+    font-weight: 700;
+  }
+
+  .navbar-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary) 0%, oklch(0.48 0.19 258) 100%);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 1px;
+  }
+
+  .navbar-link:hover::after,
+  .navbar-link.active::after {
+    width: 100%;
+  }
+
+  /* Enhanced navbar background */
+  .navbar-background {
+    background: oklch(0.99 0.005 106.423 / 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid oklch(0.92 0.005 106.423 / 0.5);
+  }
+
+  .dark .navbar-background {
+    background: oklch(0.08 0.01 106.423 / 0.95);
+    border-bottom: 1px solid oklch(0.2 0.01 106.423 / 0.5);
+  }
 }
 
 /* Custom animations keyframes */

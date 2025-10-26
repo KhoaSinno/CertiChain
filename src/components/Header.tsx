@@ -4,11 +4,13 @@ import { Button } from '@/src/components/ui/button';
 import { useBlockchain } from '@/src/hooks/useBlockchain';
 import { GraduationCap, Menu, Wallet, X } from 'lucide-react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
 export function Header() {
   const { address, isConnected, truncatedAddress } = useBlockchain();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   const navigation = [
     { name: 'Trang chủ', href: '/' },
@@ -27,16 +29,19 @@ export function Header() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-6">
-          {navigation.map((item) => (
-            <Link
-              key={item.name}
-              href={item.href}
-              className="text-sm font-medium transition-colors hover:text-primary"
-            >
-              {item.name}
-            </Link>
-          ))}
+        <nav className="hidden md:flex items-center space-x-8">
+          {navigation.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={`navbar-link ${isActive ? 'active' : ''}`}
+              >
+                {item.name}
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Wallet Connection */}
@@ -73,18 +78,25 @@ export function Header() {
 
       {/* Mobile Navigation */}
       {isMobileMenuOpen && (
-        <div className="md:hidden border-t bg-background">
+        <div className="md:hidden border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <nav className="container py-4 space-y-2">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="block px-3 py-2 text-sm font-medium rounded-md hover:bg-muted"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {item.name}
-              </Link>
-            ))}
+            {navigation.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={`block px-3 py-2 text-sm font-semibold rounded-md transition-all duration-200 ${
+                    isActive 
+                      ? 'bg-primary/10 text-primary' 
+                      : 'hover:bg-primary/10 hover:text-primary'
+                  }`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              );
+            })}
           </nav>
         </div>
       )}
