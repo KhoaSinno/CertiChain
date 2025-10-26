@@ -5,8 +5,6 @@ import { Certificate } from '@/src/types/certificate';
 import { Download, Share2 } from 'lucide-react';
 import { QRCodeCanvas } from 'qrcode.react';
 import { useRef } from 'react';
-import { useReactToPrint } from 'react-to-print';
-
 interface CertificateDisplayProps {
   certificate: Certificate;
   verificationUrl?: string;
@@ -14,11 +12,6 @@ interface CertificateDisplayProps {
 
 export function CertificateDisplay({ certificate, verificationUrl }: CertificateDisplayProps) {
   const componentRef = useRef<HTMLDivElement>(null);
-
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current,
-    documentTitle: `ChungChi_${certificate.studentName}_${certificate.studentId}`,
-  });
 
   const handleShare = () => {
     if (navigator.share && verificationUrl) {
@@ -36,7 +29,6 @@ export function CertificateDisplay({ certificate, verificationUrl }: Certificate
       <div className="flex gap-3 justify-end mb-6">
         <Button
           variant="outline"
-          onClick={handlePrint}
           className="gap-2 transition-transform hover:scale-105 active:scale-95"
         >
           <Download className="h-4 w-4" />

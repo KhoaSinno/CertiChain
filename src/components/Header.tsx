@@ -1,7 +1,9 @@
 'use client';
 
+import { RoleSwitcher } from '@/src/components/RoleSwitcher';
 import { Button } from '@/src/components/ui/button';
 import { useBlockchain } from '@/src/hooks/useBlockchain';
+import { useRole } from '@/src/hooks/useRole';
 import { GraduationCap, Menu, Wallet, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -9,15 +11,21 @@ import { useState } from 'react';
 
 export function Header() {
   const { address, isConnected, truncatedAddress } = useBlockchain();
+  const { roleContext } = useRole();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
-  const navigation = [
-    { name: 'Trang chủ', href: '/' },
-    { name: 'Dashboard', href: '/dashboard' },
-    { name: 'Tạo chứng chỉ', href: '/certificates/create' },
-    { name: 'Xác minh', href: '/verify' },
+  const allNavigation = [
+    { name: 'Trang chủ', href: '/', roles: ['issuer', 'holder', 'verifier'] },
+    { name: 'Dashboard', href: '/dashboard', roles: ['issuer', 'holder', 'verifier'] },
+    { name: 'Tạo chứng chỉ', href: '/certificates/create', roles: ['issuer'] },
+    { name: 'Xác minh', href: '/verify', roles: ['verifier'] },
   ];
+
+  // Filter navigation based on current role
+  const navigation = roleContext 
+    ? allNavigation.filter(item => item.roles.includes(roleContext.role))
+    : allNavigation;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -44,8 +52,10 @@ export function Header() {
           })}
         </nav>
 
-        {/* Wallet Connection */}
+        {/* Role Switcher & Wallet Connection */}
         <div className="flex items-center space-x-4">
+          <RoleSwitcher />
+          
           {isConnected ? (
             <div className="flex items-center space-x-2">
               <div className="flex items-center space-x-2 rounded-lg bg-muted px-3 py-2">
