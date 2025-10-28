@@ -32,10 +32,10 @@
     "tailwind-merge": "^3.3.1",
     "viem": "^2.38.3",
     "wagmi": "^2.18.2",
-    "zustand": "^5.0.8"
+    "zustand": "^5.0.8",
     "@prisma/client": "^6.18.0",
     "ethers": "^6.15.0",
-    "pinata": "^2.5.1",
+    "pinata": "^2.5.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
