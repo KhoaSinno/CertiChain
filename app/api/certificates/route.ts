@@ -1,7 +1,9 @@
 import { CertificateService } from "@/core/services/certificate.service";
+import { CertificateRepository } from "@/core/repositories/certificate.repository";
 import { NextResponse } from "next/server";
 
 const certificateService = new CertificateService();
+const certificateRepo = new CertificateRepository();
 
 export async function POST(request: Request) {
   try {
@@ -41,5 +43,18 @@ export async function POST(request: Request) {
     console.log(console.error("Lỗi tại POST /api/certificates:", error));
 
     return NextResponse.json({ error: "Lỗi máy chủ nội bộ." }, { status: 500 });
+  }
+}
+
+export async function GET() {
+  try {
+    const certificates = await certificateRepo.findAll();
+    return NextResponse.json(certificates);
+  } catch (error) {
+    console.error("Error fetching certificates:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }
