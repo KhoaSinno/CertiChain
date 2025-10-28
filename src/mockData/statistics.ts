@@ -1,0 +1,32 @@
+export const mockStatistics = {
+  totalCertificates: 1250,
+  verifiedCertificates: 980,
+  pendingCertificates: 270,
+  verificationRate: 78.4,
+  monthlyTrends: [
+    { month: 'Jan', certificates: 120, verified: 95 },
+    { month: 'Feb', certificates: 150, verified: 120 },
+    { month: 'Mar', certificates: 180, verified: 140 },
+    { month: 'Apr', certificates: 200, verified: 160 },
+    { month: 'May', certificates: 220, verified: 175 },
+    { month: 'Jun', certificates: 250, verified: 200 },
+    { month: 'Jul', certificates: 280, verified: 220 },
+    { month: 'Aug', certificates: 300, verified: 240 },
+    { month: 'Sep', certificates: 320, verified: 255 },
+    { month: 'Oct', certificates: 350, verified: 280 },
+    { month: 'Nov', certificates: 380, verified: 300 },
+    { month: 'Dec', certificates: 400, verified: 320 },
+  ],
+  topCourses: [
+    { name: 'Blockchain Development', count: 250 },
+    { name: 'Web Development', count: 200 },
+    { name: 'Data Science', count: 180 },
+    { name: 'AI & Machine Learning', count: 150 },
+    { name: 'Cybersecurity', count: 120 },
+  ],
+  issuers: [
+    { name: 'Trường Đại học Công nghệ', count: 800 },
+    { name: 'Học viện Kỹ thuật', count: 300 },
+    { name: 'Trung tâm Đào tạo ABC', count: 150 },
+  ],
+};
