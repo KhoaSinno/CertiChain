@@ -3,7 +3,7 @@
 import { RoleSwitcher } from '@/src/components/RoleSwitcher';
 import { Button } from '@/src/components/ui/button';
 import { useRole } from '@/src/hooks/useRole';
-import { GraduationCap, Menu, X } from 'lucide-react';
+import { GraduationCap, Home, LayoutDashboard, Menu, PlusCircle, ShieldCheck, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
@@ -14,10 +14,10 @@ export function Header() {
   const pathname = usePathname();
 
   const allNavigation = [
-    { name: 'Trang chủ', href: '/', roles: ['issuer', 'holder'] },
-    { name: 'Dashboard', href: '/dashboard', roles: ['issuer', 'holder'] },
-    { name: 'Tạo chứng chỉ', href: '/certificates/create', roles: ['issuer'] },
-    { name: 'Xác minh', href: '/verify', roles: ['issuer', 'holder'] },
+    { name: 'Trang chủ', href: '/', roles: ['issuer', 'holder'], icon: Home },
+    { name: 'Dashboard', href: '/dashboard', roles: ['issuer', 'holder'], icon: LayoutDashboard },
+    { name: 'Tạo chứng chỉ', href: '/certificates/create', roles: ['issuer'], icon: PlusCircle },
+    { name: 'Xác minh', href: '/verify', roles: ['issuer', 'holder'], icon: ShieldCheck },
   ];
 
   // Filter navigation based on current role
@@ -44,13 +44,15 @@ export function Header() {
           <nav className="hidden md:flex items-center space-x-8 flex-nowrap">
             {navigation.map((item) => {
               const isActive = pathname === item.href;
+              const Icon = item.icon;
               return (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`navbar-link whitespace-nowrap ${isActive ? 'active' : ''}`}
+                  className={`navbar-link whitespace-nowrap flex items-center gap-2 ${isActive ? 'active' : ''}`}
                 >
-                  {item.name}
+                  {Icon && <Icon className="h-4 w-4" />}
+                  <span>{item.name}</span>
                 </Link>
               );
             })}
@@ -77,18 +79,20 @@ export function Header() {
           <nav className="container py-4 space-y-2">
             {navigation.map((item) => {
               const isActive = pathname === item.href;
+              const Icon = item.icon;
               return (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`block px-3 py-2 text-sm font-semibold rounded-md transition-all duration-200 ${
+                  className={`block px-3 py-2 text-sm font-semibold rounded-md transition-all duration-200 flex items-center gap-2 ${
                     isActive 
                       ? 'bg-primary/10 text-primary' 
                       : 'hover:bg-primary/10 hover:text-primary'
                   }`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  {item.name}
+                  {Icon && <Icon className="h-4 w-4" />}
+                  <span>{item.name}</span>
                 </Link>
               );
             })}
