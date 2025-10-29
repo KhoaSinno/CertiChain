@@ -3,7 +3,6 @@
 import { Layout } from '@/src/components/Layout';
 import { HolderDashboard } from '@/src/components/dashboard/HolderDashboard';
 import { IssuerDashboard } from '@/src/components/dashboard/IssuerDashboard';
-import { VerifierDashboard } from '@/src/components/dashboard/VerifierDashboard';
 import { useRole } from '@/src/hooks/useRole';
 
 export default function DashboardPage() {
@@ -32,8 +31,6 @@ export default function DashboardPage() {
         return <IssuerDashboard />;
       case 'holder':
         return <HolderDashboard />;
-      case 'verifier':
-        return <VerifierDashboard />;
       default:
         return <IssuerDashboard />;
     }

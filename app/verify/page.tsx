@@ -6,7 +6,7 @@ import { Input } from '@/src/components/ui/input';
 import { VerifyResult } from '@/src/components/VerifyResult';
 import { useVerifyCertificate } from '@/src/hooks/useVerify';
 import { Hash, Search } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 export default function VerifyPage() {
   const [hash, setHash] = useState('');
@@ -24,12 +24,7 @@ export default function VerifyPage() {
     }
   };
 
-  // Debug: log verify result to help diagnose not-found issues
-  useEffect(() => {
-    if (!searchHash) return;
-    if (isLoading) return;
-    console.log('[Verify] hash:', searchHash, 'result:', verifyResult, 'error:', error);
-  }, [searchHash, isLoading, verifyResult, error]);
+  // Remove debug logs in production
 
   return (
     <Layout>
@@ -55,6 +50,9 @@ export default function VerifyPage() {
                 className="pl-10"
                 required
               />
+              <p className="mt-2 text-xs text-muted-foreground">
+                Gợi ý: Dán đúng chuỗi 64 ký tự hex. Nếu có tiền tố 0x, hệ thống sẽ tự bỏ.
+              </p>
             </div>
             <Button type="submit" className="w-full" disabled={isLoading}>
               <Search className="h-4 w-4 mr-2" />

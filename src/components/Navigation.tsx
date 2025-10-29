@@ -14,10 +14,10 @@ export function Navigation({ className }: NavigationProps) {
   const { roleContext } = useRole();
 
   const allNavigation = [
-    { name: 'Trang chủ', href: '/', description: 'Giới thiệu hệ thống', roles: ['issuer', 'holder', 'verifier'] },
-    { name: 'Dashboard', href: '/dashboard', description: 'Quản lý chứng chỉ', roles: ['issuer', 'holder', 'verifier'] },
+    { name: 'Trang chủ', href: '/', description: 'Giới thiệu hệ thống', roles: ['issuer', 'holder'] },
+    { name: 'Dashboard', href: '/dashboard', description: 'Quản lý chứng chỉ', roles: ['issuer', 'holder'] },
     { name: 'Tạo chứng chỉ', href: '/certificates/create', description: 'Tạo chứng chỉ mới', roles: ['issuer'] },
-    { name: 'Xác minh', href: '/verify', description: 'Xác minh chứng chỉ', roles: ['verifier'] },
+    { name: 'Xác minh', href: '/verify', description: 'Xác minh chứng chỉ', roles: ['issuer', 'holder'] },
   ];
 
   // Filter navigation based on current role

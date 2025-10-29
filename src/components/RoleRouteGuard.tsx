@@ -7,15 +7,15 @@ import { useEffect } from 'react';
 const ROLE_DEFAULT_ROUTE: Record<string, string> = {
   issuer: '/dashboard',
   holder: '/dashboard',
-  verifier: '/verify',
 };
 
 function isAllowed(pathname: string, role: string) {
   const rules: Array<{ pattern: RegExp; roles: string[] }> = [
-    { pattern: /^\/?$/, roles: ['issuer', 'holder', 'verifier'] },
-    { pattern: /^\/dashboard(\/.*)?$/, roles: ['issuer', 'holder', 'verifier'] },
+    { pattern: /^\/?$/, roles: ['issuer', 'holder'] },
+    { pattern: /^\/dashboard(\/.*)?$/, roles: ['issuer', 'holder'] },
     { pattern: /^\/certificates\/create(\/.*)?$/, roles: ['issuer'] },
-    { pattern: /^\/verify(\/.*)?$/, roles: ['verifier'] },
+    // Verify is public for all roles/guests, so always allowed
+    { pattern: /^\/verify(\/.*)?$/, roles: ['issuer', 'holder'] },
     { pattern: /^\/certificates(\/.*)?$/, roles: ['issuer', 'holder'] },
   ];
 

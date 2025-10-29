@@ -14,10 +14,10 @@ export function Header() {
   const pathname = usePathname();
 
   const allNavigation = [
-    { name: 'Trang chủ', href: '/', roles: ['issuer', 'holder', 'verifier'] },
-    { name: 'Dashboard', href: '/dashboard', roles: ['issuer', 'holder', 'verifier'] },
+    { name: 'Trang chủ', href: '/', roles: ['issuer', 'holder'] },
+    { name: 'Dashboard', href: '/dashboard', roles: ['issuer', 'holder'] },
     { name: 'Tạo chứng chỉ', href: '/certificates/create', roles: ['issuer'] },
-    { name: 'Xác minh', href: '/verify', roles: ['verifier'] },
+    { name: 'Xác minh', href: '/verify', roles: ['issuer', 'holder'] },
   ];
 
   // Filter navigation based on current role

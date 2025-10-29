@@ -13,7 +13,6 @@ import { useRole } from '@/src/hooks/useRole';
 import { UserRole } from '@/src/types/role';
 import {
     Building2,
-    Shield,
     User
 } from 'lucide-react';
 
@@ -29,12 +28,6 @@ const ROLE_CONFIG = {
     icon: User,
     description: 'Xem và chia sẻ chứng chỉ',
     color: 'bg-green-100 text-green-800',
-  },
-  verifier: {
-    label: 'Nhà tuyển dụng',
-    icon: Shield,
-    description: 'Xác minh chứng chỉ',
-    color: 'bg-purple-100 text-purple-800',
   },
 };
 
