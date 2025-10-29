@@ -8,6 +8,8 @@ dotenv.config();
 // Kiểm tra biến môi trường và ném lỗi nếu chúng không được đặt
 const SEPOLIA_RPC_URL = process.env.SEPOLIA_RPC_URL;
 const SEPOLIA_PRIVATE_KEY = process.env.PRIVATE_KEY;
+const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY;
+
 if (!SEPOLIA_RPC_URL) throw new Error("Missing SEPOLIA_RPC_URL in .env");
 if (!SEPOLIA_PRIVATE_KEY) throw new Error("Missing PRIVATE_KEY in .env");
 
@@ -43,6 +45,23 @@ const config: HardhatUserConfig = {
       chainType: "l1",
       url: SEPOLIA_RPC_URL,
       accounts: [SEPOLIA_PRIVATE_KEY],
+    },
+  },
+  chainDescriptors: {
+    11155111: {
+      name: "sepolia",
+      blockExplorers: {
+        etherscan: {
+          name: "Etherscan",
+          url: "https://sepolia.etherscan.io",
+          apiUrl: "https://api.etherscan.io/v2/api",
+        },
+      },
+    },
+  },
+  verify: {
+    etherscan: {
+      apiKey: ETHERSCAN_API_KEY,
     },
   },
 };
