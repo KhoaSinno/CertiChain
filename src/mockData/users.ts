@@ -24,7 +24,7 @@ export const mockUsers: User[] = [
     id: '3',
     name: 'Công ty ABC',
     email: 'hr@abc.com',
-    role: 'verifier',
+    role: 'holder',
     walletAddress: '0xabcdef1234567890abcdef1234567890abcdef12',
     organization: 'Công ty ABC',
     createdAt: new Date('2024-01-10'),

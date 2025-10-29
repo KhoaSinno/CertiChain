@@ -12,8 +12,8 @@ export function Features() {
     },
     {
       icon: Zap,
-      title: 'Tự động hóa xác thực',
-      description: 'Nhà tuyển dụng chỉ cần quét mã, hệ thống tự kiểm tra on-chain, không cần xác nhận thủ công.',
+      title: 'Xác minh tức thì (guest)',
+      description: 'Nhà tuyển dụng truy cập /verify hoặc quét QR, hệ thống tự kiểm tra on-chain — không cần đăng nhập.',
       badge: 'Hiệu quả'
     },
     {

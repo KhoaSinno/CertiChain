@@ -1,73 +1,96 @@
-import { mockApi } from '@/src/mockData/api';
+import type { Certificate } from '@/src/types/certificate';
+// API Certificate (Prisma) shape returned by our Next API
+type ApiCertificate = {
+  id: number;
+  studentName: string;
+  studentIdHash: string;
+  courseName: string;
+  fileHash: string;
+  ipfsCid: string;
+  issuerAddress: string;
+  blockchainTx: string | null;
+  status: 'pending' | 'verified' | 'failed' | string;
+  issuedAt: string;
+};
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
-const USE_MOCK_DATA = process.env.NODE_ENV === 'development' || !process.env.NEXT_PUBLIC_API_URL;
+// Map API certificate (Prisma model) to FE certificate type
+function mapApiCertificateToClient(apiCert: ApiCertificate): Certificate {
+  return {
+    id: String(apiCert.id),
+    studentName: apiCert.studentName,
+    studentId: '',
+    courseName: apiCert.courseName,
+    fileHash: apiCert.fileHash,
+    ipfsHash: apiCert.ipfsCid,
+    issuer: apiCert.issuerAddress,
+    issuedAt: new Date(apiCert.issuedAt),
+    status: apiCert.status === 'verified' ? 'verified' : 'pending',
+    transactionHash: apiCert.blockchainTx ?? undefined,
+    isVerified: apiCert.status === 'verified',
+  };
+}
 
 export const api = {
-  // Certificate endpoints
   certificates: {
+    // POST /api/certificates
     create: async (data: FormData) => {
-      if (USE_MOCK_DATA) {
-        // Convert FormData to CreateCertificateRequest
-        const studentName = data.get('studentName') as string;
-        const studentId = data.get('studentId') as string;
-        const courseName = data.get('courseName') as string;
-        const file = data.get('file') as File;
-        
-        return mockApi.certificates.create({
-          studentName,
-          studentId,
-          courseName,
-          file
-        });
-      }
-      
-      const response = await fetch(`${API_BASE_URL}/certificates`, {
+      const response = await fetch(`/api/certificates`, {
         method: 'POST',
         body: data,
       });
-      return response.json();
-    },
-    
-    getAll: async () => {
-      if (USE_MOCK_DATA) {
-        return mockApi.certificates.getAll();
+      if (!response.ok) {
+        throw new Error('Failed to create certificate');
       }
-      
-      const response = await fetch(`${API_BASE_URL}/certificates`);
+      // Return raw creation response as provided by API spec
+      // { status, fileHash, ipfsCid, certificateId, ipfsUrl }
       return response.json();
     },
-    
-    getById: async (id: string) => {
-      if (USE_MOCK_DATA) {
-        return mockApi.certificates.getById(id);
+
+    // GET /api/certificates
+    getAll: async (): Promise<Certificate[]> => {
+      const response = await fetch(`/api/certificates`, { cache: 'no-store' });
+      if (!response.ok) {
+        throw new Error('Failed to fetch certificates');
       }
-      
-      const response = await fetch(`${API_BASE_URL}/certificates/${id}`);
-      return response.json();
+      const list: ApiCertificate[] = await response.json();
+      return Array.isArray(list) ? list.map(mapApiCertificateToClient) : [];
     },
-    
+
+    // GET (not implemented server route by id; we can filter client-side when needed)
+    getById: async (id: string): Promise<Certificate> => {
+      const response = await fetch(`/api/certificates`, { cache: 'no-store' });
+      if (!response.ok) {
+        throw new Error('Failed to fetch certificates');
+      }
+      const list: ApiCertificate[] = await response.json();
+      const found = Array.isArray(list)
+        ? list.find((c: ApiCertificate) => String(c.id) === String(id))
+        : null;
+      if (!found) {
+        throw new Error('Certificate not found');
+      }
+      return mapApiCertificateToClient(found);
+    },
+
+    // POST /api/certificates/register
     register: async (certificateId: string) => {
-      if (USE_MOCK_DATA) {
-        return mockApi.certificates.register(certificateId);
-      }
-      
-      const response = await fetch(`${API_BASE_URL}/certificates/register`, {
+      const response = await fetch(`/api/certificates/register`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ certificateId }),
       });
+      if (!response.ok) {
+        throw new Error('Failed to register certificate');
+      }
       return response.json();
     },
-    
+
+    // GET /api/certificates/verify?hash=...
     verify: async (hash: string) => {
-      if (USE_MOCK_DATA) {
-        return mockApi.verify.verify(hash);
+      const response = await fetch(`/api/certificates/verify?hash=${encodeURIComponent(hash)}`);
+      if (!response.ok) {
+        throw new Error('Failed to verify certificate');
       }
-      
-      const response = await fetch(`${API_BASE_URL}/certificates/verify?hash=${hash}`);
       return response.json();
     },
   },

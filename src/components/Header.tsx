@@ -2,24 +2,22 @@
 
 import { RoleSwitcher } from '@/src/components/RoleSwitcher';
 import { Button } from '@/src/components/ui/button';
-import { useBlockchain } from '@/src/hooks/useBlockchain';
 import { useRole } from '@/src/hooks/useRole';
-import { GraduationCap, Menu, Wallet, X } from 'lucide-react';
+import { GraduationCap, Home, LayoutDashboard, Menu, PlusCircle, ShieldCheck, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
 export function Header() {
-  const { address, isConnected, truncatedAddress } = useBlockchain();
   const { roleContext } = useRole();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
   const allNavigation = [
-    { name: 'Trang chủ', href: '/', roles: ['issuer', 'holder', 'verifier'] },
-    { name: 'Dashboard', href: '/dashboard', roles: ['issuer', 'holder', 'verifier'] },
-    { name: 'Tạo chứng chỉ', href: '/certificates/create', roles: ['issuer'] },
-    { name: 'Xác minh', href: '/verify', roles: ['verifier'] },
+    { name: 'Trang chủ', href: '/', roles: ['issuer', 'holder'], icon: Home },
+    { name: 'Dashboard', href: '/dashboard', roles: ['issuer', 'holder'], icon: LayoutDashboard },
+    { name: 'Tạo chứng chỉ', href: '/certificates/create', roles: ['issuer'], icon: PlusCircle },
+    { name: 'Xác minh', href: '/verify', roles: ['issuer', 'holder'], icon: ShieldCheck },
   ];
 
   // Filter navigation based on current role
@@ -29,48 +27,37 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-6 flex h-16 items-center justify-between">
-        {/* Logo */}
-        <Link href="/" className="flex items-center space-x-2">
-          <GraduationCap className="h-8 w-8 text-primary" />
-          <span className="text-xl font-bold">CertiChain</span>
-        </Link>
+      <div className="container mx-auto px-6 grid grid-cols-3 h-16 items-center">
+        {/* Left: Logo */}
+        <div className="flex items-center">
+          <Link href="/" className="flex items-center space-x-2">
+            <GraduationCap className="h-8 w-8 text-primary" />
+            <span className="text-xl font-bold">CertiChain</span>
+          </Link>
+        </div>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-8">
-          {navigation.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={`navbar-link ${isActive ? 'active' : ''}`}
-              >
-                {item.name}
-              </Link>
-            );
-          })}
-        </nav>
+        {/* Center: empty to keep right cluster alignment */}
+        <div className="hidden md:block" />
 
-        {/* Role Switcher & Wallet Connection */}
-        <div className="flex items-center space-x-4">
+        {/* Right: Desktop Navigation + Role switcher icon + mobile menu button */}
+        <div className="flex items-center justify-end space-x-6">
+          <nav className="hidden md:flex items-center space-x-8 flex-nowrap">
+            {navigation.map((item) => {
+              const isActive = pathname === item.href;
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={`navbar-link whitespace-nowrap flex items-center gap-2 ${isActive ? 'active' : ''}`}
+                >
+                  {Icon && <Icon className="h-4 w-4" />}
+                  <span>{item.name}</span>
+                </Link>
+              );
+            })}
+          </nav>
           <RoleSwitcher />
-          
-          {isConnected ? (
-            <div className="flex items-center space-x-2">
-              <div className="flex items-center space-x-2 rounded-lg bg-muted px-3 py-2">
-                <Wallet className="h-4 w-4" />
-                <span className="text-sm font-medium">{truncatedAddress}</span>
-              </div>
-            </div>
-          ) : (
-            <Button variant="outline" size="sm">
-              <Wallet className="h-4 w-4 mr-2" />
-              Kết nối ví
-            </Button>
-          )}
-
-          {/* Mobile menu button */}
           <Button
             variant="ghost"
             size="sm"
@@ -92,18 +79,20 @@ export function Header() {
           <nav className="container py-4 space-y-2">
             {navigation.map((item) => {
               const isActive = pathname === item.href;
+              const Icon = item.icon;
               return (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`block px-3 py-2 text-sm font-semibold rounded-md transition-all duration-200 ${
+                  className={`block px-3 py-2 text-sm font-semibold rounded-md transition-all duration-200 flex items-center gap-2 ${
                     isActive 
                       ? 'bg-primary/10 text-primary' 
                       : 'hover:bg-primary/10 hover:text-primary'
                   }`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  {item.name}
+                  {Icon && <Icon className="h-4 w-4" />}
+                  <span>{item.name}</span>
                 </Link>
               );
             })}

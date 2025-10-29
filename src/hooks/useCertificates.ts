@@ -50,7 +50,7 @@ export function useCertificate(id: string) {
 
 export function useCreateCertificate() {
   const queryClient = useQueryClient();
-  const { addCertificate } = useDataStore();
+  const { /* addCertificate */ } = useDataStore();
 
   return useMutation({
     mutationFn: (data: CreateCertificateRequest) => {
@@ -62,9 +62,9 @@ export function useCreateCertificate() {
       formData.append('file', data.file);
       return api.certificates.create(formData);
     },
-    onSuccess: (newCert) => {
+    onSuccess: () => {
+      // Refresh certificates list; creation response is not a full Certificate entity
       queryClient.invalidateQueries({ queryKey: ['certificates'] });
-      addCertificate(newCert);
     },
   });
 }

@@ -51,7 +51,7 @@ export function Footer() {
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>🏫 Nhà trường (Issuer)</li>
               <li>👩‍🎓 Sinh viên (Holder)</li>
-              <li>🏢 Nhà tuyển dụng (Verifier)</li>
+              <li>🏢 Nhà tuyển dụng (Guest Verify)</li>
             </ul>
           </div>
 

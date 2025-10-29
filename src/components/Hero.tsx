@@ -1,12 +1,25 @@
 import { Badge } from '@/src/components/ui/badge';
-import { Button } from '@/src/components/ui/button';
 import { GraduationCap, Shield, Users } from 'lucide-react';
-import Link from 'next/link';
 
 export function Hero() {
   return (
-    <section className="py-20 px-6 bg-background">
-      <div className="container mx-auto px-6 text-center">
+    <section className="relative overflow-hidden px-6 bg-background flex items-center justify-center min-h-[calc(100vh-4rem)]">
+      {/* Decorative background shapes */}
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        {/* Soft radial gradient overlay */}
+        <div className="absolute inset-0 opacity-70 [background:radial-gradient(60%_60%_at_50%_30%,theme(colors.primary/10),transparent_70%)]" />
+
+        {/* Top-left blurred circle */}
+        <div className="absolute -top-24 -left-24 w-[34rem] h-[34rem] rounded-full bg-gradient-to-br from-primary/20 via-blue-400/15 to-purple-400/10 blur-3xl" />
+
+        {/* Bottom-right blurred circle */}
+        <div className="absolute -bottom-24 -right-24 w-[36rem] h-[36rem] rounded-full bg-gradient-to-tr from-purple-500/20 via-fuchsia-400/15 to-primary/10 blur-3xl" />
+
+        {/* Subtle grid */}
+        <div className="absolute inset-0 opacity-[0.07] [background-image:linear-gradient(to_right,rgba(0,0,0,0.5)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.5)_1px,transparent_1px)] [background-size:40px_40px]" />
+      </div>
+
+      <div className="container mx-auto px-6 text-center flex flex-col items-center justify-center">
         <Badge variant="secondary" className="mb-4 bg-primary text-primary-foreground shadow-primary">
           🚀 Blockchain + IPFS 2025
         </Badge>
@@ -22,23 +35,10 @@ export function Hero() {
           đảm bảo tính minh bạch, bất biến và không thể giả mạo.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-          <Button asChild size="lg" className="!bg-primary !text-primary-foreground !hover:bg-primary/90 shadow-primary font-semibold">
-            <Link href="/dashboard">
-              <GraduationCap className="mr-2 h-5 w-5" />
-              Bắt đầu ngay
-            </Link>
-          </Button>
-          <Button asChild size="lg" className="!border-2 !border-primary !bg-background !text-primary !hover:bg-primary/10 font-semibold">
-            <Link href="/verify">
-              <Shield className="mr-2 h-5 w-5" />
-              Xác minh chứng chỉ
-            </Link>
-          </Button>
-        </div>
+        {/* Action buttons removed as requested */}
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-          <div className="text-center p-6 rounded-xl bg-card shadow-card hover:shadow-lg transition-shadow">
+          <div className="text-center p-6 rounded-xl bg-background/50 supports-[backdrop-filter]:bg-background/30 backdrop-blur-md border border-border/40 shadow-lg hover:shadow-xl transition-shadow">
             <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 shadow-primary">
               <GraduationCap className="h-8 w-8 text-primary-foreground" />
             </div>
@@ -48,7 +48,7 @@ export function Hero() {
             </p>
           </div>
           
-          <div className="text-center p-6 rounded-xl bg-card shadow-card hover:shadow-lg transition-shadow">
+          <div className="text-center p-6 rounded-xl bg-background/50 supports-[backdrop-filter]:bg-background/30 backdrop-blur-md border border-border/40 shadow-lg hover:shadow-xl transition-shadow">
             <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 shadow-primary">
               <Users className="h-8 w-8 text-primary-foreground" />
             </div>
@@ -58,7 +58,7 @@ export function Hero() {
             </p>
           </div>
           
-          <div className="text-center p-6 rounded-xl bg-card shadow-card hover:shadow-lg transition-shadow">
+          <div className="text-center p-6 rounded-xl bg-background/50 supports-[backdrop-filter]:bg-background/30 backdrop-blur-md border border-border/40 shadow-lg hover:shadow-xl transition-shadow">
             <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 shadow-primary">
               <Shield className="h-8 w-8 text-primary-foreground" />
             </div>

@@ -5,9 +5,11 @@ import { useEffect, useState } from 'react';
 
 // Mock function - trong thực tế sẽ lấy từ authentication context
 const getCurrentUserRole = (): UserRole => {
-  // Tạm thời return 'issuer' - trong thực tế sẽ lấy từ auth context
-  const savedRole = localStorage.getItem('userRole') as UserRole;
-  return savedRole || 'issuer';
+  // Map legacy 'verifier' to guest flow: default to 'holder'
+  const saved = localStorage.getItem('userRole');
+  if (saved === 'verifier') return 'holder';
+  if (saved === 'issuer' || saved === 'holder') return saved as UserRole;
+  return 'issuer';
 };
 
 const getCurrentUserInfo = () => {
@@ -54,6 +56,26 @@ export function useRole() {
 
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
+  // Also listen for custom roleChanged events to force update within the same tab
+  useEffect(() => {
+    const handleRoleChanged = (e: Event) => {
+      const detail = (e as CustomEvent<UserRole>).detail;
+      if (detail) {
+        const newRole = detail as UserRole;
+        const userInfo = getCurrentUserInfo();
+        const permissions = ROLE_PERMISSIONS[newRole];
+        setRoleContext({
+          role: newRole,
+          permissions,
+          userInfo,
+        });
+      }
+    };
+
+    window.addEventListener('roleChanged', handleRoleChanged as EventListener);
+    return () => window.removeEventListener('roleChanged', handleRoleChanged as EventListener);
   }, []);
 
   const switchRole = (newRole: UserRole) => {

@@ -13,8 +13,6 @@ import { useRole } from '@/src/hooks/useRole';
 import { UserRole } from '@/src/types/role';
 import {
     Building2,
-    ChevronDown,
-    Shield,
     User
 } from 'lucide-react';
 
@@ -31,12 +29,6 @@ const ROLE_CONFIG = {
     description: 'Xem và chia sẻ chứng chỉ',
     color: 'bg-green-100 text-green-800',
   },
-  verifier: {
-    label: 'Nhà tuyển dụng',
-    icon: Shield,
-    description: 'Xác minh chứng chỉ',
-    color: 'bg-purple-100 text-purple-800',
-  },
 };
 
 export function RoleSwitcher() {
@@ -50,10 +42,8 @@ export function RoleSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="flex items-center gap-2">
+        <Button variant="ghost" size="icon" className="h-9 w-9">
           <Icon className="h-4 w-4" />
-          <span className="hidden sm:inline">{currentRole.label}</span>
-          <ChevronDown className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-64 dropdown-glass">

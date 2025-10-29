@@ -2,7 +2,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  role: 'issuer' | 'holder' | 'verifier';
+  role: 'issuer' | 'holder';
   walletAddress?: string;
   organization?: string;
   createdAt: Date;
