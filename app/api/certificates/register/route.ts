@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import { CertificateRepository } from "@/core/repositories/certificate.repository";
+import { BlockchainService } from "@/core/repositories/blockchain.repository";
 
 const certificateRepo = new CertificateRepository();
+const blockchainService = new BlockchainService();
 
 export async function POST(request: Request) {
   try {
@@ -18,7 +20,7 @@ export async function POST(request: Request) {
     const certificate = await certificateRepo.findById(
       certificateId.toString()
     );
-
+    // Validate
     if (!certificate) {
       return NextResponse.json(
         { error: "Certificate not found" },
@@ -27,13 +29,19 @@ export async function POST(request: Request) {
     }
 
     // TODO: Implement blockchain registration here
+    const blockchainTx = await blockchainService.registerOnChain(
+      certificate.fileHash,
+      certificate.ipfsCid,
+      certificate.studentIdHash
+    );
+
     // For now, just update the status to verified
-    await certificateRepo.updateStatus(certificateId.toString(), "verified");
+    await certificateRepo.updateStatus(certificateId.toString(), "verified", blockchainTx);
 
     return NextResponse.json({
       status: "success",
       message: "Certificate registered on blockchain",
-      txHash: "0x" + Math.random().toString(16).substr(2, 64), // Placeholder
+      txHash: blockchainTx,
       certificateId: certificateId,
     });
   } catch (error) {
