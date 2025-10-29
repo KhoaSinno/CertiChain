@@ -3,13 +3,50 @@
 import { Badge } from '@/src/components/ui/badge';
 import { Button } from '@/src/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card';
-import { mockCertificates } from '@/src/mockData/certificates';
+import { useCertificates } from '@/src/hooks/useCertificates';
 import { Download, Eye, FileText, QrCode, Share2 } from 'lucide-react';
 import Link from 'next/link';
 
 export function HolderDashboard() {
-  // Mock: Giả sử sinh viên có 2 chứng chỉ
-  const myCertificates = mockCertificates.slice(0, 2);
+  const { certificates, loading, error } = useCertificates();
+  
+  // Filter certificates for current user (in real app, this would be based on user context)
+  const myCertificates = certificates || [];
+
+  if (loading) {
+    return (
+      <div className="space-y-8">
+        <div>
+          <h1 className="text-3xl font-bold mb-2">Chứng chỉ của tôi</h1>
+          <p className="text-muted-foreground">Đang tải...</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[1, 2, 3].map((i) => (
+            <Card key={i}>
+              <CardHeader className="pb-2">
+                <div className="h-4 bg-muted rounded animate-pulse" />
+              </CardHeader>
+              <CardContent>
+                <div className="h-8 bg-muted rounded animate-pulse mb-2" />
+                <div className="h-3 bg-muted rounded animate-pulse" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-8">
+        <div>
+          <h1 className="text-3xl font-bold mb-2">Chứng chỉ của tôi</h1>
+          <p className="text-destructive">Lỗi khi tải dữ liệu: {error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -75,50 +112,58 @@ export function HolderDashboard() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {myCertificates.map((certificate) => (
-              <div key={certificate.id} className="p-6 border rounded-lg space-y-4">
-                <div className="flex items-start justify-between">
-                  <div className="space-y-2">
-                    <h3 className="text-lg font-semibold">{certificate.courseName}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Cấp cho: {certificate.studentName}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Mã sinh viên: {certificate.studentId}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Ngày cấp: {new Date(certificate.issuedAt).toLocaleDateString('vi-VN')}
-                    </p>
-                  </div>
-                  <Badge variant={certificate.status === 'verified' ? 'default' : 'secondary'}>
-                    {certificate.status === 'verified' ? 'Đã xác thực' : 'Chờ xác thực'}
-                  </Badge>
-                </div>
-
-                <div className="flex gap-2">
-                  <Link href={`/certificates/${certificate.id}`}>
-                    <Button size="sm" className="flex items-center gap-2">
-                      <Eye className="h-4 w-4" />
-                      Xem chi tiết
-                    </Button>
-                  </Link>
-                  <Link href={`/certificates/view/${certificate.id}`}>
-                    <Button size="sm" variant="outline" className="flex items-center gap-2">
-                      <Download className="h-4 w-4" />
-                      Tải chứng chỉ
-                    </Button>
-                  </Link>
-                  <Button size="sm" variant="outline" className="flex items-center gap-2">
-                    <Share2 className="h-4 w-4" />
-                    Chia sẻ
-                  </Button>
-                  <Button size="sm" variant="outline" className="flex items-center gap-2">
-                    <QrCode className="h-4 w-4" />
-                    QR Code
-                  </Button>
-                </div>
+            {myCertificates.length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground">
+                <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                <p>Bạn chưa có chứng chỉ nào</p>
+                <p className="text-sm">Liên hệ nhà trường để được cấp chứng chỉ</p>
               </div>
-            ))}
+            ) : (
+              myCertificates.map((certificate) => (
+                <div key={certificate.id} className="p-6 border rounded-lg space-y-4">
+                  <div className="flex items-start justify-between">
+                    <div className="space-y-2">
+                      <h3 className="text-lg font-semibold">{certificate.courseName}</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Cấp cho: {certificate.studentName}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Mã sinh viên: {certificate.studentId || 'N/A'}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Ngày cấp: {new Date(certificate.issuedAt).toLocaleDateString('vi-VN')}
+                      </p>
+                    </div>
+                    <Badge variant={certificate.status === 'verified' ? 'default' : 'secondary'}>
+                      {certificate.status === 'verified' ? 'Đã xác thực' : 'Chờ xác thực'}
+                    </Badge>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Link href={`/certificates/${certificate.id}`}>
+                      <Button size="sm" className="flex items-center gap-2">
+                        <Eye className="h-4 w-4" />
+                        Xem chi tiết
+                      </Button>
+                    </Link>
+                    <Link href={`/certificates/view/${certificate.id}`}>
+                      <Button size="sm" variant="outline" className="flex items-center gap-2">
+                        <Download className="h-4 w-4" />
+                        Tải chứng chỉ
+                      </Button>
+                    </Link>
+                    <Button size="sm" variant="outline" className="flex items-center gap-2">
+                      <Share2 className="h-4 w-4" />
+                      Chia sẻ
+                    </Button>
+                    <Button size="sm" variant="outline" className="flex items-center gap-2">
+                      <QrCode className="h-4 w-4" />
+                      QR Code
+                    </Button>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </CardContent>
       </Card>
