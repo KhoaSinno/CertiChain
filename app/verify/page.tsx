@@ -6,7 +6,7 @@ import { Input } from '@/src/components/ui/input';
 import { VerifyResult } from '@/src/components/VerifyResult';
 import { useVerifyCertificate } from '@/src/hooks/useVerify';
 import { Hash, Search } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function VerifyPage() {
   const [hash, setHash] = useState('');
@@ -16,10 +16,20 @@ export default function VerifyPage() {
 
   const handleVerify = (e: React.FormEvent) => {
     e.preventDefault();
-    if (hash.trim()) {
-      setSearchHash(hash.trim());
+    const trimmed = hash.trim();
+    if (trimmed) {
+      // Normalize: strip leading 0x if present to match DB format
+      const normalized = trimmed.startsWith('0x') ? trimmed.slice(2) : trimmed;
+      setSearchHash(normalized);
     }
   };
+
+  // Debug: log verify result to help diagnose not-found issues
+  useEffect(() => {
+    if (!searchHash) return;
+    if (isLoading) return;
+    console.log('[Verify] hash:', searchHash, 'result:', verifyResult, 'error:', error);
+  }, [searchHash, isLoading, verifyResult, error]);
 
   return (
     <Layout>
@@ -39,7 +49,7 @@ export default function VerifyPage() {
               <Hash className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 type="text"
-                placeholder="Nhập hash của chứng chỉ (0x...)"
+                placeholder="Nhập file hash (64 hex, không 0x)"
                 value={hash}
                 onChange={(e) => setHash(e.target.value)}
                 className="pl-10"
@@ -88,8 +98,8 @@ export default function VerifyPage() {
           <h3 className="text-lg font-semibold mb-4">Hướng dẫn sử dụng</h3>
           <div className="space-y-2 text-sm text-muted-foreground">
             <p>1. Nhập hash của chứng chỉ vào ô trên</p>
-            <p>2. Hash thường bắt đầu bằng "0x" và có 64 ký tự</p>
-            <p>3. Nhấn "Xác minh chứng chỉ" để kiểm tra</p>
+            <p>2. Hash có 64 ký tự hex; nếu có tiền tố 0x sẽ tự bỏ</p>
+            <p>3. Nhấn Xác minh chứng chỉ để kiểm tra</p>
             <p>4. Kết quả sẽ hiển thị thông tin chi tiết về chứng chỉ</p>
           </div>
         </div>

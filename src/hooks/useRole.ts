@@ -56,6 +56,26 @@ export function useRole() {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
+  // Also listen for custom roleChanged events to force update within the same tab
+  useEffect(() => {
+    const handleRoleChanged = (e: Event) => {
+      const detail = (e as CustomEvent<UserRole>).detail;
+      if (detail) {
+        const newRole = detail as UserRole;
+        const userInfo = getCurrentUserInfo();
+        const permissions = ROLE_PERMISSIONS[newRole];
+        setRoleContext({
+          role: newRole,
+          permissions,
+          userInfo,
+        });
+      }
+    };
+
+    window.addEventListener('roleChanged', handleRoleChanged as EventListener);
+    return () => window.removeEventListener('roleChanged', handleRoleChanged as EventListener);
+  }, []);
+
   const switchRole = (newRole: UserRole) => {
     localStorage.setItem('userRole', newRole);
     const userInfo = getCurrentUserInfo();
