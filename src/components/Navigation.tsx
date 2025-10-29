@@ -22,9 +22,10 @@ export function Navigation({ className }: NavigationProps) {
   ];
 
   // Filter navigation based on current role
+  // Show empty array while loading to prevent flickering
   const navigation = roleContext 
     ? allNavigation.filter(item => item.roles.includes(roleContext.role))
-    : allNavigation;
+    : [];
 
   return (
     <nav className={cn('flex space-x-8', className)}>
