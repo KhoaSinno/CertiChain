@@ -1,7 +1,7 @@
 import { buildModule } from "@nomicfoundation/hardhat-ignition/modules";
 
 export default buildModule("CertiChainSCModule", (m) => {
-  const certiChain = m.contract("CertiChainSC");
+  const certiChain = m.contract("CertiChain");
 
   return { certiChain };
 });

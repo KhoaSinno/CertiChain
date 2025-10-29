@@ -2,6 +2,7 @@
 
 import { useRole } from '@/src/hooks/useRole';
 import { cn } from '@/src/lib/utils';
+import { Home, LayoutDashboard, PlusCircle, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -14,10 +15,10 @@ export function Navigation({ className }: NavigationProps) {
   const { roleContext } = useRole();
 
   const allNavigation = [
-    { name: 'Trang chủ', href: '/', description: 'Giới thiệu hệ thống', roles: ['issuer', 'holder', 'verifier'] },
-    { name: 'Dashboard', href: '/dashboard', description: 'Quản lý chứng chỉ', roles: ['issuer', 'holder', 'verifier'] },
-    { name: 'Tạo chứng chỉ', href: '/certificates/create', description: 'Tạo chứng chỉ mới', roles: ['issuer'] },
-    { name: 'Xác minh', href: '/verify', description: 'Xác minh chứng chỉ', roles: ['verifier'] },
+    { name: 'Trang chủ', href: '/', description: 'Giới thiệu hệ thống', roles: ['issuer', 'holder'], icon: Home },
+    { name: 'Dashboard', href: '/dashboard', description: 'Quản lý chứng chỉ', roles: ['issuer', 'holder'], icon: LayoutDashboard },
+    { name: 'Tạo chứng chỉ', href: '/certificates/create', description: 'Tạo chứng chỉ mới', roles: ['issuer'], icon: PlusCircle },
+    { name: 'Xác minh', href: '/verify', description: 'Xác minh chứng chỉ', roles: ['issuer', 'holder'], icon: ShieldCheck },
   ];
 
   // Filter navigation based on current role
@@ -29,13 +30,15 @@ export function Navigation({ className }: NavigationProps) {
     <nav className={cn('flex space-x-8', className)}>
       {navigation.map((item) => {
         const isActive = pathname === item.href;
+        const Icon = item.icon;
         return (
           <Link
             key={item.name}
             href={item.href}
-            className={`navbar-link ${isActive ? 'active' : ''}`}
+            className={`navbar-link ${isActive ? 'active' : ''} flex items-center gap-2`}
           >
-            {item.name}
+            {Icon && <Icon className="h-4 w-4" />}
+            <span>{item.name}</span>
           </Link>
         );
       })}

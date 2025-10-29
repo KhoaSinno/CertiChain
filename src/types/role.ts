@@ -1,4 +1,4 @@
-export type UserRole = 'issuer' | 'holder' | 'verifier';
+export type UserRole = 'issuer' | 'holder';
 
 export interface RolePermissions {
   canCreate: boolean;
@@ -22,13 +22,6 @@ export const ROLE_PERMISSIONS: Record<UserRole, RolePermissions> = {
     canVerify: false,
     canRegisterOnChain: false,
     canViewOwn: true,
-  },
-  verifier: {
-    canCreate: false,
-    canViewAll: false,
-    canVerify: true,
-    canRegisterOnChain: false,
-    canViewOwn: false,
   },
 };
 

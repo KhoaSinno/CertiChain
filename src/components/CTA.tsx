@@ -25,7 +25,7 @@ export function CTA() {
           <Button asChild size="lg" variant="outline" className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
             <Link href="/verify">
               <Shield className="mr-2 h-5 w-5" />
-              Xác minh chứng chỉ
+              Xác minh như khách (không cần tài khoản)
             </Link>
           </Button>
         </div>

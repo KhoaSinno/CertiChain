@@ -3,15 +3,17 @@
 import { Badge } from '@/src/components/ui/badge';
 import { Button } from '@/src/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card';
-import { mockCertificates } from '@/src/mockData/certificates';
+import { useCertificates } from '@/src/hooks/useCertificates';
 import { CheckCircle, Clock, FileText, Plus, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
 
 export function IssuerDashboard() {
-  const totalCertificates = mockCertificates.length;
-  const verifiedCount = mockCertificates.filter(c => c.status === 'verified').length;
-  const pendingCount = mockCertificates.filter(c => c.status === 'pending').length;
-  const verificationRate = Math.round((verifiedCount / totalCertificates) * 100);
+  const { certificates, allCertificates, isLoading, error } = useCertificates();
+
+  const totalCertificates = allCertificates.length;
+  const verifiedCount = allCertificates.filter(c => c.status === 'verified').length;
+  const pendingCount = allCertificates.filter(c => c.status === 'pending').length;
+  const verificationRate = totalCertificates > 0 ? Math.round((verifiedCount / totalCertificates) * 100) : 0;
 
   return (
     <div className="space-y-8">
@@ -95,32 +97,45 @@ export function IssuerDashboard() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {mockCertificates.slice(0, 5).map((certificate) => (
-              <div key={certificate.id} className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="space-y-1">
-                  <h3 className="font-semibold">{certificate.studentName}</h3>
-                  <p className="text-sm text-muted-foreground">{certificate.courseName}</p>
-                  <p className="text-xs text-muted-foreground">Mã SV: {certificate.studentId}</p>
+          {isLoading && (
+            <div className="text-sm text-muted-foreground">Đang tải danh sách chứng chỉ...</div>
+          )}
+          {error && (
+            <div className="text-sm text-red-600">Không thể tải chứng chỉ. Vui lòng thử lại.</div>
+          )}
+          {!isLoading && !error && (
+            <div className="space-y-4">
+              {certificates.slice(0, 5).map((certificate) => (
+                <div key={certificate.id} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="space-y-1">
+                    <h3 className="font-semibold">{certificate.studentName}</h3>
+                    <p className="text-sm text-muted-foreground">{certificate.courseName}</p>
+                    {certificate.studentId && (
+                      <p className="text-xs text-muted-foreground">Mã SV: {certificate.studentId}</p>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Badge variant={certificate.status === 'verified' ? 'default' : 'secondary'}>
+                      {certificate.status === 'verified' ? 'Đã xác thực' : 'Chờ xác thực'}
+                    </Badge>
+                    {certificate.status === 'pending' && (
+                      <Button size="sm" variant="outline">
+                        Đăng ký on-chain
+                      </Button>
+                    )}
+                    <Link href={`/certificates/${certificate.id}`}>
+                      <Button size="sm" variant="ghost">
+                        Xem chi tiết
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <Badge variant={certificate.status === 'verified' ? 'default' : 'secondary'}>
-                    {certificate.status === 'verified' ? 'Đã xác thực' : 'Chờ xác thực'}
-                  </Badge>
-                  {certificate.status === 'pending' && (
-                    <Button size="sm" variant="outline">
-                      Đăng ký on-chain
-                    </Button>
-                  )}
-                  <Link href={`/certificates/${certificate.id}`}>
-                    <Button size="sm" variant="ghost">
-                      Xem chi tiết
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+              {certificates.length === 0 && (
+                <div className="text-sm text-muted-foreground">Chưa có chứng chỉ nào.</div>
+              )}
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
