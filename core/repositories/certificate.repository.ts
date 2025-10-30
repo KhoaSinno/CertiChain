@@ -1,13 +1,30 @@
 // QUERY DATABASE FOR CERTIFICATES
 
 import { prisma } from "@/lib/db";
-import type { Prisma, Certificate } from "@prisma/client";
+import type { Prisma, Certificate } from "@/app/generated/prisma/client";
+
+const db = prisma;
 
 export class CertificateRepository {
   // -- CREATE CERTIFICATE --
   async create(data: Prisma.CertificateCreateInput): Promise<Certificate> {
-    return prisma.certificate.create({
+    return db.certificate.create({
       data,
+    });
+  }
+
+  // -- CREATE CERTIFICATE WITH USER ID --
+  async createWithUserId(
+    data: Omit<Prisma.CertificateCreateInput, "student"> & { userId: number }
+  ): Promise<Certificate> {
+    const { userId, ...certificateData } = data;
+    return db.certificate.create({
+      data: {
+        ...certificateData,
+        student: {
+          connect: { id: userId },
+        },
+      },
     });
   }
 
@@ -15,7 +32,7 @@ export class CertificateRepository {
   async findAll(): Promise<Certificate[]> {
     return prisma.certificate.findMany();
   }
-  
+
   // -- FIND CERTIFICATE BY ID --
   async findById(id: string): Promise<Certificate | null> {
     return prisma.certificate.findUnique({
@@ -31,7 +48,11 @@ export class CertificateRepository {
   }
 
   // -- UPDATE CERTIFICATE STATUS --
-  async updateStatus(id: string, status: string, blockchainTx: string): Promise<Certificate | null> {
+  async updateStatus(
+    id: string,
+    status: string,
+    blockchainTx: string
+  ): Promise<Certificate | null> {
     return prisma.certificate.update({
       where: { id: Number(id) },
       data: { status, blockchainTx },

@@ -7,6 +7,7 @@ type CertificateUploadInput = {
   studentName: string;
   studentId: string;
   courseName: string;
+  userId: number;
 };
 
 export const certSha256 = (buffer: Buffer) =>
@@ -21,22 +22,26 @@ export class CertificateService {
     studentName,
     studentId,
     courseName,
+    userId,
   }: CertificateUploadInput) {
     // Upload file to IPFS
     const fileHash = certSha256(Buffer.from(await file.arrayBuffer()));
-    const studentIdHash = certSha256(Buffer.from(studentId + studentName + courseName));
+    const studentIdHash = certSha256(
+      Buffer.from(studentId + studentName + courseName)
+    );
 
     const { cid } = await pinata.upload.public.file(file);
     const url = await pinata.gateways.public.convert(cid);
     const issuerAddress = process.env.ISSUER_WALLET!;
 
-    const cert = await this.certRepo.create({
+    const cert = await this.certRepo.createWithUserId({
       studentName,
       courseName,
       fileHash,
       ipfsCid: cid,
       studentIdHash,
       issuerAddress,
+      userId,
     });
 
     // return NextResponse.json(url, { status: 200 });

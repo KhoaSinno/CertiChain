@@ -1,4 +1,13 @@
-# **🎓 – Hệ thống Xác thực Chứng chỉ Giáo dục trên Blockchain (Blockchain-Backed Certificate Verification) \=\>** B**lockchain \+ IPFS 2025**
+# **🎓 CertiChain – Hệ thống Xác thực Chứng chỉ Giáo dục trên Blockchain**
+
+**Blockchain + IPFS 2025**
+
+---
+
+## 📚 Quick Links
+
+- 📖 [**Complete Auth Guide**](./docs/FE_AUTH_GUIDE.md) - Comprehensive documentation
+- 🧪 [**Testing Guide**](./TEST_AUTH.md) - How to test authentication
 
 ---
 
@@ -6,11 +15,11 @@
 
 Hệ thống được xây dựng nhằm **tự động hóa và phi tập trung hóa quy trình xác thực chứng chỉ giáo dục**, giúp:
 
-* Nhà trường có thể phát hành chứng chỉ kỹ thuật số **minh bạch, không thể giả mạo**.
+- Nhà trường có thể phát hành chứng chỉ kỹ thuật số **minh bạch, không thể giả mạo**.
 
-* Sinh viên có thể **chứng minh năng lực học tập** của mình chỉ bằng một đường link hoặc mã QR.
+- Sinh viên có thể **chứng minh năng lực học tập** của mình chỉ bằng một đường link hoặc mã QR.
 
-* Nhà tuyển dụng có thể **xác thực độc lập** chứng chỉ đó mà **không cần liên hệ trực tiếp với trường**.
+- Nhà tuyển dụng có thể **xác thực độc lập** chứng chỉ đó mà **không cần liên hệ trực tiếp với trường**.
 
 Toàn bộ quy trình vận hành dựa trên **Blockchain (Base chain)** và **IPFS (phi tập trung)**, đảm bảo tính **bất biến, minh bạch, và kiểm chứng công khai**.
 
@@ -38,21 +47,21 @@ Toàn bộ quy trình vận hành dựa trên **Blockchain (Base chain)** và **
 
 4. Hệ thống:
 
-   * Sinh `SHA-256 hash` từ file PDF.
+   - Sinh `SHA-256 hash` từ file PDF.
 
-   * Upload file lên **IPFS** → nhận **CID (Content Identifier)**.
+   - Upload file lên **IPFS** → nhận **CID (Content Identifier)**.
 
-   * Gọi smart contract `registerCertificate(hash, CID, studentIdHash)` trên **mạng Base Sepolia**.
+   - Gọi smart contract `registerCertificate(hash, CID, studentIdHash)` trên **mạng Base Sepolia**.
 
 5. Smart contract lưu trữ:
 
-   * Hash chứng chỉ (fileHash).
+   - Hash chứng chỉ (fileHash).
 
-   * CID (vị trí lưu trữ phi tập trung).
+   - CID (vị trí lưu trữ phi tập trung).
 
-   * Địa chỉ ví của nhà trường (issuer).
+   - Địa chỉ ví của nhà trường (issuer).
 
-   * Dấu thời gian phát hành (`block.timestamp`).
+   - Dấu thời gian phát hành (`block.timestamp`).
 
 💰 **Nhà trường chịu chi phí giao dịch (gas fee)** cho mỗi chứng chỉ được phát hành.
 
@@ -66,8 +75,8 @@ Link công khai:
 
  <https://verify.edu.vn/certificates/\><certificate\_id\>
 
-*
-  * Hoặc mã QR tương ứng.
+-
+  - Hoặc mã QR tương ứng.
 
 2. Sinh viên (guest account) nhận link/QR từ trường (qua email, LMS, hoặc dashboard).
 
@@ -85,9 +94,9 @@ Link công khai:
 
 3. API truy vấn smart contract:
 
-   * Kiểm tra xem hash có tồn tại trên blockchain hay không.
+   - Kiểm tra xem hash có tồn tại trên blockchain hay không.
 
-   * Lấy thông tin: `issuer`, `ipfsCID`, `issuedAt`, `studentIdHash`.
+   - Lấy thông tin: `issuer`, `ipfsCID`, `issuedAt`, `studentIdHash`.
 
 API trả về kết quả xác thực:
 
@@ -102,11 +111,11 @@ API trả về kết quả xác thực:
 4.
 5. Frontend hiển thị:
 
-   * ✅ “Certificate Verified — Issued by University of ABC”
+   - ✅ “Certificate Verified — Issued by University of ABC”
 
-   * Xem file chứng chỉ gốc tại: `https://ipfs.io/ipfs/QmXyz...`
+   - Xem file chứng chỉ gốc tại: `https://ipfs.io/ipfs/QmXyz...`
 
-   * Xem giao dịch on-chain trên BaseScan.
+   - Xem giao dịch on-chain trên BaseScan.
 
 ---
 
@@ -155,13 +164,13 @@ sequenceDiagram
 
 ## **⚙️ 7\. Điểm nổi bật trong phiên bản này**
 
-* **Không cần sinh viên có ví hoặc đăng ký blockchain.**
+- **Không cần sinh viên có ví hoặc đăng ký blockchain.**
 
-* **Nhà trường đóng vai trò duy nhất phát hành on-chain** → tránh giả mạo.
+- **Nhà trường đóng vai trò duy nhất phát hành on-chain** → tránh giả mạo.
 
-* **Nhà tuyển dụng có thể xác minh độc lập** mà không cần tin vào server của trường.
+- **Nhà tuyển dụng có thể xác minh độc lập** mà không cần tin vào server của trường.
 
-* **Sử dụng IPFS \+ Base Chain** → dữ liệu phân tán, bất biến, rẻ và minh bạch.
+- **Sử dụng IPFS \+ Base Chain** → dữ liệu phân tán, bất biến, rẻ và minh bạch.
 
 ---
 
