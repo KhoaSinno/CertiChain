@@ -24,7 +24,7 @@ export class CertificateService {
   }: CertificateUploadInput) {
     // Upload file to IPFS
     const fileHash = certSha256(Buffer.from(await file.arrayBuffer()));
-    const studentIdHash = certSha256(Buffer.from(studentId));
+    const studentIdHash = certSha256(Buffer.from(studentId + studentName + courseName));
 
     const { cid } = await pinata.upload.public.file(file);
     const url = await pinata.gateways.public.convert(cid);

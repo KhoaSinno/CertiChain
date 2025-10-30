@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     // TODO: Implement blockchain registration here
     const blockchainTx = await blockchainService.registerOnChain(
       certificate.fileHash,
-      certificate.ipfsCid,
+      // certificate.ipfsCid,
       certificate.studentIdHash
     );
 

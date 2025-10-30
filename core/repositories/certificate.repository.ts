@@ -15,6 +15,7 @@ export class CertificateRepository {
   async findAll(): Promise<Certificate[]> {
     return prisma.certificate.findMany();
   }
+  
   // -- FIND CERTIFICATE BY ID --
   async findById(id: string): Promise<Certificate | null> {
     return prisma.certificate.findUnique({
