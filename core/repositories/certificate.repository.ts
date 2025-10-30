@@ -30,10 +30,10 @@ export class CertificateRepository {
   }
 
   // -- UPDATE CERTIFICATE STATUS --
-  async updateStatus(id: string, status: string): Promise<Certificate | null> {
+  async updateStatus(id: string, status: string, blockchainTx: string): Promise<Certificate | null> {
     return prisma.certificate.update({
       where: { id: Number(id) },
-      data: { status },
+      data: { status, blockchainTx },
     });
   }
 }

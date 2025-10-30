@@ -21,9 +21,10 @@ export function Header() {
   ];
 
   // Filter navigation based on current role
+  // Show empty array while loading to prevent flickering
   const navigation = roleContext 
     ? allNavigation.filter(item => item.roles.includes(roleContext.role))
-    : allNavigation;
+    : [];
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">

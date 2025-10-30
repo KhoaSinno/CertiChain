@@ -3,18 +3,15 @@
 import { Badge } from '@/src/components/ui/badge';
 import { Button } from '@/src/components/ui/button';
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
 } from '@/src/components/ui/dropdown-menu';
 import { useRole } from '@/src/hooks/useRole';
 import { UserRole } from '@/src/types/role';
-import {
-    Building2,
-    User
-} from 'lucide-react';
+import { Building2, Cog, LogIn, LogOut, User } from 'lucide-react';
 
 const ROLE_CONFIG = {
   issuer: {
@@ -37,60 +34,60 @@ export function RoleSwitcher() {
   if (!roleContext) return null;
 
   const currentRole = ROLE_CONFIG[roleContext.role];
-  const Icon = currentRole.icon;
+  const CurrentIcon = currentRole.icon;
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-9 w-9">
-          <Icon className="h-4 w-4" />
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-10 w-10 rounded-md p-2"
+        >
+          <CurrentIcon className="h-5 w-5" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-64 dropdown-glass">
-        <div className="px-2 py-1.5">
-          <p className="text-sm font-medium">Chuyển đổi vai trò</p>
-          <p className="text-xs text-muted-foreground">
-            Chọn vai trò để xem giao diện phù hợp
-          </p>
+      <DropdownMenuContent align="end" sideOffset={8} className="w-64" avoidCollisions={true}>
+        {/* Account section */}
+        <div className="px-3 py-2">
+          <p className="text-sm font-semibold text-gradient-primary">Tài khoản</p>
         </div>
+        <DropdownMenuItem className="flex items-center gap-2 p-2.5 font-semibold text-foreground">
+          <LogIn className="h-4 w-4" />
+          Đăng nhập
+        </DropdownMenuItem>
+        <DropdownMenuItem className="flex items-center gap-2 p-2.5 font-semibold text-foreground">
+          <LogOut className="h-4 w-4" />
+          Đăng xuất
+        </DropdownMenuItem>
+        <DropdownMenuItem className="flex items-center gap-2 p-2.5 font-semibold text-foreground">
+          <Cog className="h-4 w-4" />
+          Cài đặt
+        </DropdownMenuItem>
+
         <DropdownMenuSeparator />
-        
+
+        {/* Role section */}
+        <div className="px-3 py-2">
+          <p className="text-sm font-semibold text-gradient-primary">Chuyển vai trò</p>
+        </div>
         {Object.entries(ROLE_CONFIG).map(([role, config]) => {
           const RoleIcon = config.icon;
           const isActive = role === roleContext.role;
-          
           return (
             <DropdownMenuItem
               key={role}
               onClick={() => switchRole(role as UserRole)}
-              className="flex items-center gap-3 p-3"
+              className="flex items-center gap-2 p-2.5 font-semibold text-foreground"
             >
-              <div className={`p-2 rounded-md ${config.color}`}>
-                <RoleIcon className="h-4 w-4" />
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <p className="font-medium">{config.label}</p>
-                  {isActive && (
-                    <Badge variant="secondary" className="text-xs">
-                      Hiện tại
-                    </Badge>
-                  )}
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  {config.description}
-                </p>
-              </div>
+              <RoleIcon className="h-4 w-4" />
+              <span className="flex-1">{config.label}</span>
+              {isActive && (
+                <Badge variant="secondary" className="text-xs">Hiện tại</Badge>
+              )}
             </DropdownMenuItem>
           );
         })}
-        
-        <DropdownMenuSeparator />
-        <div className="px-2 py-1.5">
-          <p className="text-xs text-muted-foreground">
-            💡 Tip: Chuyển đổi role để trải nghiệm các tính năng khác nhau
-          </p>
-        </div>
       </DropdownMenuContent>
     </DropdownMenu>
   );

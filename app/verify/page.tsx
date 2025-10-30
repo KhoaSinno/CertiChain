@@ -6,11 +6,12 @@ import { Input } from '@/src/components/ui/input';
 import { VerifyResult } from '@/src/components/VerifyResult';
 import { useVerifyCertificate } from '@/src/hooks/useVerify';
 import { Hash, Search } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function VerifyPage() {
   const [hash, setHash] = useState('');
   const [searchHash, setSearchHash] = useState('');
+  const resultRef = useRef<HTMLDivElement | null>(null);
   
   const { data: verifyResult, isLoading, error } = useVerifyCertificate(searchHash);
 
@@ -24,11 +25,20 @@ export default function VerifyPage() {
     }
   };
 
-  // Remove debug logs in production
+
+  // Smooth scroll to result section whenever a new search is triggered
+  useEffect(() => {
+    if (searchHash && resultRef.current) {
+      const el = resultRef.current;
+      const headerOffset = 64; // approx h-16 sticky header
+      const y = el.getBoundingClientRect().top + window.scrollY - headerOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  }, [searchHash]);
 
   return (
     <Layout>
-      <section className="relative overflow-hidden px-6 bg-background min-h-[calc(100vh-4rem)] flex items-start md:items-center py-8 md:py-0">
+      <section className="relative overflow-hidden px-6 bg-background min-h-screen flex items-start md:items-center py-16">
         {/* Decorative background shapes (same style direction as Hero) */}
         <div className="pointer-events-none absolute inset-0 -z-10">
           <div className="absolute inset-0 opacity-70 [background:radial-gradient(60%_60%_at_50%_30%,theme(colors.primary/10),transparent_70%)]" />
@@ -95,9 +105,10 @@ export default function VerifyPage() {
           </form>
         </div>
 
-        {/* Verification Result */}
+        {/* Verification Result Section (full viewport height) */}
         {searchHash && (
-          <div className="w-full">
+          <section ref={resultRef} id="verify-result" className="w-full min-h-screen flex items-start md:items-center scroll-mt-20 py-12">
+            <div className="w-full">
             {isLoading && (
               <div className="text-center py-12">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
@@ -122,7 +133,8 @@ export default function VerifyPage() {
                 <VerifyResult data={verifyResult} hash={searchHash} />
               </div>
             )}
-          </div>
+            </div>
+          </section>
         )}
 
         {/* Instructions */}
