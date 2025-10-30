@@ -12,6 +12,7 @@ const ROLE_DEFAULT_ROUTE: Record<string, string> = {
 function isAllowed(pathname: string, role: string) {
   const rules: Array<{ pattern: RegExp; roles: string[] }> = [
     { pattern: /^\/?$/, roles: ['issuer', 'holder'] },
+    { pattern: /^\/login(\/.*)?$/, roles: ['issuer', 'holder'] }, // Login page is public
     { pattern: /^\/dashboard(\/.*)?$/, roles: ['issuer', 'holder'] },
     { pattern: /^\/certificates\/create(\/.*)?$/, roles: ['issuer'] },
     // Verify is public for all roles/guests, so always allowed

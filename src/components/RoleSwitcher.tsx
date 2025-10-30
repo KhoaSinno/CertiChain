@@ -12,6 +12,7 @@ import {
 import { useRole } from '@/src/hooks/useRole';
 import { UserRole } from '@/src/types/role';
 import { Building2, Cog, LogIn, LogOut, User } from 'lucide-react';
+import Link from 'next/link';
 
 const ROLE_CONFIG = {
   issuer: {
@@ -52,9 +53,11 @@ export function RoleSwitcher() {
         <div className="px-3 py-2">
           <p className="text-sm font-semibold text-gradient-primary">Tài khoản</p>
         </div>
-        <DropdownMenuItem className="flex items-center gap-2 p-2.5 font-semibold text-foreground">
-          <LogIn className="h-4 w-4" />
-          Đăng nhập
+        <DropdownMenuItem asChild className="flex items-center gap-2 p-2.5 font-semibold text-foreground">
+          <Link href="/login">
+            <LogIn className="h-4 w-4" />
+            Đăng nhập
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem className="flex items-center gap-2 p-2.5 font-semibold text-foreground">
           <LogOut className="h-4 w-4" />
