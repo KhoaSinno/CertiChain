@@ -9,19 +9,23 @@ import { privateKeyToAccount } from "viem/accounts";
 import { sepolia } from "viem/chains";
 
 const RPC = process.env.SEPOLIA_RPC_URL;
-const PK = process.env.PRIVATE_KEY;
-const CONTRACT = "0xfA26AB254e35004e9Af3B4C86153049bcD4432dA";
+let PK = process.env.PRIVATE_KEY;
+const CONTRACT = "0xF82d44De7D594f8d47c38a2c7208Fac85554C0d8";
 
 if (!RPC) throw new Error("Missing SEPOLIA_RPC_URL in .env");
 if (!PK) throw new Error("Missing PRIVATE_KEY in .env");
 if (!CONTRACT) throw new Error("Missing CONTRACT_ADDRESS in .env");
 
-// ABI for CertiChain contract
+// Đảm bảo private key có prefix 0x
+if (!PK.startsWith("0x")) {
+  PK = `0x${PK}`;
+}
+
+// ABI for CertiChain contract (updated to match CertiChain.sol)
 const ABI = [
   {
     inputs: [
       { internalType: "bytes32", name: "_fileHash", type: "bytes32" },
-      { internalType: "string", name: "_ipfsCID", type: "string" },
       { internalType: "bytes32", name: "_studentIdHash", type: "bytes32" },
     ],
     name: "registerCertificate",
@@ -33,7 +37,6 @@ const ABI = [
     inputs: [{ internalType: "bytes32", name: "_fileHash", type: "bytes32" }],
     name: "verifyCertificate",
     outputs: [
-      { internalType: "string", name: "_ipfsCID", type: "string" },
       { internalType: "address", name: "_issuer", type: "address" },
       { internalType: "uint256", name: "_isssedAt", type: "uint256" },
       { internalType: "bytes32", name: "_studentIdHash", type: "bytes32" },
@@ -71,11 +74,22 @@ const ABI = [
     type: "function",
   },
   {
+    inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+    name: "certificates",
+    outputs: [
+      { internalType: "bytes32", name: "studentIdHash", type: "bytes32" },
+      { internalType: "address", name: "issuer", type: "address" },
+      { internalType: "uint256", name: "issuedAt", type: "uint256" },
+      { internalType: "bool", name: "isValid", type: "bool" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     anonymous: false,
     inputs: [
       { indexed: true, internalType: "bytes32", name: "fileHash", type: "bytes32" },
       { indexed: true, internalType: "address", name: "issuer", type: "address" },
-      { indexed: false, internalType: "string", name: "ipfsCID", type: "string" },
       { indexed: false, internalType: "bytes32", name: "studentidHash", type: "bytes32" },
       { indexed: false, internalType: "uint256", name: "issuedAt", type: "uint256" },
     ],
@@ -148,11 +162,12 @@ async function main() {
 
   // 4. Đăng ký chứng chỉ (registerCertificate)
   console.log("\n[4] Đăng ký chứng chỉ lên blockchain...");
+  console.log("Note: IPFS CID không lưu trên blockchain, chỉ lưu trong database");
   const txHash = await walletClient.writeContract({
     address: CONTRACT as `0x${string}`,
     abi: ABI,
     functionName: "registerCertificate",
-    args: [fileHash, MOCK_IPFS_CID, studentIdHash],
+    args: [fileHash, studentIdHash],
   });
   console.log("Tx hash:", txHash);
 
@@ -185,14 +200,13 @@ async function main() {
       args: [fileHash],
     });
     
-    console.log("\n=== Thông tin chứng chỉ ===");
-    console.log("IPFS CID:", cert[0]);
-    console.log("Issuer:", cert[1]);
-    console.log("Issued At:", new Date(Number(cert[2]) * 1000).toLocaleString());
-    console.log("Student ID Hash:", cert[3]);
-    console.log("Is Valid", cert[4]);
+    console.log("\n=== Thông tin chứng chỉ (từ blockchain) ===");
+    console.log("Issuer:", cert[0]);
+    console.log("Issued At:", new Date(Number(cert[1]) * 1000).toLocaleString());
+    console.log("Student ID Hash:", cert[2]);
+    console.log("Is Valid:", cert[3]);
     console.log("\n✅ Chứng chỉ hợp lệ!");
-    console.log(`Link IPFS gateway: https://ipfs.io/ipfs/${cert[0]}`);
+    console.log(`Note: IPFS CID (${MOCK_IPFS_CID}) được lưu trong database, không trên blockchain`);
   } catch (e) {
     console.error("❌ Lỗi khi xác minh:", e instanceof Error ? e.message : String(e));
   }
