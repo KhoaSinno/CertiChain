@@ -42,12 +42,12 @@ export function RoleSwitcher() {
         <Button
           variant="ghost"
           size="icon"
-          className="h-10 w-10 rounded-md p-2 text-foreground hover:bg-accent hover:text-accent-foreground focus-visible:ring-0 data-[state=open]:bg-accent data-[state=open]:text-accent-foreground"
+          className="h-10 w-10 rounded-md p-2"
         >
           <CurrentIcon className="h-5 w-5" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-64">
+      <DropdownMenuContent align="end" sideOffset={8} className="w-64" avoidCollisions={true}>
         {/* Account section */}
         <div className="px-3 py-2">
           <p className="text-sm font-semibold text-gradient-primary">Tài khoản</p>

@@ -46,8 +46,27 @@ export function Process() {
   ];
 
   return (
-    <section className="py-20 px-6">
-      <div className="container mx-auto px-6">
+    <section className="py-20 px-6 relative overflow-hidden">
+    {/* Background Pattern - Dense dots (no hexagon) */}
+      <div className="absolute inset-0 -z-10">
+      {/* Dense dot grid (two layers offset to increase density) */}
+      <div className="absolute inset-0 opacity-60 [background-image:radial-gradient(circle,theme(colors.primary/18)_1.5px,transparent_1.5px),radial-gradient(circle,theme(colors.primary/22)_1px,transparent_1px)] [background-size:24px_24px,24px_24px] [background-position:0_0,12px_12px]" />
+        
+        {/* Subtle wave gradients */}
+        <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-primary/6 to-transparent" />
+        <div className="absolute bottom-0 right-0 w-full h-24 bg-gradient-to-t from-blue-400/6 to-transparent" />
+        
+      {/* Floating elements */}
+      <div className="absolute top-1/3 left-1/4 w-6 h-6 bg-primary/30 rounded-full animate-pulse [animation-delay:0s]" />
+      <div className="absolute bottom-1/3 right-1/4 w-4 h-4 bg-blue-400/40 rounded-full animate-pulse [animation-delay:2s]" />
+      <div className="absolute top-1/4 right-1/3 w-3 h-3 bg-purple-400/40 rounded-full animate-pulse [animation-delay:1s]" />
+      <div className="absolute bottom-1/4 left-1/3 w-2.5 h-2.5 bg-fuchsia-400/40 rounded-full animate-pulse [animation-delay:2.5s]" />
+        
+        {/* Light overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-primary/3 to-blue-400/3" />
+      </div>
+      
+      <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             Quy trình hoạt động
@@ -69,24 +88,24 @@ export function Process() {
               const Icon = step.icon;
               return (
                 <div key={index} className="relative">
-                  <Card className="h-full">
+                  <Card className="h-full bg-background/60 backdrop-blur-sm border-border/50">
                     <CardContent className="p-6">
                       <div className="text-center mb-6">
                         <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
                           <Icon className="h-8 w-8 text-primary-foreground" />
                         </div>
-                        <Badge variant="outline" className="mb-2">
+                        <Badge variant="outline" className="mb-2 opacity-80">
                           Bước {step.step}
                         </Badge>
                         <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
-                        <p className="text-muted-foreground">{step.description}</p>
+                        <p className="text-muted-foreground opacity-90">{step.description}</p>
                       </div>
                       
                       <ul className="space-y-2">
                         {step.details.map((detail, detailIndex) => (
                           <li key={detailIndex} className="flex items-start text-sm">
                             <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                            <span>{detail}</span>
+                            <span className="opacity-90">{detail}</span>
                           </li>
                         ))}
                       </ul>
