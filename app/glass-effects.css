@@ -1,0 +1,106 @@
+/* Glass morphism effects */
+
+/* Base glass effect - neutral/white */
+.glass-effect {
+  background: oklch(1 0 0 / 0.8);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgb(206, 206, 206);
+}
+
+.dark .glass-effect {
+  background: oklch(0.12 0.01 106.423 / 0.8);
+  border: 1px solid rgb(51, 51, 51);
+}
+
+/* Glass effect with primary color tint */
+.glass-primary {
+  background: oklch(0.52 0.18 253 / 0.85);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid oklch(0.52 0.18 253 / 0.3);
+}
+
+.dark .glass-primary {
+  background: oklch(0.62 0.18 253 / 0.85);
+  border: 1px solid oklch(0.62 0.18 253 / 0.3);
+}
+
+/* Glass effect with blue tint */
+.glass-blue {
+  background: oklch(0.5 0.15 240 / 0.85);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid oklch(0.5 0.15 240 / 0.3);
+}
+
+.dark .glass-blue {
+  background: oklch(0.6 0.15 240 / 0.85);
+  border: 1px solid oklch(0.6 0.15 240 / 0.3);
+}
+
+/* Glass effect with purple tint */
+.glass-purple {
+  background: oklch(0.5 0.15 270 / 0.85);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid oklch(0.5 0.15 270 / 0.3);
+}
+
+.dark .glass-purple {
+  background: oklch(0.6 0.15 270 / 0.85);
+  border: 1px solid oklch(0.6 0.15 270 / 0.3);
+}
+
+/* Glass effect with cyan tint */
+.glass-cyan {
+  background: oklch(0.5 0.15 200 / 0.85);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid oklch(0.5 0.15 200 / 0.3);
+}
+
+.dark .glass-cyan {
+  background: oklch(0.6 0.15 200 / 0.85);
+  border: 1px solid oklch(0.6 0.15 200 / 0.3);
+}
+
+/* Glass effect with green tint */
+.glass-green {
+  background: oklch(0.5 0.15 142 / 0.85);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid oklch(0.5 0.15 142 / 0.3);
+}
+
+.dark .glass-green {
+  background: oklch(0.6 0.15 142 / 0.85);
+  border: 1px solid oklch(0.6 0.15 142 / 0.3);
+}
+
+/* Glass effect with orange tint */
+.glass-orange {
+  background: oklch(0.65 0.15 75 / 0.85);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid oklch(0.65 0.15 75 / 0.3);
+}
+
+.dark .glass-orange {
+  background: oklch(0.75 0.15 75 / 0.85);
+  border: 1px solid oklch(0.75 0.15 75 / 0.3);
+}
+
+/* Glass effect with pink tint */
+.glass-pink {
+  background: oklch(0.6 0.15 320 / 0.85);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid oklch(0.6 0.15 320 / 0.3);
+}
+
+.dark .glass-pink {
+  background: oklch(0.7 0.15 320 / 0.85);
+  border: 1px solid oklch(0.7 0.15 320 / 0.3);
+}
+

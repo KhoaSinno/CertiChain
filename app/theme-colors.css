@@ -1,0 +1,89 @@
+/* CSS Custom Properties - Theme Colors */
+
+:root {
+  /* === DIMENSION === */
+  --radius: 0.625rem;
+  
+  /* === LIGHT MODE - PRIMARY COLORS === */
+  --background: oklch(0.99 0.005 106.423);
+  --foreground: oklch(0.15 0.01 106.423);
+  --card: oklch(0.98 0.01 106.423);
+  --card-foreground: oklch(0.15 0.01 106.423);
+  --popover: oklch(0.98 0.01 106.423);
+  --popover-foreground: oklch(0.15 0.01 106.423);
+  
+  /* === LIGHT MODE - BRAND COLOR (FACEBOOK BLUE) === */
+  --primary: oklch(0.52 0.18 253);
+  --primary-foreground: oklch(0.98 0.005 106.423);
+  
+  /* === LIGHT MODE - SECONDARY COLORS === */
+  --secondary: oklch(0.95 0.01 106.423);
+  --secondary-foreground: oklch(0.25 0.01 106.423);
+  --accent: oklch(0.92 0.02 106.423);
+  --accent-foreground: oklch(0.25 0.01 106.423);
+  
+  /* === LIGHT MODE - STATE COLORS === */
+  --success: oklch(0.5 0.15 142);
+  --success-foreground: oklch(0.98 0.005 106.423);
+  --warning: oklch(0.65 0.15 75);
+  --warning-foreground: oklch(0.98 0.005 106.423);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.98 0.005 106.423);
+  
+  /* === LIGHT MODE - UI ELEMENTS === */
+  --muted: oklch(0.96 0.005 106.423);
+  --muted-foreground: oklch(0.5 0.01 106.423);
+  --border: oklch(0.92 0.005 106.423);
+  --input: oklch(0.92 0.005 106.423);
+  --ring: oklch(0.55 0.15 240);
+  
+  /* === LIGHT MODE - CHART COLORS === */
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+}
+
+.dark {
+  /* === DARK MODE - PRIMARY COLORS === */
+  --background: oklch(0.08 0.01 106.423);
+  --foreground: oklch(0.95 0.005 106.423);
+  --card: oklch(0.15 0.01 106.423);
+  --card-foreground: oklch(0.95 0.005 106.423);
+  --popover: oklch(0.15 0.01 106.423);
+  --popover-foreground: oklch(0.95 0.005 106.423);
+  
+  /* === DARK MODE - BRAND COLOR (FACEBOOK BLUE - BRIGHTER) === */
+  --primary: oklch(0.62 0.18 253);
+  --primary-foreground: oklch(0.08 0.01 106.423);
+  
+  /* === DARK MODE - SECONDARY COLORS === */
+  --secondary: oklch(0.18 0.01 106.423);
+  --secondary-foreground: oklch(0.95 0.005 106.423);
+  --accent: oklch(0.22 0.02 106.423);
+  --accent-foreground: oklch(0.95 0.005 106.423);
+  
+  /* === DARK MODE - STATE COLORS === */
+  --success: oklch(0.65 0.15 142);
+  --success-foreground: oklch(0.08 0.01 106.423);
+  --warning: oklch(0.75 0.15 75);
+  --warning-foreground: oklch(0.08 0.01 106.423);
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(0.95 0.005 106.423);
+  
+  /* === DARK MODE - UI ELEMENTS === */
+  --muted: oklch(0.15 0.01 106.423);
+  --muted-foreground: oklch(0.65 0.01 106.423);
+  --border: oklch(0.2 0.01 106.423);
+  --input: oklch(0.18 0.01 106.423);
+  --ring: oklch(0.65 0.15 240);
+  
+  /* === DARK MODE - CHART COLORS === */
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+}
+
