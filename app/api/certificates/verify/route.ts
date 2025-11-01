@@ -29,6 +29,7 @@ export async function GET(request: Request) {
       });
     }
 
+    // Find certificate on blockchain
     const certOnChain = await blockchainService.verifyOnChain(hash);
 
     // Validate certificate data layer 2: ONCHAIN

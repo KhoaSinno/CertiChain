@@ -73,6 +73,7 @@ export async function POST(request: Request) {
       courseName,
       userId: student.id, // Sử dụng userId của sinh viên được tạo certificate
     });
+    
     // return response
     return NextResponse.json(
       {
