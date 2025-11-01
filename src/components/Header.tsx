@@ -1,17 +1,18 @@
 'use client';
 
-import { RoleSwitcher } from '@/src/components/RoleSwitcher';
+import { UserMenu } from '@/src/components/UserMenu';
 import { Button } from '@/src/components/ui/button';
-import { useRole } from '@/src/hooks/useRole';
+import { useAuth } from '@/src/hooks/useAuth';
 import { GraduationCap, Home, LayoutDashboard, Menu, PlusCircle, ShieldCheck, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
 export function Header() {
-  const { roleContext } = useRole();
+  const { roleContext, isLoading } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const isLoginPage = pathname === '/login';
 
   const allNavigation = [
     { name: 'Trang chủ', href: '/', roles: ['issuer', 'holder'], icon: Home },
@@ -20,11 +21,18 @@ export function Header() {
     { name: 'Xác minh', href: '/verify', roles: ['issuer', 'holder'], icon: ShieldCheck },
   ];
 
-  // Filter navigation based on current role
-  // Show empty array while loading to prevent flickering
-  const navigation = roleContext 
-    ? allNavigation.filter(item => item.roles.includes(roleContext.role))
+  // Always show Home + Verify links (public), filter rest based on role
+  const homeLink = allNavigation[0];
+  const verifyLink = allNavigation[3]; // Xác minh - always public
+  const protectedNavigation = allNavigation.slice(1, 3); // Dashboard, Tạo chứng chỉ
+  
+  const filteredProtectedNavigation = roleContext 
+    ? protectedNavigation.filter(item => item.roles.includes(roleContext.role))
     : [];
+  
+  const navigation = roleContext 
+    ? [homeLink, ...filteredProtectedNavigation, verifyLink]
+    : [homeLink, verifyLink]; // Always show home + verify even when not authenticated
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -58,7 +66,7 @@ export function Header() {
               );
             })}
           </nav>
-          <RoleSwitcher />
+          <UserMenu />
           <Button
             variant="ghost"
             size="sm"

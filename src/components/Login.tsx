@@ -4,6 +4,8 @@ import { Button } from '@/src/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card';
 import { Input } from '@/src/components/ui/input';
 import { ArrowLeft, Lock, Mail, Shield, User } from 'lucide-react';
+import { signIn } from 'next-auth/react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
 export function Login() {
@@ -11,14 +13,45 @@ export function Login() {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
+  
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Static page - no actual login functionality
-    setError(isForgotPassword 
-      ? 'Trang tĩnh - Chức năng đặt lại mật khẩu sẽ được tích hợp sau' 
-      : 'Trang tĩnh - Chức năng đăng nhập sẽ được tích hợp sau');
+    
+    if (isForgotPassword) {
+      // TODO: Implement forgot password functionality
+      setError('Chức năng đặt lại mật khẩu sẽ được tích hợp sau');
+      return;
+    }
+
+    setIsLoading(true);
+    setError('');
+
+    try {
+      const result = await signIn('credentials', {
+        username,
+        password,
+        redirect: false, // Manual redirect
+      });
+
+      if (result?.error) {
+        setError('Tên đăng nhập hoặc mật khẩu không đúng');
+      } else if (result?.ok) {
+        // Login successful
+        router.push(callbackUrl);
+        router.refresh();
+      }
+    } catch (err) {
+      setError('Đã xảy ra lỗi. Vui lòng thử lại.');
+      console.error('Login error:', err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleForgotPassword = (e: React.MouseEvent) => {
@@ -125,10 +158,11 @@ export function Login() {
                 {/* Submit Button */}
                 <Button
                   type="submit"
-                  className="w-full h-12 text-base font-semibold glass-primary text-white hover:opacity-95 shadow-primary hover:shadow-lg-primary transition-all border-0"
+                  disabled={isLoading}
+                  className="w-full h-12 text-base font-semibold glass-primary text-white hover:opacity-95 shadow-primary hover:shadow-lg-primary transition-all border-0 disabled:opacity-50"
                   size="lg"
                 >
-                  Đăng nhập
+                  {isLoading ? 'Đang đăng nhập...' : 'Đăng nhập'}
                 </Button>
               </form>
             ) : (

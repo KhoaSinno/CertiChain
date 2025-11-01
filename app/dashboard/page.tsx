@@ -3,10 +3,10 @@
 import { Layout } from '@/src/components/Layout';
 import { HolderDashboard } from '@/src/components/dashboard/HolderDashboard';
 import { IssuerDashboard } from '@/src/components/dashboard/IssuerDashboard';
-import { useRole } from '@/src/hooks/useRole';
+import { useAuth } from '@/src/hooks/useAuth';
 
 export default function DashboardPage() {
-  const { roleContext, isLoading } = useRole();
+  const { roleContext, isLoading } = useAuth();
 
   if (isLoading) {
     return (
