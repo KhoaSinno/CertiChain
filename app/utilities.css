@@ -335,6 +335,41 @@
     width: 100%;
   }
 
+  /* UserMenu dropdown trigger indicator */
+  .usermenu-trigger {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .usermenu-trigger:hover {
+    color: var(--primary) !important;
+    transform: translateY(-1px) !important;
+    background-color: transparent !important;
+    scale: 1 !important;
+  }
+  
+  .usermenu-trigger::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary) 0%, oklch(0.48 0.19 258) 100%);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 1px;
+  }
+  
+  .usermenu-trigger:hover::after {
+    width: 100%;
+  }
+  
+  .usermenu-trigger[data-state="open"] {
+    color: var(--primary) !important;
+  }
+  .usermenu-trigger[data-state="open"]::after {
+    width: 100%;
+  }
+
   /* Enhanced navbar background */
   .navbar-background {
     background: oklch(0.99 0.005 106.423 / 0.95);

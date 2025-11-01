@@ -1,6 +1,6 @@
 'use client';
 
-import { useRole } from '@/src/hooks/useRole';
+import { useAuth } from '@/src/hooks/useAuth';
 import { cn } from '@/src/lib/utils';
 import { Home, LayoutDashboard, PlusCircle, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
@@ -12,7 +12,7 @@ interface NavigationProps {
 
 export function Navigation({ className }: NavigationProps) {
   const pathname = usePathname();
-  const { roleContext } = useRole();
+  const { roleContext } = useAuth();
 
   const allNavigation = [
     { name: 'Trang chủ', href: '/', description: 'Giới thiệu hệ thống', roles: ['issuer', 'holder'], icon: Home },
@@ -21,11 +21,18 @@ export function Navigation({ className }: NavigationProps) {
     { name: 'Xác minh', href: '/verify', description: 'Xác minh chứng chỉ', roles: ['issuer', 'holder'], icon: ShieldCheck },
   ];
 
-  // Filter navigation based on current role
-  // Show empty array while loading to prevent flickering
-  const navigation = roleContext 
-    ? allNavigation.filter(item => item.roles.includes(roleContext.role))
+  // Always show Home + Verify links (public), filter rest based on role
+  const homeLink = allNavigation[0];
+  const verifyLink = allNavigation[3]; // Xác minh - always public
+  const protectedNavigation = allNavigation.slice(1, 3); // Dashboard, Tạo chứng chỉ
+  
+  const filteredProtectedNavigation = roleContext 
+    ? protectedNavigation.filter(item => item.roles.includes(roleContext.role))
     : [];
+  
+  const navigation = roleContext 
+    ? [homeLink, ...filteredProtectedNavigation, verifyLink]
+    : [homeLink, verifyLink]; // Always show home + verify even when not authenticated
 
   return (
     <nav className={cn('flex space-x-8', className)}>

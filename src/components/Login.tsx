@@ -4,6 +4,8 @@ import { Button } from '@/src/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card';
 import { Input } from '@/src/components/ui/input';
 import { ArrowLeft, Lock, Mail, Shield, User } from 'lucide-react';
+import { signIn } from 'next-auth/react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
 export function Login() {
@@ -11,14 +13,47 @@ export function Login() {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
+  
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Static page - no actual login functionality
-    setError(isForgotPassword 
-      ? 'Trang tĩnh - Chức năng đặt lại mật khẩu sẽ được tích hợp sau' 
-      : 'Trang tĩnh - Chức năng đăng nhập sẽ được tích hợp sau');
+    
+    if (isForgotPassword) {
+      // TODO: Implement forgot password functionality
+      setError('Chức năng đặt lại mật khẩu sẽ được tích hợp sau');
+      return;
+    }
+
+    setIsLoading(true);
+    setError('');
+
+    try {
+      const result = await signIn('credentials', {
+        username,
+        password,
+        redirect: false, // Manual redirect
+      });
+
+      if (result?.error) {
+        setError('Tên đăng nhập hoặc mật khẩu không đúng');
+      } else if (result?.ok) {
+        // Login successful - show redirecting state
+        setIsRedirecting(true);
+        router.push(callbackUrl);
+        router.refresh();
+      }
+    } catch (err) {
+      setError('Đã xảy ra lỗi. Vui lòng thử lại.');
+      console.error('Login error:', err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleForgotPassword = (e: React.MouseEvent) => {
@@ -32,6 +67,33 @@ export function Login() {
     setEmail('');
     setError('');
   };
+
+  // Show loading overlay when redirecting after successful login
+  if (isRedirecting) {
+    return (
+      <section className="relative overflow-hidden px-6 bg-background flex items-center justify-center min-h-[calc(100vh-16rem)] py-20">
+        {/* Background decorative shapes - matching Hero design */}
+        <div className="pointer-events-none absolute inset-0 -z-10">
+          {/* Soft radial gradient overlay */}
+          <div className="absolute inset-0 opacity-70 [background:radial-gradient(60%_60%_at_50%_30%,theme(colors.primary/10),transparent_70%)]" />
+          {/* Top-left blurred circle */}
+          <div className="absolute -top-24 -left-24 w-[34rem] h-[34rem] rounded-full bg-gradient-to-br from-primary/20 via-blue-400/15 to-purple-400/10 blur-3xl" />
+          {/* Bottom-right blurred circle */}
+          <div className="absolute -bottom-24 -right-24 w-[36rem] h-[36rem] rounded-full bg-gradient-to-tr from-purple-500/20 via-fuchsia-400/15 to-primary/10 blur-3xl" />
+          {/* Subtle grid */}
+          <div className="absolute inset-0 opacity-[0.07] [background-image:linear-gradient(to_right,rgba(0,0,0,0.5)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.5)_1px,transparent_1px)] [background-size:40px_40px]" />
+        </div>
+        {/* Loading content */}
+        <div className="text-center px-6 max-w-md relative z-10">
+          <h2 className="text-4xl md:text-6xl font-bold text-gradient-primary mb-4">CertiChain</h2>
+          <div className="flex items-center justify-center mb-4">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          </div>
+          <p className="text-lg text-muted-foreground">Đang chuyển hướng...</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="relative overflow-hidden px-6 bg-background flex items-center justify-center min-h-[calc(100vh-16rem)] py-20">
@@ -125,10 +187,11 @@ export function Login() {
                 {/* Submit Button */}
                 <Button
                   type="submit"
-                  className="w-full h-12 text-base font-semibold glass-primary text-white hover:opacity-95 shadow-primary hover:shadow-lg-primary transition-all border-0"
+                  disabled={isLoading}
+                  className="w-full h-12 text-base font-semibold glass-primary text-white hover:opacity-95 shadow-primary hover:shadow-lg-primary transition-all border-0 disabled:opacity-50"
                   size="lg"
                 >
-                  Đăng nhập
+                  {isLoading ? 'Đang đăng nhập...' : 'Đăng nhập'}
                 </Button>
               </form>
             ) : (

@@ -1,6 +1,6 @@
 'use client';
 
-import { useRole } from '@/src/hooks/useRole';
+import { useAuth } from '@/src/hooks/useAuth';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
@@ -28,8 +28,12 @@ function isAllowed(pathname: string, role: string) {
   return true;
 }
 
+/**
+ * Role Route Guard - Navigates users based on their role
+ * Note: This is a CLIENT-SIDE guard for UX. Real protection is in middleware.ts
+ */
 export function RoleRouteGuard() {
-  const { roleContext, isLoading } = useRole();
+  const { roleContext, isLoading } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
 
