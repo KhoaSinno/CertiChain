@@ -80,24 +80,27 @@ export function CertificateForm({
   const isFormValid = selectedFile && formData.studentName && formData.studentId && formData.courseName;
 
   return (
-    <Card className={`w-full max-w-2xl mx-auto ${className}`}>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <FileText className="h-5 w-5 text-primary" />
+    <Card className={`w-full mx-auto bg-background/60 backdrop-blur-md border-border/50 shadow-lg-primary transition-all duration-500 ${className}`}>
+      <CardHeader className="pb-4 pt-4 px-4 md:px-6">
+        <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
+          <FileText className="h-4 w-4 md:h-5 md:w-5 text-primary" />
           Tạo chứng chỉ mới
         </CardTitle>
       </CardHeader>
       
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* File Upload */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium">File chứng chỉ (PDF)</label>
+      <CardContent className="p-4 md:p-6">
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Left Column - File Upload */}
+          <div className="space-y-3 h">
+            <label className="text-sm md:text-base font-semibold flex items-center gap-2">
+              <Upload className="h-4 w-4 text-primary" />
+              File chứng chỉ (PDF)
+            </label>
             <div
-              className={`relative border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
+              className={`relative border-2 border-dashed rounded-lg text-center h-90 transition-all duration-300 cursor-pointer group min-h-[250px] flex items-center justify-center ${
                 dragActive 
-                  ? 'border-primary bg-primary/5' 
-                  : 'border-muted-foreground/25 hover:border-primary/50'
+                  ? 'border-primary bg-primary/10 scale-[1.02]' 
+                  : 'border-muted-foreground/25 hover:border-primary/50 hover:bg-primary/5 hover:shadow-lg'
               }`}
               onDragEnter={handleDrag}
               onDragLeave={handleDrag}
@@ -114,21 +117,21 @@ export function CertificateForm({
               />
               
               {selectedFile ? (
-                <div className="space-y-2">
-                  <FileText className="h-8 w-8 text-primary mx-auto" />
-                  <p className="text-sm font-medium">{selectedFile.name}</p>
-                  <p className="text-xs text-muted-foreground">
+                <div className="space-y-3 animate-fade-in w-full">
+                  <FileText className="h-12 w-12 md:h-16 md:w-16 text-primary mx-auto group-hover:scale-110 transition-transform duration-300" />
+                  <p className="text-sm md:text-base font-semibold text-foreground break-words">{selectedFile.name}</p>
+                  <p className="text-xs md:text-sm text-muted-foreground">
                     {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
                   </p>
                 </div>
               ) : (
-                <div className="space-y-2">
-                  <Upload className="h-8 w-8 text-muted-foreground mx-auto" />
-                  <p className="text-sm">
+                <div className="space-y-3 w-full">
+                  <Upload className="h-12 w-12 md:h-16 md:w-16 text-muted-foreground mx-auto group-hover:text-primary group-hover:scale-110 transition-all duration-300" />
+                  <p className="text-sm md:text-base">
                     Kéo thả file PDF vào đây hoặc{' '}
-                    <span className="text-primary cursor-pointer">chọn file</span>
+                    <span className="text-primary font-semibold underline decoration-2 underline-offset-2">chọn file</span>
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs md:text-sm text-muted-foreground">
                     Chỉ chấp nhận file PDF, tối đa 10MB
                   </p>
                 </div>
@@ -136,11 +139,12 @@ export function CertificateForm({
             </div>
           </div>
 
-          {/* Student Information */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Right Column - Form Fields */}
+          <div className="space-y-4 md:space-y-6 flex flex-col">
+            {/* Student Name */}
             <div className="space-y-2">
-              <label className="text-sm font-medium flex items-center gap-2">
-                <User className="h-4 w-4" />
+              <label className="text-sm md:text-base font-semibold flex items-center gap-2">
+                <User className="h-4 w-4 text-primary" />
                 Tên sinh viên
               </label>
               <Input
@@ -148,13 +152,15 @@ export function CertificateForm({
                 value={formData.studentName}
                 onChange={handleInputChange}
                 placeholder="Nhập tên sinh viên"
+                className="text-sm md:text-base h-10 md:h-11"
                 required
               />
             </div>
             
+            {/* Student ID */}
             <div className="space-y-2">
-              <label className="text-sm font-medium flex items-center gap-2">
-                <Hash className="h-4 w-4" />
+              <label className="text-sm md:text-base font-semibold flex items-center gap-2">
+                <Hash className="h-4 w-4 text-primary" />
                 Mã sinh viên
               </label>
               <Input
@@ -162,47 +168,56 @@ export function CertificateForm({
                 value={formData.studentId}
                 onChange={handleInputChange}
                 placeholder="Nhập mã sinh viên"
+                className="text-sm md:text-base h-10 md:h-11"
                 required
               />
             </div>
-          </div>
 
-          {/* Course Information */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium flex items-center gap-2">
-              <BookOpen className="h-4 w-4" />
-              Tên khóa học
-            </label>
-            <Textarea
-              name="courseName"
-              value={formData.courseName}
-              onChange={handleInputChange}
-              placeholder="Nhập tên khóa học hoặc chương trình đào tạo"
-              rows={3}
-              required
-            />
-          </div>
-
-          {/* Progress Bar */}
-          {isLoading && (
+            {/* Course Information */}
             <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Đang xử lý...</span>
-                <span>{progress}%</span>
-              </div>
-              <Progress value={progress} className="w-full" />
+              <label className="text-sm md:text-base font-semibold flex items-center gap-2">
+                <BookOpen className="h-4 w-4 text-primary" />
+                Tên khóa học
+              </label>
+              <Textarea
+                name="courseName"
+                value={formData.courseName}
+                onChange={handleInputChange}
+                placeholder="Nhập tên khóa học hoặc chương trình đào tạo"
+                rows={3}
+                className="text-sm md:text-base resize-none"
+                required
+              />
             </div>
-          )}
 
-          {/* Submit Button */}
-          <Button
-            type="submit"
-            disabled={!isFormValid || isLoading}
-            className="w-full"
-            size="lg"
-          >
-            {isLoading ? 'Đang tạo chứng chỉ...' : 'Tạo chứng chỉ'}
-          </Button>
+            {/* Progress Bar */}
+            {isLoading && (
+              <div className="space-y-2 p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                <div className="flex justify-between text-sm md:text-base font-medium">
+                  <span className="text-foreground">Đang xử lý...</span>
+                  <span className="text-primary font-bold">{progress}%</span>
+                </div>
+                <Progress value={progress} className="w-full h-2" />
+              </div>
+            )}
+
+            {/* Submit Button - Styled with gradient blue glass effect */}
+            <Button
+              type="submit"
+              disabled={!isFormValid || isLoading}
+              className="w-full h-11 md:h-12 text-sm text-white md:text-base font-semibold btn-hover-lift bg-gradient-primary hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+              size="lg"
+            >
+              {isLoading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <div className="h-4 w-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                  Đang xử lý...
+                </span>
+              ) : (
+                'Tạo chứng chỉ'
+              )}
+            </Button>
+          </div>
         </form>
       </CardContent>
     </Card>
