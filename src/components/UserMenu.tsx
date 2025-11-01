@@ -14,6 +14,7 @@ import { Building2, Cog, LogIn, LogOut, User } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 const ROLE_CONFIG = {
   issuer: {
@@ -33,6 +34,16 @@ export function UserMenu() {
   const router = useRouter();
   const pathname = usePathname();
   const isLoginPage = pathname === '/login';
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  // Show minimal loading indicator when logging out
+  if (isLoggingOut) {
+    return (
+      <div className="h-10 w-10 rounded-md bg-muted animate-pulse flex items-center justify-center">
+        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary" />
+      </div>
+    );
+  }
 
   // Show login button if not authenticated, but NOT on login page
   if (!isAuthenticated && !isLoading && !isLoginPage) {
@@ -66,6 +77,9 @@ export function UserMenu() {
   const UserBadge = currentRole.label;
 
   const handleLogout = async () => {
+    setIsLoggingOut(true);
+    // Dispatch event to show global logout overlay
+    window.dispatchEvent(new CustomEvent('logout:start'));
     await signOut({ redirect: false });
     router.push('/');
     router.refresh();
@@ -77,15 +91,23 @@ export function UserMenu() {
         <Button
           variant="ghost"
           size="sm"
-          className="h-10 gap-2 px-3"
+          className="usermenu-trigger relative h-10 px-2 md:px-3 gap-2"
         >
-          <CurrentIcon className="h-5 w-5" />
-          <span className="hidden md:inline font-semibold">
-            {session.user.username}
-          </span>
-          <Badge variant="secondary" className="ml-1 hidden md:inline-flex">
-            {UserBadge}
-          </Badge>
+          {/* Icon - shown on all screens */}
+          <CurrentIcon className="h-5 w-5 flex-shrink-0" />
+          
+          {/* Desktop: Two-line layout with icon */}
+          <div className="hidden md:flex flex-col items-start gap-0 leading-tight">
+            <span className="text-[10px] text-muted-foreground uppercase tracking-wide">
+              {UserBadge}
+            </span>
+            <span className="font-semibold text-sm">
+              {session.user.username}
+            </span>
+          </div>
+          
+          {/* Mobile: Hide text, only show icon */}
+          <span className="md:hidden sr-only">{session.user.username}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" sideOffset={8} className="w-64" avoidCollisions={true}>

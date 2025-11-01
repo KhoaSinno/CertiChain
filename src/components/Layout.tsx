@@ -1,6 +1,7 @@
 'use client';
 
 import { Footer } from './Footer';
+import { GlobalLogoutOverlay } from './GlobalLogoutOverlay';
 import { Header } from './Header';
 import { RoleRouteGuard } from './RoleRouteGuard';
 
@@ -10,13 +11,16 @@ interface LayoutProps {
 
 export function Layout({ children }: LayoutProps) {
   return (
-    <div className="min-h-screen flex flex-col w-full m-0 p-0">
-      <Header />
-      <RoleRouteGuard />
-      <main className="flex-1 w-full m-0 p-0">
-        {children}
-      </main>
-      <Footer />
-    </div>
+    <>
+      <GlobalLogoutOverlay />
+      <div className="min-h-screen flex flex-col w-full m-0 p-0">
+        <Header />
+        <RoleRouteGuard />
+        <main className="flex-1 w-full m-0 p-0">
+          {children}
+        </main>
+        <Footer />
+      </div>
+    </>
   );
 }
