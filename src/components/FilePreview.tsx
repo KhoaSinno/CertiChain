@@ -2,8 +2,7 @@
 
 import { Button } from '@/src/components/ui/button';
 import { FileText, Image as ImageIcon, RotateCcw, X } from 'lucide-react';
-import Image from 'next/image';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 
 interface FilePreviewProps {
   file: File;
@@ -15,20 +14,40 @@ interface FilePreviewProps {
 export function FilePreview({ file, onRemove, onReplace, className = "" }: FilePreviewProps) {
   const isPDF = file.type === 'application/pdf';
   const isImage = file.type.startsWith('image/');
+  const [previewUrl, setPreviewUrl] = useState<string>('');
 
-  // Create preview URL for images using useMemo
-  const previewUrl = useMemo(() => {
+  console.log('FilePreview - File info:', {
+    name: file.name,
+    type: file.type,
+    size: file.size,
+    isPDF,
+    isImage
+  });
+
+  // Create preview URL for images using FileReader
+  useEffect(() => {
     if (isImage) {
-      return URL.createObjectURL(file);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const result = e.target?.result as string;
+        if (result) {
+          console.log('FileReader loaded data URL');
+          setPreviewUrl(result);
+        }
+      };
+      reader.onerror = () => {
+        console.error('FileReader error');
+      };
+      reader.readAsDataURL(file);
     }
-    return '';
   }, [file, isImage]);
 
-  // Cleanup blob URL on unmount
+  // No cleanup needed for data URLs
   useEffect(() => {
     return () => {
       if (previewUrl) {
-        URL.revokeObjectURL(previewUrl);
+        console.log('Cleaning up preview URL');
+        setPreviewUrl('');
       }
     };
   }, [previewUrl]);
@@ -64,19 +83,20 @@ export function FilePreview({ file, onRemove, onReplace, className = "" }: FileP
         {/* Preview Area */}
         <div className="min-h-[200px] flex items-center justify-center bg-muted/30 rounded-lg border border-border/30">
           {isImage && previewUrl ? (
-            <div className="relative w-full h-full min-h-[200px] flex items-center justify-center">
-              <Image
+            <div className="relative w-full h-full min-h-[200px] flex items-center justify-center p-4">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src={previewUrl}
                 alt="Preview"
                 className="max-w-full max-h-[300px] object-contain rounded-md shadow-sm"
-                width={300}
-                height={300}
-                style={{ maxWidth: '100%', height: 'auto' }}
+                referrerPolicy="no-referrer"
+                crossOrigin="anonymous"
                 onLoad={() => {
-                  // Image loaded successfully
+                  console.log('Image loaded successfully:', previewUrl);
                 }}
-                onError={() => {
-                  console.error('Failed to load image preview');
+                onError={(e) => {
+                  console.error('Failed to load image preview:', e);
+                  console.error('Preview URL:', previewUrl);
                 }}
               />
             </div>

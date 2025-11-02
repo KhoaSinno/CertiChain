@@ -43,6 +43,13 @@ export function CertificateForm({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      console.log('File selected:', {
+        name: file.name,
+        type: file.type,
+        size: file.size,
+        isImage: file.type.startsWith('image/'),
+        isPDF: file.type === 'application/pdf'
+      });
       setSelectedFile(file);
     }
   };
@@ -77,7 +84,16 @@ export function CertificateForm({
     
     const file = e.dataTransfer.files?.[0];
     if (file && (file.type === 'application/pdf' || file.type.startsWith('image/'))) {
+      console.log('File dropped:', {
+        name: file.name,
+        type: file.type,
+        size: file.size,
+        isImage: file.type.startsWith('image/'),
+        isPDF: file.type === 'application/pdf'
+      });
       setSelectedFile(file);
+    } else {
+      console.log('Invalid file type dropped:', file?.type);
     }
   };
 
