@@ -8,6 +8,7 @@ import { Textarea } from '@/src/components/ui/textarea';
 import { CreateCertificateRequest } from '@/src/types/certificate';
 import { BookOpen, FileText, Hash, Upload, User } from 'lucide-react';
 import { useRef, useState } from 'react';
+import { FilePreview } from './FilePreview';
 
 interface CertificateFormProps {
   onSubmit: (data: CreateCertificateRequest) => void;
@@ -46,6 +47,19 @@ export function CertificateForm({
     }
   };
 
+  const handleFileRemove = () => {
+    setSelectedFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const handleFileReplace = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -62,7 +76,7 @@ export function CertificateForm({
     setDragActive(false);
     
     const file = e.dataTransfer.files?.[0];
-    if (file && file.type === 'application/pdf') {
+    if (file && (file.type === 'application/pdf' || file.type.startsWith('image/'))) {
       setSelectedFile(file);
     }
   };
@@ -88,55 +102,55 @@ export function CertificateForm({
         </CardTitle>
       </CardHeader>
       
-      <CardContent className="p-4 md:p-6">
+      <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
         <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Left Column - File Upload */}
-          <div className="space-y-3 h">
+          <div className="space-y-3">
             <label className="text-sm md:text-base font-semibold flex items-center gap-2">
               <Upload className="h-4 w-4 text-primary" />
-              File chứng chỉ (PDF)
+              File chứng chỉ (PDF/Image)
             </label>
-            <div
-              className={`relative border-2 border-dashed rounded-lg text-center h-90 transition-all duration-300 cursor-pointer group min-h-[250px] flex items-center justify-center ${
-                dragActive 
-                  ? 'border-primary bg-primary/10 scale-[1.02]' 
-                  : 'border-muted-foreground/25 hover:border-primary/50 hover:bg-primary/5 hover:shadow-lg'
-              }`}
-              onDragEnter={handleDrag}
-              onDragLeave={handleDrag}
-              onDragOver={handleDrag}
-              onDrop={handleDrop}
-            >
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".pdf"
-                onChange={handleFileChange}
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                aria-label="Upload PDF file"
+            
+            {selectedFile ? (
+              <FilePreview
+                file={selectedFile}
+                onRemove={handleFileRemove}
+                onReplace={handleFileReplace}
+                className="min-h-[250px]"
               />
-              
-              {selectedFile ? (
-                <div className="space-y-3 animate-fade-in w-full">
-                  <FileText className="h-12 w-12 md:h-16 md:w-16 text-primary mx-auto group-hover:scale-110 transition-transform duration-300" />
-                  <p className="text-sm md:text-base font-semibold text-foreground break-words">{selectedFile.name}</p>
-                  <p className="text-xs md:text-sm text-muted-foreground">
-                    {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
-                  </p>
-                </div>
-              ) : (
+            ) : (
+              <div
+                className={`relative border-2 border-dashed rounded-lg text-center h-90 transition-all duration-300 cursor-pointer group min-h-[250px] flex items-center justify-center ${
+                  dragActive 
+                    ? 'border-primary bg-primary/10 scale-[1.02]' 
+                    : 'border-muted-foreground/25 hover:border-primary/50 hover:bg-primary/5 hover:shadow-lg'
+                }`}
+                onDragEnter={handleDrag}
+                onDragLeave={handleDrag}
+                onDragOver={handleDrag}
+                onDrop={handleDrop}
+              >
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".pdf,image/*"
+                  onChange={handleFileChange}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  aria-label="Upload PDF or image file"
+                />
+                
                 <div className="space-y-3 w-full">
                   <Upload className="h-12 w-12 md:h-16 md:w-16 text-muted-foreground mx-auto group-hover:text-primary group-hover:scale-110 transition-all duration-300" />
                   <p className="text-sm md:text-base">
-                    Kéo thả file PDF vào đây hoặc{' '}
+                    Kéo thả file vào đây hoặc{' '}
                     <span className="text-primary font-semibold underline decoration-2 underline-offset-2">chọn file</span>
                   </p>
                   <p className="text-xs md:text-sm text-muted-foreground">
-                    Chỉ chấp nhận file PDF, tối đa 10MB
+                    Chấp nhận PDF hoặc hình ảnh (JPG, PNG), tối đa 10MB
                   </p>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
 
           {/* Right Column - Form Fields */}
