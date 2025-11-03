@@ -11,6 +11,7 @@ import { useEffect, useRef, useState } from 'react';
 export default function VerifyPage() {
   const [hash, setHash] = useState('');
   const [searchHash, setSearchHash] = useState('');
+  const [hashType, setHashType] = useState<'auto' | 'file' | 'tx'>('auto');
   const resultRef = useRef<HTMLDivElement | null>(null);
   
   const { data: verifyResult, isLoading, error } = useVerifyCertificate(searchHash);
@@ -19,9 +20,23 @@ export default function VerifyPage() {
     e.preventDefault();
     const trimmed = hash.trim();
     if (trimmed) {
-      // Normalize: strip leading 0x if present to match DB format
-      const normalized = trimmed.startsWith('0x') ? trimmed.slice(2) : trimmed;
-      setSearchHash(normalized);
+      // Detect hash type automatically
+      // Transaction hash: 0x + 64 hex chars (66 total)
+      // File hash: 64 hex chars (with or without 0x)
+      if (trimmed.startsWith('0x') && trimmed.length === 66) {
+        setHashType('tx');
+        setSearchHash(trimmed); // Keep 0x for tx hash
+      } else if (trimmed.length === 64) {
+        setHashType('file');
+        setSearchHash(trimmed);
+      } else if (trimmed.startsWith('0x') && trimmed.length === 66) {
+        // Could be file hash with 0x prefix
+        setHashType('file');
+        setSearchHash(trimmed.slice(2));
+      } else {
+        alert('Invalid hash format. Please enter a valid file hash (64 chars) or transaction hash (0x + 64 chars)');
+        return;
+      }
     }
   };
 
@@ -70,7 +85,7 @@ export default function VerifyPage() {
           </div>
           <div className="mx-auto mt-3 h-1 w-28 rounded-full bg-gradient-to-r from-blue-600 via-blue-500 to-purple-500" />
           <p className="mt-4 text-base md:text-lg">
-            Nhập mã giao dịch (transaction hash) sau khi chứng chỉ được đăng ký on-chain
+            Nhập transaction hash hoặc file hash để xác minh chứng chỉ
           </p>
         </div>
 
@@ -83,7 +98,7 @@ export default function VerifyPage() {
                 <Hash className="h-4 w-4 text-muted-foreground" />
                 <Input
                   type="text"
-                  placeholder="Nhập mã giao dịch (transaction hash)"
+                  placeholder="Nhập transaction hash (0x...) hoặc file hash"
                   value={hash}
                   onChange={(e) => setHash(e.target.value)}
                   className="flex-1 border-0 bg-transparent focus-visible:ring-0 focus:outline-none h-12 px-2"
@@ -99,8 +114,13 @@ export default function VerifyPage() {
                 </Button>
               </div>
               <p className="mt-2 text-xs text-muted-foreground text-center">
-                Gợi ý: Sau khi chứng chỉ được đăng ký on-chain, dùng mã giao dịch (transaction hash) để xác minh.
+                💡 Transaction hash: 0x... (66 ký tự) | File hash: 64 ký tự hex
               </p>
+              {hashType !== 'auto' && (
+                <p className="mt-1 text-xs text-blue-600 text-center">
+                  🔍 Đang tìm kiếm theo: {hashType === 'tx' ? 'Transaction Hash' : 'File Hash'}
+                </p>
+              )}
             </div>
           </form>
         </div>
@@ -141,9 +161,10 @@ export default function VerifyPage() {
         <div className="max-w-2xl mx-auto mt-12 text-center">
           <h3 className="text-lg font-semibold mb-4">Hướng dẫn sử dụng</h3>
           <div className="space-y-2 text-sm text-muted-foreground">
-            <p>1. Dùng mã giao dịch sau khi đăng ký on-chain</p>
-            <p>2. Dán transaction hash vào ô tìm kiếm và nhấn Tìm</p>
-            <p>3. Kết quả sẽ hiển thị thông tin chi tiết và trạng thái</p>
+            <p>1. <strong>Transaction Hash</strong>: Dùng mã giao dịch (0x...) sau khi đăng ký on-chain</p>
+            <p>2. <strong>File Hash</strong>: Dùng mã hash của file PDF chứng chỉ</p>
+            <p>3. Dán hash vào ô tìm kiếm và nhấn Tìm</p>
+            <p>4. Kết quả sẽ hiển thị thông tin chi tiết và trạng thái xác thực</p>
           </div>
         </div>
         </div>

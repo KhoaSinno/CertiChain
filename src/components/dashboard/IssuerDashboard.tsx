@@ -16,10 +16,14 @@ export function IssuerDashboard() {
   const queryClient = useQueryClient();
   const [registeringIds, setRegisteringIds] = useState<Set<string>>(new Set());
 
-  const totalCertificates = allCertificates.length;
+  // Statistics: Note that verified/pending counts are based on current page only
+  // To get accurate counts across all pages, consider adding a separate /api/certificates/stats endpoint
+  const totalCertificates = pagination?.total || allCertificates.length;
   const verifiedCount = allCertificates.filter(c => c.status === 'verified').length;
   const pendingCount = allCertificates.filter(c => c.status === 'pending').length;
-  const verificationRate = totalCertificates > 0 ? Math.round((verifiedCount / totalCertificates) * 100) : 0;
+  const verificationRate = verifiedCount + pendingCount > 0 
+    ? Math.round((verifiedCount / (verifiedCount + pendingCount)) * 100) 
+    : 0;
 
   const handleRegisterOnChain = async (certificateId: string) => {
     try {

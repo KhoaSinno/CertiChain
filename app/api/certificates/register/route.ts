@@ -11,7 +11,10 @@ export async function POST(request: Request) {
 
     if (!certificateId) {
       return NextResponse.json(
-        { error: "Certificate ID is required" },
+        { 
+          error: "Certificate ID is required",
+          step: "validation"
+        },
         { status: 400 }
       );
     }
@@ -23,19 +26,22 @@ export async function POST(request: Request) {
     // Validate
     if (!certificate) {
       return NextResponse.json(
-        { error: "Certificate not found" },
+        { 
+          error: "Certificate not found",
+          step: "database_lookup",
+          certificateId
+        },
         { status: 404 }
       );
     }
 
-    // TODO: Implement blockchain registration here
+    // Register on blockchain
     const blockchainTx = await blockchainService.registerOnChain(
       certificate.fileHash,
-      // certificate.ipfsCid,
       certificate.studentIdHash
     );
 
-    // For now, just update the status to verified
+    // Update the status to verified
     await certificateRepo.updateStatus(certificateId.toString(), "verified", blockchainTx);
 
     return NextResponse.json({
@@ -43,11 +49,29 @@ export async function POST(request: Request) {
       message: "Certificate registered on blockchain",
       txHash: blockchainTx,
       certificateId: certificateId,
+      certificate: {
+        id: certificate.id,
+        fileHash: certificate.fileHash,
+        studentIdHash: certificate.studentIdHash,
+      }
     });
   } catch (error) {
-    console.error("Error registering certificate:", error);
+    // Return detailed error information
+    const errorMessage = error instanceof Error ? error.message : 'Internal server error';
+    const errorName = error instanceof Error ? error.name : 'UnknownError';
+    
     return NextResponse.json(
-      { error: "Internal server error" },
+      { 
+        error: errorMessage,
+        errorName,
+        errorType: typeof error,
+        step: "blockchain_registration",
+        details: error instanceof Error ? {
+          message: error.message,
+          name: error.name,
+          stack: error.stack?.split('\n').slice(0, 5).join('\n'), // First 5 lines of stack
+        } : String(error),
+      },
       { status: 500 }
     );
   }

@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useRegisterCertificate as useBlockchainRegisterCertificate } from './useBlockchain'; // Alias to avoid conflict
 
 export function useCertificates(initialPage = 1, initialLimit = 10) {
-  const { certificates, setCertificates, searchTerm, filterStatus } = useDataStore();
+  const { searchTerm, filterStatus } = useDataStore();
   const queryClient = useQueryClient();
   const [page, setPage] = useState(initialPage);
   const [limit, setLimit] = useState(initialLimit);
@@ -18,12 +18,11 @@ export function useCertificates(initialPage = 1, initialLimit = 10) {
     gcTime: 10 * 60 * 1000, // 10 minutes
   });
 
-  // Update Zustand store when data changes
-  if (data?.data && certificates.length === 0) {
-    setCertificates(data.data);
-  }
+  // Update Zustand store when data changes (only if not using pagination filtering)
+  // Since we're using server-side pagination, we rely on data?.data directly
+  const currentCertificates = data?.data || [];
 
-  const filteredCertificates = (data?.data || certificates).filter((cert) => {
+  const filteredCertificates = currentCertificates.filter((cert) => {
     const matchesSearch = cert.studentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           cert.courseName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           cert.studentId.toLowerCase().includes(searchTerm.toLowerCase());
@@ -36,7 +35,7 @@ export function useCertificates(initialPage = 1, initialLimit = 10) {
 
   return {
     certificates: filteredCertificates,
-    allCertificates: data?.data || certificates, // Return all for statistics
+    allCertificates: currentCertificates, // Return all for statistics
     pagination: data?.pagination,
     isLoading,
     error,
