@@ -1,21 +1,21 @@
 'use client';
 
+import { CertificateCard } from '@/src/components/CertificateCard';
 import { Badge } from '@/src/components/ui/badge';
 import { Button } from '@/src/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card';
-import { Pagination } from '@/src/components/ui/pagination';
-import { CertificateCard } from '@/src/components/CertificateCard';
-import { Filter, FileText } from 'lucide-react';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuLabel,
+    DropdownMenuRadioGroup,
+    DropdownMenuRadioItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
 } from '@/src/components/ui/dropdown-menu';
+import { Pagination } from '@/src/components/ui/pagination';
 import { Certificate } from '@/src/types/certificate';
+import { FileText, Filter } from 'lucide-react';
 import { useState } from 'react';
 
 interface CertificateListSectionProps {
@@ -63,13 +63,13 @@ export function CertificateListSection({
 
   return (
     <Card className="relative overflow-hidden border-primary/20 bg-gradient-to-br from-primary/5 via-background to-purple-500/5">
-      {/* Background effects - Tăng độ rực rỡ */}
+      {/* Background effects - Nhẹ nhàng */}
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute inset-0 opacity-70 [background:radial-gradient(60%_60%_at_50%_30%,theme(colors.primary/20),transparent_70%)]" />
-        <div className="absolute -top-12 -left-12 w-96 h-96 rounded-full bg-gradient-to-br from-primary/40 via-blue-400/30 to-purple-400/20 blur-3xl animate-pulse" />
-        <div className="absolute -bottom-12 -right-12 w-[28rem] h-[28rem] rounded-full bg-gradient-to-tr from-purple-500/40 via-fuchsia-400/30 to-primary/20 blur-3xl animate-pulse" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full bg-gradient-to-r from-cyan-400/20 to-blue-500/20 blur-3xl" />
-        <div className="absolute inset-0 opacity-[0.05] [background-image:linear-gradient(to_right,rgba(0,0,0,0.5)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.5)_1px,transparent_1px)] [background-size:40px_40px]" />
+        <div className="absolute inset-0 opacity-30 [background:radial-gradient(60%_60%_at_50%_30%,theme(colors.primary/10),transparent_70%)]" />
+        <div className="absolute -top-12 -left-12 w-96 h-96 rounded-full bg-gradient-to-br from-primary/15 via-blue-400/10 to-purple-400/8 blur-3xl" />
+        <div className="absolute -bottom-12 -right-12 w-[28rem] h-[28rem] rounded-full bg-gradient-to-tr from-purple-500/15 via-fuchsia-400/10 to-primary/8 blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full bg-gradient-to-r from-cyan-400/8 to-blue-500/8 blur-3xl" />
+        <div className="absolute inset-0 opacity-[0.08] [background-image:linear-gradient(to_right,rgba(0,0,0,0.5)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.5)_1px,transparent_1px)] [background-size:40px_40px]" />
       </div>
 
       <CardHeader className="relative">

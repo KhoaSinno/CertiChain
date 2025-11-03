@@ -63,8 +63,11 @@ export function IssuerDashboard() {
           </p>
         </div>
         <Link href="/certificates/create">
-          <Button className="flex items-center gap-2">
-            <Plus className="h-4 w-4" />
+          <Button 
+            size="lg"
+            className="flex items-center gap-2 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+          >
+            <Plus className="h-5 w-5" />
             Tạo chứng chỉ mới
           </Button>
         </Link>

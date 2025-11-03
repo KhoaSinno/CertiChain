@@ -9,8 +9,8 @@ export function formatDate(date: Date | string): string {
   const d = new Date(date);
   return d.toLocaleDateString('vi-VN', {
     year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
   });
 }
 
