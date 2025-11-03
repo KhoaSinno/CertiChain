@@ -24,14 +24,16 @@ export function useCertificates(initialPage = 1, initialLimit = 10) {
 
   const filteredCertificates = currentCertificates.filter((cert) => {
     const matchesSearch =
-      cert.studentName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      cert.student?.studentName
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
       cert.courseName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      cert.studentId.toLowerCase().includes(searchTerm.toLowerCase());
+      cert.student?.studentId?.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesStatus =
       filterStatus === "all" ||
-      (filterStatus === "verified" && cert.isVerified) ||
-      (filterStatus === "pending" && !cert.isVerified);
+      (filterStatus === "verified" && cert.status === "verified") ||
+      (filterStatus === "pending" && cert.status === "pending");
     return matchesSearch && matchesStatus;
   });
 

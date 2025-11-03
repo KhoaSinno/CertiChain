@@ -171,17 +171,17 @@ async function main() {
         issuedAt: new Date(),
         userId: users[6].id, // Gán cho user thứ 7
       },
-      {
-        courseName: "Vstep Certificate",
-        fileHash:
-          "146687b95c77271ad1e4922a3999bf857ba69b87a5ca5c37eb723dbda0350c04",
-        ipfsCid: "bafkreiaum2d3sxdxe4nndzesfi4ztp4fpotjxb5fzjodp23shw62animaq",
-        issuerAddress: "0xbEb7518cD8F8f096A23426AE3c8a9d778b4CBf00",
-        blockchainTx: "", // empty because not yet registered
-        status: "pending",
-        issuedAt: new Date(),
-        userId: users[7].id, // Gán cho user thứ 8
-      },
+      // {
+      //   courseName: "Vstep Certificate",
+      //   fileHash:
+      //     "146687b95c77271ad1e4922a3999bf857ba69b87a5ca5c37eb723dbda0350c04",
+      //   ipfsCid: "bafkreiaum2d3sxdxe4nndzesfi4ztp4fpotjxb5fzjodp23shw62animaq",
+      //   issuerAddress: "0xbEb7518cD8F8f096A23426AE3c8a9d778b4CBf00",
+      //   blockchainTx: "", // empty because not yet registered
+      //   status: "pending",
+      //   issuedAt: new Date(),
+      //   userId: users[7].id, // Gán cho user thứ 8
+      // },
       {
         courseName: "The best student of the year certificate",
         fileHash:
@@ -192,7 +192,7 @@ async function main() {
           "0x1021a9642622445cbea10af15f1c2350ab3edce3d966a8aa6af32d036b210045",
         status: "verified",
         issuedAt: new Date(),
-        userId: users[8].id, // Gán cho user thứ 9
+        userId: users[7].id, // Gán cho user thứ 9
       },
     ],
   });

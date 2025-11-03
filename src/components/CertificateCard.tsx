@@ -1,9 +1,20 @@
-import { Badge } from '@/src/components/ui/badge';
-import { Button } from '@/src/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/card';
-import { formatDate, truncateAddress } from '@/src/lib/utils';
-import { Certificate } from '@/src/types/certificate';
-import { Calendar, Copy, ExternalLink, GraduationCap, User } from 'lucide-react';
+import { Badge } from "@/src/components/ui/badge";
+import { Button } from "@/src/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/src/components/ui/card";
+import { formatDate, truncateAddress } from "@/src/lib/utils";
+import { Certificate } from "@/src/types/certificate";
+import {
+  Calendar,
+  Copy,
+  ExternalLink,
+  GraduationCap,
+  User,
+} from "lucide-react";
 
 interface CertificateCardProps {
   certificate: Certificate;
@@ -13,19 +24,34 @@ interface CertificateCardProps {
   isRegistering?: boolean;
 }
 
-export function CertificateCard({ 
-  certificate, 
-  onView, 
-  onRegister, 
+export function CertificateCard({
+  certificate,
+  onView,
+  onRegister,
   onCopy,
-  isRegistering = false
+  isRegistering = false,
 }: CertificateCardProps) {
-  const isPending = certificate.status === 'pending';
-  
+  const isPending = certificate.status === "pending";
+
   // Check transaction hash (support both transactionHash and blockchainTx field names)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const txHash = certificate.transactionHash || (certificate as any).blockchainTx;
+  const txHash =
+    certificate.transactionHash || (certificate as any).blockchainTx;
   const hasTransaction = !!txHash;
+
+  // ✅ Safety check: Return early if student data is missing
+  if (!certificate.student) {
+    return (
+      <Card className="w-full h-full flex flex-col items-center justify-center p-6 bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-900">
+        <p className="text-red-600 dark:text-red-400 font-medium">
+          ⚠️ Thiếu thông tin sinh viên
+        </p>
+        <p className="text-sm text-muted-foreground mt-1">
+          Certificate ID: {certificate.id}
+        </p>
+      </Card>
+    );
+  }
 
   return (
     <Card className="w-full h-full flex flex-col bg-white/70 dark:bg-white/10 backdrop-blur-xl border-2 border-white/60 dark:border-white/30 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] hover:border-white/80 dark:hover:border-white/40">
@@ -46,7 +72,10 @@ export function CertificateCard({
         {/* Hash Info & Date - Cùng hàng */}
         <div className="flex flex-wrap gap-2">
           {/* Date Badge */}
-          <Badge variant="secondary" className="gap-1.5 bg-indigo-600/90 text-white border-0">
+          <Badge
+            variant="secondary"
+            className="gap-1.5 bg-indigo-600/90 text-white border-0"
+          >
             <Calendar className="h-3 w-3" />
             {formatDate(certificate.issuedAt)}
           </Badge>
@@ -54,7 +83,10 @@ export function CertificateCard({
           {/* Hash Badge - Thay đổi theo trạng thái */}
           {hasTransaction ? (
             // On-chain: Hiển thị transaction hash màu xanh
-            <Badge variant="secondary" className="gap-1.5 font-mono text-xs bg-green-600/90 hover:bg-green-700/90 text-white border-0">
+            <Badge
+              variant="secondary"
+              className="gap-1.5 font-mono text-xs bg-green-600/90 hover:bg-green-700/90 text-white border-0"
+            >
               <span className="opacity-90">Hash:</span>
               {truncateAddress(txHash)}
               <Button
@@ -71,7 +103,10 @@ export function CertificateCard({
             </Badge>
           ) : (
             // Pending: Hiển thị "Chờ xác thực" màu cam
-            <Badge variant="secondary" className="gap-1.5 font-mono text-xs bg-orange-500/90 text-white border-0">
+            <Badge
+              variant="secondary"
+              className="gap-1.5 font-mono text-xs bg-orange-500/90 text-white border-0"
+            >
               <span className="opacity-90">Hash:</span>
               Chờ xác thực
             </Badge>
@@ -83,8 +118,12 @@ export function CertificateCard({
           <div className="flex items-center gap-2 text-sm">
             <User className="h-4 w-4 text-primary flex-shrink-0" />
             <div className="flex flex-col gap-0.5 min-w-0">
-              <span className="font-semibold text-foreground leading-tight">{certificate.studentName}</span>
-              <span className="text-xs text-muted-foreground leading-tight">{certificate.studentId}</span>
+              <span className="font-semibold text-foreground leading-tight">
+                {certificate.student.studentName || ""}
+              </span>
+              <span className="text-xs text-muted-foreground leading-tight">
+                {certificate.student.studentId || ""}
+              </span>
             </div>
           </div>
         </div>
@@ -100,7 +139,7 @@ export function CertificateCard({
             <ExternalLink className="h-4 w-4 mr-2" />
             Chi tiết
           </Button>
-          
+
           {hasTransaction ? (
             <div className="flex-1 flex items-center justify-center text-green-600 dark:text-green-400 rounded-md px-3 py-2 text-sm font-medium">
               ✓ Đã xác thực
@@ -113,7 +152,7 @@ export function CertificateCard({
               disabled={isRegistering}
               className="flex-1 text-purple-600 dark:text-purple-400 hover:bg-purple-600 hover:text-white dark:hover:bg-purple-600 dark:hover:text-white disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-purple-600"
             >
-              {isRegistering ? 'Đang đăng ký...' : 'Đăng ký on-chain'}
+              {isRegistering ? "Đang đăng ký..." : "Đăng ký on-chain"}
             </Button>
           ) : null}
         </div>

@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { Button } from '@/src/components/ui/button';
-import { Card, CardContent } from '@/src/components/ui/card';
-import { Input } from '@/src/components/ui/input';
-import { Pagination } from '@/src/components/ui/pagination';
-import { Certificate } from '@/src/types/certificate';
-import { GraduationCap, Search } from 'lucide-react';
-import { useState } from 'react';
-import { CertificateCard } from './CertificateCard';
+import { Button } from "@/src/components/ui/button";
+import { Card, CardContent } from "@/src/components/ui/card";
+import { Input } from "@/src/components/ui/input";
+import { Pagination } from "@/src/components/ui/pagination";
+import { Certificate } from "@/src/types/certificate";
+import { GraduationCap, Search } from "lucide-react";
+import { useState } from "react";
+import { CertificateCard } from "./CertificateCard";
 
 interface CertificateListProps {
   certificates: Certificate[];
@@ -24,30 +24,40 @@ interface CertificateListProps {
   onPageChange?: (page: number) => void;
 }
 
-export function CertificateList({ 
-  certificates, 
-  onView, 
-  onRegister, 
+export function CertificateList({
+  certificates,
+  onView,
+  onRegister,
   onCopy,
   className = "",
   pagination,
   onPageChange,
 }: CertificateListProps) {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState<'all' | 'verified' | 'pending'>('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState<
+    "all" | "verified" | "pending"
+  >("all");
 
-  const filteredCertificates = certificates.filter(cert => {
-    const matchesSearch = cert.studentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         cert.courseName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         cert.studentId.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesFilter = filterStatus === 'all' || cert.status === filterStatus;
-    
+  const filteredCertificates = certificates.filter((cert) => {
+    const matchesSearch =
+      cert.student?.studentName
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      cert.courseName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      cert.student?.studentId?.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesFilter =
+      filterStatus === "all" || cert.status === filterStatus;
+
     return matchesSearch && matchesFilter;
   });
 
-  const verifiedCount = certificates.filter(c => c.status === 'verified').length;
-  const pendingCount = certificates.filter(c => c.status === 'pending').length;
+  const verifiedCount = certificates.filter(
+    (c) => c.status === "verified"
+  ).length;
+  const pendingCount = certificates.filter(
+    (c) => c.status === "pending"
+  ).length;
 
   return (
     <div className={`w-full space-y-6 ${className}`}>
@@ -60,7 +70,8 @@ export function CertificateList({
           <div>
             <h2 className="text-xl font-semibold">Danh sách chứng chỉ</h2>
             <p className="text-sm text-muted-foreground">
-              {certificates.length} chứng chỉ • {verifiedCount} đã xác thực • {pendingCount} chờ xác thực
+              {certificates.length} chứng chỉ • {verifiedCount} đã xác thực •{" "}
+              {pendingCount} chờ xác thực
             </p>
           </div>
         </div>
@@ -77,26 +88,26 @@ export function CertificateList({
             className="pl-10"
           />
         </div>
-        
+
         <div className="flex gap-2">
           <Button
-            variant={filterStatus === 'all' ? 'default' : 'outline'}
+            variant={filterStatus === "all" ? "default" : "outline"}
             size="sm"
-            onClick={() => setFilterStatus('all')}
+            onClick={() => setFilterStatus("all")}
           >
             Tất cả ({certificates.length})
           </Button>
           <Button
-            variant={filterStatus === 'verified' ? 'default' : 'outline'}
+            variant={filterStatus === "verified" ? "default" : "outline"}
             size="sm"
-            onClick={() => setFilterStatus('verified')}
+            onClick={() => setFilterStatus("verified")}
           >
             Đã xác thực ({verifiedCount})
           </Button>
           <Button
-            variant={filterStatus === 'pending' ? 'default' : 'outline'}
+            variant={filterStatus === "pending" ? "default" : "outline"}
             size="sm"
-            onClick={() => setFilterStatus('pending')}
+            onClick={() => setFilterStatus("pending")}
           >
             Chờ xác thực ({pendingCount})
           </Button>
@@ -135,18 +146,17 @@ export function CertificateList({
               <GraduationCap className="h-8 w-8 text-muted-foreground" />
             </div>
             <h3 className="text-lg font-semibold mb-2">
-              {searchTerm || filterStatus !== 'all' ? 'Không tìm thấy chứng chỉ' : 'Chưa có chứng chỉ nào'}
+              {searchTerm || filterStatus !== "all"
+                ? "Không tìm thấy chứng chỉ"
+                : "Chưa có chứng chỉ nào"}
             </h3>
             <p className="text-muted-foreground mb-4">
-              {searchTerm || filterStatus !== 'all' 
-                ? 'Thử thay đổi từ khóa tìm kiếm hoặc bộ lọc'
-                : 'Bắt đầu tạo chứng chỉ đầu tiên của bạn'
-              }
+              {searchTerm || filterStatus !== "all"
+                ? "Thử thay đổi từ khóa tìm kiếm hoặc bộ lọc"
+                : "Bắt đầu tạo chứng chỉ đầu tiên của bạn"}
             </p>
-            {!searchTerm && filterStatus === 'all' && (
-              <Button>
-                Tạo chứng chỉ đầu tiên
-              </Button>
+            {!searchTerm && filterStatus === "all" && (
+              <Button>Tạo chứng chỉ đầu tiên</Button>
             )}
           </CardContent>
         </Card>

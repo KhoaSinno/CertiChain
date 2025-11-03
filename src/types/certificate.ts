@@ -1,15 +1,21 @@
 export interface Certificate {
-  id: string;
-  studentName: string;
-  studentId: string;
+  id: number; // ✅ Changed from string to number (matches Prisma Int)
   courseName: string;
   fileHash: string;
-  ipfsHash?: string;
-  issuer?: string;
+  ipfsCid: string; // ✅ Changed from ipfsHash to ipfsCid (matches schema)
+  issuerAddress: string; // ✅ Changed from issuer to issuerAddress
   issuedAt: Date;
-  status: 'verified' | 'pending';
-  transactionHash?: string;
-  isVerified: boolean;
+  status: "verified" | "pending" | "failed"; // ✅ Added "failed" status
+  blockchainTx?: string; // ✅ Added blockchainTx field
+  userId: number; // ✅ Added userId field
+  student: {
+    id: number; // ✅ Changed from string to number
+    studentId: string;
+    studentName: string;
+  };
+  // Legacy support for old field names
+  transactionHash?: string; // Alias for blockchainTx
+  isVerified?: boolean; // Computed from status
 }
 
 export interface CreateCertificateRequest {

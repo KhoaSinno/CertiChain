@@ -154,8 +154,8 @@ export function CertificateListSection({
                 key={certificate.id}
                 certificate={certificate}
                 onView={() => window.location.href = `/certificates/${certificate.id}`}
-                onRegister={onRegisterOnChain && certificate.status === 'pending' ? () => onRegisterOnChain(certificate.id) : undefined}
-                isRegistering={registeringIds.has(certificate.id)}
+                onRegister={onRegisterOnChain && certificate.status === 'pending' ? () => onRegisterOnChain(certificate.id.toString()) : undefined}
+                isRegistering={registeringIds.has(certificate.id.toString())}
                 onCopy={() => {
                   navigator.clipboard.writeText(certificate.fileHash);
                   alert('Đã copy hash!');

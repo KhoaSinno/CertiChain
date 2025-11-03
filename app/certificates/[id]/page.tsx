@@ -54,13 +54,13 @@ export default function CertificateDetailPage() {
           <div className="space-y-6">
             <div>
               <h1 className="text-3xl font-bold mb-2">{certificate.courseName}</h1>
-              <p className="text-xl text-muted-foreground">{certificate.studentName}</p>
+              <p className="text-xl text-muted-foreground">{certificate.student?.studentName || 'N/A'}</p>
             </div>
 
             <div className="space-y-4">
               <div>
                 <h3 className="font-semibold text-sm text-muted-foreground">Mã sinh viên</h3>
-                <p className="text-lg">{certificate.studentId}</p>
+                <p className="text-lg">{certificate.student?.studentId || 'N/A'}</p>
               </div>
 
               <div>
@@ -107,10 +107,10 @@ export default function CertificateDetailPage() {
                  Xem chứng chỉ
                </Button>
 
-              {certificate.ipfsHash && (
+              {certificate.ipfsCid && (
                 <Button
                   variant="outline"
-                  onClick={() => window.open(`https://ipfs.io/ipfs/${certificate.ipfsHash}`, '_blank')}
+                  onClick={() => window.open(`https://ipfs.io/ipfs/${certificate.ipfsCid}`, '_blank')}
                   className="transition-transform hover:scale-105 active:scale-95"
                 >
                   <ExternalLink className="h-4 w-4 mr-2" />
@@ -133,7 +133,7 @@ export default function CertificateDetailPage() {
                 variant="outline"
                 onClick={() => navigator.share({ 
                   title: 'Chứng chỉ CertiChain',
-                  text: `Chứng chỉ ${certificate.courseName} của ${certificate.studentName}`,
+                  text: `Chứng chỉ ${certificate.courseName} của ${certificate.student?.studentName || 'N/A'}`,
                   url: verificationUrl 
                 })}
                 className="transition-transform hover:scale-105 active:scale-95"

@@ -30,13 +30,16 @@ export class CertificateRepository {
 
   // -- FIND ALL CERTIFICATES --
   async findAll(): Promise<Certificate[]> {
-    return prisma.certificate.findMany();
+    return prisma.certificate.findMany({
+      include: { student: true },
+    });
   }
 
   // -- FIND CERTIFICATE BY ID --
   async findById(id: string): Promise<Certificate | null> {
     return prisma.certificate.findUnique({
       where: { id: Number(id) },
+      include: { student: true },
     });
   }
 
@@ -44,6 +47,7 @@ export class CertificateRepository {
   async findByHash(txtHash: string): Promise<Certificate | null> {
     return prisma.certificate.findFirst({
       where: { blockchainTx: txtHash },
+      include: { student: true },
     });
   }
 
@@ -56,6 +60,7 @@ export class CertificateRepository {
     return prisma.certificate.update({
       where: { id: Number(id) },
       data: { status, blockchainTx },
+      include: { student: true },
     });
   }
 

@@ -128,6 +128,7 @@ export async function GET(request: Request) {
           skip,
           take: limit,
           orderBy: { issuedAt: "desc" },
+          include: { student: true },
         }),
         prisma.certificate.count(),
       ]);
@@ -140,6 +141,7 @@ export async function GET(request: Request) {
           skip,
           take: limit,
           orderBy: { issuedAt: "desc" },
+          include: { student: true },
         }),
         prisma.certificate.count({
           where: { userId: currentUser.id },

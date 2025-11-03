@@ -1,3 +1,32 @@
+<!-- Luồng hệ thống xác thực chứng chỉ, nhà trường sẽ đảm bảo chứng chỉ cho sv, bất cứ người nào cũng có thể xác thực chứng chỉ đó là sự thật, sinh viên và nhà trường cần đăng nhập đẻ có thể quản lý chứng chỉ của bản thân:
+
+Admin upoad: họ tên, mssv, tên khóa học + file chứng chỉ(này lên ipfs) => Các thông tin còn lại thì lưu database và lúc này data:
+```
+Certificate {
+  id           	Tự tăng
+  studentName   Đã có
+  studentIdHash hash dựa trên: certSha256(Buffer.from(studentId + studentName + courseName));
+  courseName    Đã có
+  fileHash      Đã có hash từ nội dung file được đẩy lên
+  ipfsCid       cid từ pinata trả về
+  issuerAddress Đã cố định
+  blockchainTx  null, chưa có vì chưa thực hiện verify
+  status        pending khi mới tạo, verified và failed thì trả về khi thực hiện verify onchain
+  issuedAt      Đã có khi tạo thành công
+
+  // Relations
+  userId Đã query vào bảng User với trường studentId raw lúc chưa hash
+}
+``` 
+
+Lúc này student có tài khoản trước đó rồi, login vào thấy được các chứng chỉ của mình, lưu ý là chỉ xem.
+
+Sau đó admin có nhiệm vụ là verify, thực hiện đẩy lên blockchain với các thông tin: fileHash, studentIdHash (Là ở đây tôi có thể thay thế studentIdHash thành studentId được không). Nếu thành công sẽ cập nhật status = verified (failed nếu thất bại), blockchainTx = transactionHash 
+
+Người interviewer có thể verify hay bất cứ người nào mà không cần login. Người này chỉ cần nhập cái mã file hash dô (Có thể bằng link hoặc qr cho tiện). Lúc này quan trọng đó là nếu như smartContract xác thực thành công thì trả về ok (Có thể kèm data một số trường cần thiết) hoặc thất bại
+
+ -->
+
 # **🎓 CertiChain – Hệ thống Xác thực Chứng chỉ Giáo dục trên Blockchain**
 
 **Blockchain + IPFS 2025**
