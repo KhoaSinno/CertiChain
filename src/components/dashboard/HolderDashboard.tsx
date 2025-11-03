@@ -133,7 +133,7 @@ export function HolderDashboard() {
                           Mã sinh viên: {certificate.studentId || 'N/A'}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          Ngày cấp: {new Date(certificate.issuedAt).toLocaleDateString('vi-VN')}
+                          Ngày xác thực: {new Date(certificate.issuedAt).toLocaleDateString('vi-VN')}
                         </p>
                       </div>
                       <Badge variant={certificate.status === 'verified' ? 'default' : 'secondary'}>

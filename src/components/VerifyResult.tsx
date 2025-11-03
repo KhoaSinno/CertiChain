@@ -96,7 +96,7 @@ export function VerifyResult({ data, hash, className = "" }: VerifyResultProps) 
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4 text-muted-foreground flex-shrink-0" />
               <div>
-                <span className="text-xs text-muted-foreground">Ngày cấp</span>
+                <span className="text-xs text-muted-foreground">Ngày xác thực</span>
                 <p className="text-sm font-medium">{formatDate(certificate.issuedAt)}</p>
               </div>
             </div>

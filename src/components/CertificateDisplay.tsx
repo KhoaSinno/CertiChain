@@ -186,7 +186,7 @@ export function CertificateDisplay({ certificate, verificationUrl }: Certificate
                 {/* Right - Issue Date */}
                 <div className="flex-1 text-right">
                   <div className="border-b-2 border-blue-900 mb-2 w-32 ml-auto"></div>
-                  <p className="text-sm font-semibold text-gray-700">NGÀY CẤP</p>
+                  <p className="text-sm font-semibold text-gray-700">NGÀY XÁC THỰC</p>
                   <p className="text-xs text-gray-600 mt-1">
                     {certificate.issuedAt.toLocaleDateString('vi-VN')}
                   </p>
