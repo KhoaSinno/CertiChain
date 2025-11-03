@@ -1,4 +1,3 @@
-import { prisma } from "@/lib/db";
 import { UserRepository } from "../repositories/user.repository";
 
 const userRepository = new UserRepository();

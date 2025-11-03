@@ -36,8 +36,8 @@ export function useAuth() {
       role: userRole,
       permissions: ROLE_PERMISSIONS[userRole],
       userInfo: {
-        name: session.user.username || '',
-        organization: session.user.username || '',
+        name: session.user.studentId || '',
+        organization: session.user.studentId || '',
         walletAddress: undefined, // Add wallet if needed later
       },
     };

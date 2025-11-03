@@ -19,7 +19,7 @@ async function testUserLogin() {
     // 1. Tìm user trong database
     console.log("1️⃣ Searching for user:", testUsername);
     const user = await prisma.user.findFirst({
-      where: { username: testUsername },
+      where: { studentId: testUsername },
     });
 
     if (!user) {
@@ -29,7 +29,7 @@ async function testUserLogin() {
 
     console.log("✅ User found:");
     console.log("   - ID:", user.id);
-    console.log("   - Username:", user.username);
+    console.log("   - Username:", user.studentId);
     console.log("   - Role:", user.role);
     console.log("   - Password Hash:", user.passwordHash);
 
@@ -86,17 +86,21 @@ async function testUserLogin() {
       where: { userId: user.id },
       select: {
         id: true,
-        studentName: true,
         courseName: true,
         status: true,
         issuedAt: true,
       },
     });
 
+    // search user by certificate id
+    const userCerti = await prisma.user.findFirst({
+      where: { certificates: { some: { id: certificates[0].id } } },
+    });
+
     if (certificates.length > 0) {
       certificates.forEach((cert, index) => {
         console.log(
-          `   ${index + 1}. ${cert.studentName} - ${cert.courseName} (${
+          `   ${index + 1}. ${userCerti?.studentName} - ${cert.courseName} (${
             cert.status
           })`
         );
@@ -119,7 +123,7 @@ async function testAllUsers() {
     const users = await prisma.user.findMany({
       select: {
         id: true,
-        username: true,
+        studentId: true,
         role: true,
         passwordHash: true,
         _count: {
@@ -131,7 +135,7 @@ async function testAllUsers() {
     console.log(`Found ${users.length} users:\n`);
 
     for (const user of users) {
-      console.log(`🔹 ${user.username}`);
+      console.log(`🔹 ${user.studentId}`);
       console.log(`   ID: ${user.id}`);
       console.log(`   Role: ${user.role}`);
       console.log(`   Certificates: ${user._count.certificates}`);

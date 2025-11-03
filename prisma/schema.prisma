@@ -12,7 +12,7 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  // directUrl = env("DIRECT_URL")
 }
 
 enum Role {
@@ -22,19 +22,19 @@ enum Role {
 
 model User {
   id           Int      @id @default(autoincrement())
-  username     String
+  studentId    String   @unique
+  studentName  String
   passwordHash String
   role         Role     @default(STUDENT)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
+  // 1 student - n certificates
   certificates Certificate[]
 }
 
 model Certificate {
   id            Int      @id @default(autoincrement())
-  studentName   String
-  studentIdHash String
   courseName    String
   fileHash      String   @unique
   ipfsCid       String
@@ -45,6 +45,5 @@ model Certificate {
 
   // Relations
   userId Int
-
   student User @relation(fields: [userId], references: [id])
 }

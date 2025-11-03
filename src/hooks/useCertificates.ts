@@ -1,9 +1,9 @@
-import { api } from '@/src/lib/api';
-import { useDataStore } from '@/src/state/data';
-import { CreateCertificateRequest } from '@/src/types/certificate';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
-import { useRegisterCertificate as useBlockchainRegisterCertificate } from './useBlockchain'; // Alias to avoid conflict
+import { api } from "@/src/lib/api";
+import { useDataStore } from "@/src/state/data";
+import { CreateCertificateRequest } from "@/src/types/certificate";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { useRegisterCertificate as useBlockchainRegisterCertificate } from "./useBlockchain"; // Alias to avoid conflict
 
 export function useCertificates(initialPage = 1, initialLimit = 10) {
   const { searchTerm, filterStatus } = useDataStore();
@@ -12,7 +12,7 @@ export function useCertificates(initialPage = 1, initialLimit = 10) {
   const [limit, setLimit] = useState(initialLimit);
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['certificates', page, limit],
+    queryKey: ["certificates", page, limit],
     queryFn: () => api.certificates.getAll(page, limit),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
@@ -23,13 +23,15 @@ export function useCertificates(initialPage = 1, initialLimit = 10) {
   const currentCertificates = data?.data || [];
 
   const filteredCertificates = currentCertificates.filter((cert) => {
-    const matchesSearch = cert.studentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          cert.courseName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          cert.studentId.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch =
+      cert.studentName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      cert.courseName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      cert.studentId.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesStatus = filterStatus === 'all' ||
-                          (filterStatus === 'verified' && cert.isVerified) ||
-                          (filterStatus === 'pending' && !cert.isVerified);
+    const matchesStatus =
+      filterStatus === "all" ||
+      (filterStatus === "verified" && cert.isVerified) ||
+      (filterStatus === "pending" && !cert.isVerified);
     return matchesSearch && matchesStatus;
   });
 
@@ -43,13 +45,14 @@ export function useCertificates(initialPage = 1, initialLimit = 10) {
     limit,
     setPage,
     setLimit,
-    refetch: () => queryClient.invalidateQueries({ queryKey: ['certificates'] }),
+    refetch: () =>
+      queryClient.invalidateQueries({ queryKey: ["certificates"] }),
   };
 }
 
 export function useCertificate(id: string) {
   return useQuery({
-    queryKey: ['certificates', id],
+    queryKey: ["certificates", id],
     queryFn: () => api.certificates.getById(id),
     enabled: !!id,
   });
@@ -57,21 +60,23 @@ export function useCertificate(id: string) {
 
 export function useCreateCertificate() {
   const queryClient = useQueryClient();
-  const { /* addCertificate */ } = useDataStore();
+  const {
+    /* addCertificate */
+  } = useDataStore();
 
   return useMutation({
     mutationFn: (data: CreateCertificateRequest) => {
       // Convert CreateCertificateRequest to FormData
       const formData = new FormData();
-      formData.append('studentName', data.studentName);
-      formData.append('studentId', data.studentId);
-      formData.append('courseName', data.courseName);
-      formData.append('file', data.file);
+      formData.append("studentName", data.studentName);
+      formData.append("studentId", data.studentId);
+      formData.append("courseName", data.courseName);
+      formData.append("file", data.file);
       return api.certificates.create(formData);
     },
     onSuccess: () => {
       // Refresh certificates list; creation response is not a full Certificate entity
-      queryClient.invalidateQueries({ queryKey: ['certificates'] });
+      queryClient.invalidateQueries({ queryKey: ["certificates"] });
     },
   });
 }
@@ -79,10 +84,16 @@ export function useCreateCertificate() {
 export function useRegisterCertificate() {
   const queryClient = useQueryClient();
   const { updateCertificate } = useDataStore();
-  const { registerCertificate: blockchainRegister } = useBlockchainRegisterCertificate();
+  const { registerCertificate: blockchainRegister } =
+    useBlockchainRegisterCertificate();
 
   return useMutation({
-    mutationFn: async ({ certificateId, fileHash, ipfsHash, studentIdHash }: {
+    mutationFn: async ({
+      certificateId,
+      fileHash,
+      ipfsHash,
+      studentIdHash,
+    }: {
       certificateId: string;
       fileHash: `0x${string}`;
       ipfsHash: string;
@@ -94,7 +105,7 @@ export function useRegisterCertificate() {
       return api.certificates.register(certificateId);
     },
     onSuccess: (updatedCert) => {
-      queryClient.invalidateQueries({ queryKey: ['certificates'] });
+      queryClient.invalidateQueries({ queryKey: ["certificates"] });
       updateCertificate(updatedCert);
     },
   });

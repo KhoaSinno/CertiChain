@@ -41,9 +41,9 @@ export class CertificateRepository {
   }
 
   // -- FIND BY HASH --
-  async findByHash(fileHash: string): Promise<Certificate | null> {
-    return prisma.certificate.findUnique({
-      where: { fileHash },
+  async findByHash(txtHash: string): Promise<Certificate | null> {
+    return prisma.certificate.findFirst({
+      where: { blockchainTx: txtHash },
     });
   }
 
@@ -57,5 +57,14 @@ export class CertificateRepository {
       where: { id: Number(id) },
       data: { status, blockchainTx },
     });
+  }
+
+  // -- FIND USER BY CERTIFICATE ID --
+  async findUserByCertificateId(certificateId: string) {
+    return prisma.certificate
+      .findUnique({
+        where: { id: Number(certificateId) },
+      })
+      .student();
   }
 }

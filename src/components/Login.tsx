@@ -9,7 +9,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
 export function Login() {
-  const [username, setUsername] = useState('');
+  const [studentId, setStudentId] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
@@ -35,7 +35,7 @@ export function Login() {
 
     try {
       const result = await signIn('credentials', {
-        username,
+        studentId,
         password,
         redirect: false, // Manual redirect
       });
@@ -145,16 +145,16 @@ export function Login() {
               <form onSubmit={handleSubmit} className="space-y-4 animate-fade-in">
                 {/* Username Field */}
                 <div className="space-y-2 transition-all duration-500">
-                  <label htmlFor="username" className="text-sm font-semibold flex items-center gap-2">
+                  <label htmlFor="studentId" className="text-sm font-semibold flex items-center gap-2">
                     <User className="h-4 w-4 text-primary" />
                     Tên đăng nhập
                   </label>
                   <Input
-                    id="username"
+                    id="studentId"
                     type="text"
                     placeholder="Nhập tên đăng nhập của bạn"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    value={studentId}
+                    onChange={(e) => setStudentId(e.target.value)}
                     required
                     className="h-12"
                   />

@@ -18,10 +18,10 @@ export const authOptions: NextAuthOptions = {
     Credentials({
       // Define fields
       credentials: {
-        username: {
-          label: "Username",
+        studentId: {
+          label: "Student ID",
           type: "text",
-          placeholder: "your username",
+          placeholder: "your studentId",
         },
         password: {
           label: "Password",
@@ -34,17 +34,17 @@ export const authOptions: NextAuthOptions = {
         // Check valid credentials
         const parsedCredentials = z
           .object({
-            username: z.string().min(3),
+            studentId: z.string().min(3),
             password: z.string().min(6),
           })
           .safeParse(credentials);
 
         if (parsedCredentials.success) {
-          const { username, password } = parsedCredentials.data;
-          // Get user from username
+          const { studentId, password } = parsedCredentials.data;
+          // Get user from studentId
 
           const user = await db.user.findFirst({
-            where: { username: username },
+            where: { studentId: studentId },
           });
 
           if (!user) return null;
@@ -58,7 +58,7 @@ export const authOptions: NextAuthOptions = {
           if (isPasswordValid)
             return {
               id: user.id.toString(),
-              username: user.username,
+              studentId: user.studentId,
               role: user.role,
             };
         }

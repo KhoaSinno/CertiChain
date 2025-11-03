@@ -75,14 +75,16 @@ export class BlockchainService {
   async registerOnChain(
     fileHash: string,
     // ipfsHash: string,
-    studentIdHash: string
+    // studentIdHash: string
   ) {
     try {
       console.log("Đang gọi Smart Contract (viem): registerCertificate()...");
 
       // Normalize hashes to bytes32 format
       const normalizedFileHash = normalizeHashToBytes32(fileHash);
-      const normalizedStudentIdHash = normalizeHashToBytes32(studentIdHash);
+      
+      // TODO: FIX THIS LATER
+      const normalizedStudentIdHash = normalizeHashToBytes32(fileHash);
 
       const { request } = await publicClient.simulateContract({
         account: adminAccount,

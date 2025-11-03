@@ -1,31 +1,31 @@
-'use client';
+"use client";
 
-import { Badge } from '@/src/components/ui/badge';
-import { Button } from '@/src/components/ui/button';
+import { Badge } from "@/src/components/ui/badge";
+import { Button } from "@/src/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/src/components/ui/dropdown-menu';
-import { useAuth } from '@/src/hooks/useAuth';
-import { Building2, Cog, LogIn, LogOut, User } from 'lucide-react';
-import { signOut } from 'next-auth/react';
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { useState } from 'react';
+  DropdownMenuTrigger,
+} from "@/src/components/ui/dropdown-menu";
+import { useAuth } from "@/src/hooks/useAuth";
+import { Building2, Cog, LogIn, LogOut, User } from "lucide-react";
+import { signOut } from "next-auth/react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 
 const ROLE_CONFIG = {
   issuer: {
-    label: 'Nhà trường',
+    label: "Nhà trường",
     icon: Building2,
-    color: 'bg-blue-100 text-blue-800',
+    color: "bg-blue-100 text-blue-800",
   },
   holder: {
-    label: 'Sinh viên',
+    label: "Sinh viên",
     icon: User,
-    color: 'bg-green-100 text-green-800',
+    color: "bg-green-100 text-green-800",
   },
 };
 
@@ -33,7 +33,7 @@ export function UserMenu() {
   const { roleContext, session, isLoading, isAuthenticated } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
-  const isLoginPage = pathname === '/login';
+  const isLoginPage = pathname === "/login";
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   // Show minimal loading indicator when logging out
@@ -64,9 +64,7 @@ export function UserMenu() {
 
   // Show loading state
   if (isLoading) {
-    return (
-      <div className="h-10 w-10 rounded-md bg-muted animate-pulse" />
-    );
+    return <div className="h-10 w-10 rounded-md bg-muted animate-pulse" />;
   }
 
   // Show menu if authenticated
@@ -79,9 +77,9 @@ export function UserMenu() {
   const handleLogout = async () => {
     setIsLoggingOut(true);
     // Dispatch event to show global logout overlay
-    window.dispatchEvent(new CustomEvent('logout:start'));
+    window.dispatchEvent(new CustomEvent("logout:start"));
     await signOut({ redirect: false });
-    router.push('/');
+    router.push("/");
     router.refresh();
   };
 
@@ -95,32 +93,43 @@ export function UserMenu() {
         >
           {/* Icon - shown on all screens */}
           <CurrentIcon className="h-5 w-5 flex-shrink-0" />
-          
+
           {/* Desktop: Two-line layout with icon */}
           <div className="hidden md:flex flex-col items-start gap-0 leading-tight">
             <span className="text-[10px] text-muted-foreground uppercase tracking-wide">
               {UserBadge}
             </span>
             <span className="font-semibold text-sm">
-              {session.user.username}
+              {session.user.studentId}
             </span>
           </div>
-          
+
           {/* Mobile: Hide text, only show icon */}
-          <span className="md:hidden sr-only">{session.user.username}</span>
+          <span className="md:hidden sr-only">{session.user.studentId}</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" sideOffset={8} className="w-64" avoidCollisions={true}>
+      <DropdownMenuContent
+        align="end"
+        sideOffset={8}
+        className="w-64"
+        avoidCollisions={true}
+      >
         {/* Account section */}
         <div className="px-3 py-2">
-          <p className="text-sm font-semibold text-gradient-primary">Tài khoản</p>
-          <p className="text-xs text-muted-foreground truncate">{session.user.username}</p>
+          <p className="text-sm font-semibold text-gradient-primary">
+            Tài khoản
+          </p>
+          <p className="text-xs text-muted-foreground truncate">
+            {session.user.studentId}
+          </p>
         </div>
         <DropdownMenuSeparator />
-        
+
         {/* Role info */}
         <div className="px-3 py-2">
-          <p className="text-sm font-semibold text-gradient-primary">Vai trò hiện tại</p>
+          <p className="text-sm font-semibold text-gradient-primary">
+            Vai trò hiện tại
+          </p>
           <div className="flex items-center gap-2 mt-1">
             <CurrentIcon className="h-4 w-4" />
             <span className="text-sm">{currentRole.label}</span>
@@ -130,16 +139,16 @@ export function UserMenu() {
           </div>
         </div>
         <DropdownMenuSeparator />
-        
+
         {/* Actions */}
         <DropdownMenuItem className="flex items-center gap-2 p-2.5 font-semibold text-foreground">
           <Cog className="h-4 w-4" />
           Cài đặt
         </DropdownMenuItem>
-        
+
         <DropdownMenuSeparator />
-        
-        <DropdownMenuItem 
+
+        <DropdownMenuItem
           onClick={handleLogout}
           className="flex items-center gap-2 p-2.5 font-semibold text-red-600 focus:text-red-600"
         >
@@ -150,4 +159,3 @@ export function UserMenu() {
     </DropdownMenu>
   );
 }
-

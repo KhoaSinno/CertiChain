@@ -19,27 +19,25 @@ export class CertificateService {
   // -- UPLOAD + IPFS FILE --
   async createCertificate({
     file,
-    studentName,
-    studentId,
+    // studentName,
+    // studentId,
     courseName,
     userId,
   }: CertificateUploadInput) {
     // Upload file to IPFS
     const fileHash = certSha256(Buffer.from(await file.arrayBuffer()));
-    const studentIdHash = certSha256(
-      Buffer.from(studentId + studentName + courseName)
-    );
+    // const studentIdHash = certSha256(
+    //   Buffer.from(studentId + studentName + courseName)
+    // );
 
     const { cid } = await pinata.upload.public.file(file);
     const url = await pinata.gateways.public.convert(cid);
     const issuerAddress = process.env.ISSUER_WALLET!;
 
     const cert = await this.certRepo.createWithUserId({
-      studentName,
       courseName,
       fileHash,
       ipfsCid: cid,
-      studentIdHash,
       issuerAddress,
       userId,
     });
@@ -47,5 +45,14 @@ export class CertificateService {
     // return NextResponse.json(url, { status: 200 });
 
     return { id: cert.id, fileHash, ipfsCid: cid, url, status: cert.status };
+  }
+
+  // -- GET USER BY CERTIFICATE ID --
+  async getUserByCertificateId(certificateId: string) {
+    const user = await this.certRepo.findUserByCertificateId(certificateId);
+    if (!user) {
+      throw new Error("User not found");
+    }
+    return user;
   }
 }

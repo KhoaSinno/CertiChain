@@ -16,7 +16,6 @@
         status: string;
         id: number;
         studentName: string;
-        studentIdHash: string;
         courseName: string;
         fileHash: string;
         ipfsCid: string;
@@ -28,7 +27,6 @@
         status: string;
         id: number;
         studentName: string;
-        studentIdHash: string;
         courseName: string;
         fileHash: string;
         ipfsCid: string;

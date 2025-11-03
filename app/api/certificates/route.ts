@@ -51,14 +51,14 @@ export async function POST(request: Request) {
       );
     }
 
-    // Tìm user theo studentId (username)
+    // Tìm user theo studentId
     const student = await prisma.user.findFirst({
-      where: { username: studentId },
+      where: { studentId: studentId },
     });
 
     if (!student) {
       return NextResponse.json(
-        { error: `Không tìm thấy sinh viên với username: ${studentId}` },
+        { error: `Không tìm thấy sinh viên với student ID: ${studentId}` },
         { status: 404 }
       );
     }
@@ -71,7 +71,7 @@ export async function POST(request: Request) {
       courseName,
       userId: student.id, // Sử dụng userId của sinh viên được tạo certificate
     });
-    
+
     // return response
     return NextResponse.json(
       {
@@ -114,8 +114,8 @@ export async function GET(request: Request) {
 
     // Get pagination params from URL
     const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '10');
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "10");
     const skip = (page - 1) * limit;
 
     let certificates;
