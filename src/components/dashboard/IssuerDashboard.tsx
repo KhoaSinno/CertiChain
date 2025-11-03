@@ -1,23 +1,21 @@
 'use client';
 
-import { Badge } from '@/src/components/ui/badge';
 import { Button } from '@/src/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card';
-import { Pagination } from '@/src/components/ui/pagination';
+import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/card';
 import { useCertificates } from '@/src/hooks/useCertificates';
 import { api } from '@/src/lib/api';
 import { useQueryClient } from '@tanstack/react-query';
-import { CheckCircle, Clock, FileText, Loader2, Plus, TrendingUp } from 'lucide-react';
+import { CheckCircle, Clock, FileText, Plus, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
+import { CertificateListSection } from './CertificateListSection';
 
 export function IssuerDashboard() {
-  const { certificates, allCertificates, pagination, isLoading, error, setPage } = useCertificates(1, 10);
+  const { certificates, allCertificates, pagination, isLoading, error, setPage, limit, setLimit } = useCertificates(1, 10);
   const queryClient = useQueryClient();
   const [registeringIds, setRegisteringIds] = useState<Set<string>>(new Set());
 
-  // Statistics: Note that verified/pending counts are based on current page only
-  // To get accurate counts across all pages, consider adding a separate /api/certificates/stats endpoint
+  // Statistics
   const totalCertificates = pagination?.total || allCertificates.length;
   const verifiedCount = allCertificates.filter(c => c.status === 'verified').length;
   const pendingCount = allCertificates.filter(c => c.status === 'pending').length;
@@ -128,79 +126,20 @@ export function IssuerDashboard() {
       </div>
 
       {/* Recent Certificates */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Danh sách chứng chỉ</CardTitle>
-          <CardDescription>
-            Danh sách các chứng chỉ đã tạo và trạng thái của chúng
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {isLoading && (
-            <div className="text-sm text-muted-foreground">Đang tải danh sách chứng chỉ...</div>
-          )}
-          {error && (
-            <div className="text-sm text-red-600">Không thể tải chứng chỉ. Vui lòng thử lại.</div>
-          )}
-          {!isLoading && !error && (
-            <>
-              <div className="space-y-4">
-                {certificates.map((certificate) => (
-                  <div key={certificate.id} className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="space-y-1">
-                      <h3 className="font-semibold">{certificate.studentName}</h3>
-                      <p className="text-sm text-muted-foreground">{certificate.courseName}</p>
-                      {certificate.studentId && (
-                        <p className="text-xs text-muted-foreground">Mã SV: {certificate.studentId}</p>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <Badge variant={certificate.status === 'verified' ? 'default' : 'secondary'}>
-                        {certificate.status === 'verified' ? 'Đã xác thực' : 'Chờ xác thực'}
-                      </Badge>
-                      {certificate.status === 'pending' && (
-                        <Button 
-                          size="sm" 
-                          variant="outline"
-                          onClick={() => handleRegisterOnChain(certificate.id)}
-                          disabled={registeringIds.has(certificate.id)}
-                        >
-                          {registeringIds.has(certificate.id) ? (
-                            <>
-                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                              Đang đăng ký...
-                            </>
-                          ) : (
-                            'Đăng ký on-chain'
-                          )}
-                        </Button>
-                      )}
-                      <Link href={`/certificates/${certificate.id}`}>
-                        <Button size="sm" variant="ghost">
-                          Xem chi tiết
-                        </Button>
-                      </Link>
-                    </div>
-                  </div>
-                ))}
-                {certificates.length === 0 && (
-                  <div className="text-sm text-muted-foreground">Chưa có chứng chỉ nào.</div>
-                )}
-              </div>
-              
-              {/* Pagination */}
-              {pagination && pagination.totalPages > 1 && (
-                <Pagination
-                  currentPage={pagination.page}
-                  totalPages={pagination.totalPages}
-                  onPageChange={setPage}
-                  className="mt-6"
-                />
-              )}
-            </>
-          )}
-        </CardContent>
-      </Card>
+      <CertificateListSection
+        certificates={certificates}
+        pagination={pagination}
+        isLoading={isLoading}
+        error={error}
+        onPageChange={setPage}
+        limit={limit}
+        setLimit={setLimit}
+        onRegisterOnChain={handleRegisterOnChain}
+        registeringIds={registeringIds}
+        title="Danh sách chứng chỉ"
+        description="Danh sách các chứng chỉ đã tạo và trạng thái của chúng"
+        emptyMessage="Không có chứng chỉ nào"
+      />
     </div>
   );
 }
