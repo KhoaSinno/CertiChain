@@ -8,7 +8,7 @@ const blockchainService = new BlockchainService();
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const hash = searchParams.get("hash"); // file hash
+    const hash = searchParams.get("hash"); // can be fileHash or blockchainTx
 
     if (!hash) {
       return NextResponse.json(
@@ -17,8 +17,13 @@ export async function GET(request: Request) {
       );
     }
 
-    // Find certificate by hash
-    const certificate = await certificateRepo.findByHash(hash);
+    // Try to find certificate by fileHash first, then by blockchainTx
+    let certificate = await certificateRepo.findByHash(hash);
+
+    if (!certificate) {
+      // If not found by fileHash, try blockchainTx
+      certificate = await certificateRepo.findByTxHash(hash);
+    }
 
     // Validate certificate data layer 1: DATABASE
     if (!certificate) {
@@ -29,19 +34,19 @@ export async function GET(request: Request) {
       });
     }
 
-    // Find certificate on blockchain
-    const certOnChain = await blockchainService.verifyOnChain(hash);
-    const user = await certificateRepo.findUserByCertificateId(
-      certificate.id.toString()
-    );
-    
-    if (!user) {
+    // ✅ Certificate already includes student from findByHash
+    if (!certificate.student) {
       return NextResponse.json({
         verified: false,
-        message: "User not found",
+        message: "Student information not found",
         hash: hash,
       });
     }
+
+    // Find certificate on blockchain using fileHash
+    const certOnChain = await blockchainService.verifyOnChain(
+      certificate.fileHash
+    );
 
     // Validate certificate data layer 2: ONCHAIN
     if (
@@ -60,7 +65,7 @@ export async function GET(request: Request) {
     return NextResponse.json({
       verified: certOnChain.isValid,
       certificate: {
-        studentName: user.studentName,
+        studentName: certificate.student.studentName,
         courseName: certificate.courseName,
         issuedAt: certOnChain.issuedAt, // onChain data
         status: certificate.status,
