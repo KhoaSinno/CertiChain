@@ -1,15 +1,13 @@
 'use client';
 
 import { Badge } from '@/src/components/ui/badge';
-import { Button } from '@/src/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card';
-import { Pagination } from '@/src/components/ui/pagination';
 import { useCertificates } from '@/src/hooks/useCertificates';
-import { Download, Eye, FileText, QrCode, Share2 } from 'lucide-react';
-import Link from 'next/link';
+import { FileText, Share2 } from 'lucide-react';
+import { CertificateListSection } from './CertificateListSection';
 
 export function HolderDashboard() {
-  const { certificates, pagination, isLoading, error, setPage } = useCertificates(1, 10);
+  const { certificates, pagination, isLoading, error, setPage, limit, setLimit } = useCertificates(1, 10);
   
   // Filter certificates for current user (in real app, this would be based on user context)
   const myCertificates = certificates || [];
@@ -104,82 +102,18 @@ export function HolderDashboard() {
       </div>
 
       {/* My Certificates */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Danh sách chứng chỉ</CardTitle>
-          <CardDescription>
-            Các chứng chỉ đã được cấp cho bạn
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {myCertificates.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
-              <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <p>Bạn chưa có chứng chỉ nào</p>
-              <p className="text-sm">Liên hệ nhà trường để được cấp chứng chỉ</p>
-            </div>
-          ) : (
-            <>
-              <div className="space-y-4">
-                {myCertificates.map((certificate) => (
-                  <div key={certificate.id} className="p-6 border rounded-lg space-y-4">
-                    <div className="flex items-start justify-between">
-                      <div className="space-y-2">
-                        <h3 className="text-lg font-semibold">{certificate.courseName}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          Cấp cho: {certificate.studentName}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          Mã sinh viên: {certificate.studentId || 'N/A'}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          Ngày cấp: {new Date(certificate.issuedAt).toLocaleDateString('vi-VN')}
-                        </p>
-                      </div>
-                      <Badge variant={certificate.status === 'verified' ? 'default' : 'secondary'}>
-                        {certificate.status === 'verified' ? 'Đã xác thực' : 'Chờ xác thực'}
-                      </Badge>
-                    </div>
-
-                    <div className="flex gap-2">
-                      <Link href={`/certificates/${certificate.id}`}>
-                        <Button size="sm" className="flex items-center gap-2">
-                          <Eye className="h-4 w-4" />
-                          Xem chi tiết
-                        </Button>
-                      </Link>
-                      <Link href={`/certificates/view/${certificate.id}`}>
-                        <Button size="sm" variant="outline" className="flex items-center gap-2">
-                          <Download className="h-4 w-4" />
-                          Tải chứng chỉ
-                        </Button>
-                      </Link>
-                      <Button size="sm" variant="outline" className="flex items-center gap-2">
-                        <Share2 className="h-4 w-4" />
-                        Chia sẻ
-                      </Button>
-                      <Button size="sm" variant="outline" className="flex items-center gap-2">
-                        <QrCode className="h-4 w-4" />
-                        QR Code
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              
-              {/* Pagination */}
-              {pagination && pagination.totalPages > 1 && (
-                <Pagination
-                  currentPage={pagination.page}
-                  totalPages={pagination.totalPages}
-                  onPageChange={setPage}
-                  className="mt-6"
-                />
-              )}
-            </>
-          )}
-        </CardContent>
-      </Card>
+      <CertificateListSection
+        certificates={myCertificates}
+        pagination={pagination}
+        isLoading={isLoading}
+        error={error}
+        onPageChange={setPage}
+        limit={limit}
+        setLimit={setLimit}
+        title="Danh sách chứng chỉ"
+        description="Các chứng chỉ đã được cấp cho bạn"
+        emptyMessage="Liên hệ nhà trường để được cấp chứng chỉ"
+      />
 
       {/* Verification Guide */}
       <Card>

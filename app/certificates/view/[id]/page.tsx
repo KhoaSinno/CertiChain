@@ -32,8 +32,10 @@ export default function CertificateViewPage() {
     notFound();
   }
 
+  // Use transaction hash if available, otherwise fallback to file hash
+  const verificationHash = certificate.transactionHash || certificate.fileHash;
   const verificationUrl = typeof window !== 'undefined' 
-    ? `${window.location.origin}/verify?hash=${certificate.fileHash}` 
+    ? `${window.location.origin}/verify?hash=${verificationHash}` 
     : '';
 
   return (

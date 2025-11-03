@@ -32,7 +32,9 @@ export default function CertificateDetailPage() {
     notFound();
   }
 
-  const verificationUrl = `${window.location.origin}/verify?hash=${certificate.fileHash}`;
+  // Use transaction hash if available, fallback to file hash
+  const verificationHash = certificate.transactionHash || certificate.fileHash;
+  const verificationUrl = `${window.location.origin}/verify?hash=${verificationHash}`;
 
   return (
     <Layout>
@@ -62,7 +64,7 @@ export default function CertificateDetailPage() {
               </div>
 
               <div>
-                <h3 className="font-semibold text-sm text-muted-foreground">Ngày cấp</h3>
+                <h3 className="font-semibold text-sm text-muted-foreground">Ngày xác thực</h3>
                 <p className="text-lg">{certificate.issuedAt.toLocaleDateString('vi-VN')}</p>
               </div>
 
@@ -147,7 +149,10 @@ export default function CertificateDetailPage() {
             <QRDisplay
               value={verificationUrl}
               title="Mã QR xác minh"
-              description="Quét mã QR để xác minh chứng chỉ này"
+              description={certificate.transactionHash 
+                ? "Quét mã QR để xác minh chứng chỉ trên blockchain" 
+                : "Quét mã QR để xác minh chứng chỉ (chưa đăng ký on-chain)"
+              }
               size={250}
             />
           </div>
