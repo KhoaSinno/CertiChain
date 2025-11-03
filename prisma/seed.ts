@@ -2,6 +2,11 @@ import { prisma } from "../lib/db";
 import bcrypt from "bcrypt";
 
 async function main() {
+  console.log("Cleaning data ...");
+  await prisma.certificate.deleteMany();
+  await prisma.user.deleteMany();
+  
+  console.log("Seeding data ...");
   // Hash passwords với bcrypt
   const saltRounds = 10;
 
@@ -23,11 +28,48 @@ async function main() {
     }),
     prisma.user.create({
       data: {
+        username: "httt22008",
+        passwordHash: await bcrypt.hash("sinooStu", saltRounds),
+        role: "STUDENT",
+      },
+    }),
+    prisma.user.create({
+      data: {
+        username: "httt22004",
+        passwordHash: await bcrypt.hash("sinooStu", saltRounds),
+        role: "STUDENT",
+      },
+    }),
+    prisma.user.create({
+      data: {
+        username: "httt22005",
+        passwordHash: await bcrypt.hash("sinooStu", saltRounds),
+        role: "STUDENT",
+      },
+    }),
+    prisma.user.create({
+      data: {
+        username: "httt22006",
+        passwordHash: await bcrypt.hash("sinooStu", saltRounds),
+        role: "STUDENT",
+      },
+    }),
+    prisma.user.create({
+      data: {
+        username: "httt22007",
+        passwordHash: await bcrypt.hash("sinooStu", saltRounds),
+        role: "STUDENT",
+      },
+    }),
+    prisma.user.create({
+      data: {
         username: "httt22003",
         passwordHash: await bcrypt.hash("sinooStu", saltRounds),
         role: "STUDENT",
       },
     }),
+
+    // Tạo thêm user ADMIN
     prisma.user.create({
       data: {
         username: "admin",
@@ -96,7 +138,7 @@ async function main() {
         blockchainTx: "", // empty because not yet registered
         status: "pending",
         issuedAt: new Date(),
-        userId: users[0].id, // Gán cho user đầu tiên
+        userId: users[3].id, // Gán cho user thứ 4
       },
       {
         studentName: "Mariah Smith",
@@ -110,7 +152,7 @@ async function main() {
         blockchainTx: "", // empty because not yet registered
         status: "pending",
         issuedAt: new Date(),
-        userId: users[1].id, // Gán cho user thứ 2
+        userId: users[4].id, // Gán cho user thứ 5
       },
       {
         studentName: "Peter Baker",
@@ -125,7 +167,7 @@ async function main() {
         blockchainTx: "", // empty because not yet registered
         status: "pending",
         issuedAt: new Date(),
-        userId: users[2].id, // Gán cho user thứ 3
+        userId: users[5].id, // Gán cho user thứ 6
       },
       {
         studentName: "Willie Smith",
@@ -139,7 +181,7 @@ async function main() {
         blockchainTx: "", // empty because not yet registered
         status: "pending",
         issuedAt: new Date(),
-        userId: users[0].id, // Gán cho user đầu tiên
+        userId: users[6].id, // Gán cho user thứ 7
       },
       {
         studentName: "Nguyễn Hữu Hoàn Thiện",
@@ -153,7 +195,21 @@ async function main() {
         blockchainTx: "", // empty because not yet registered
         status: "pending",
         issuedAt: new Date(),
-        userId: users[1].id, // Gán cho user thứ 2
+        userId: users[7].id, // Gán cho user thứ 8
+      },
+      {
+        studentName: "Nguyễn Thành Đạt",
+        studentIdHash:
+          "6f76922abc670d00b692956e1b8221d30631c32767d25b36378bc870e8b66529", // httt22003
+        courseName: "Vstep Certificate",
+        fileHash:
+          "7e0dc866e2870a67a4d37189ec57a819467c63711202008b6f1b437255874368",
+        ipfsCid: "bafybeicfx2eq3ctrysypp2yahjk3utfb62in6i2flkibgyqf75dgfimk4m",
+        issuerAddress: "0xbEb7518cD8F8f096A23426AE3c8a9d778b4CBf00",
+        blockchainTx: "0x1021a9642622445cbea10af15f1c2350ab3edce3d966a8aa6af32d036b210045", 
+        status: "pending",
+        issuedAt: new Date(),
+        userId: users[8].id, // Gán cho user thứ 9
       },
     ],
   });
