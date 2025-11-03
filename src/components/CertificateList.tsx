@@ -3,6 +3,7 @@
 import { Button } from '@/src/components/ui/button';
 import { Card, CardContent } from '@/src/components/ui/card';
 import { Input } from '@/src/components/ui/input';
+import { Pagination } from '@/src/components/ui/pagination';
 import { Certificate } from '@/src/types/certificate';
 import { GraduationCap, Search } from 'lucide-react';
 import { useState } from 'react';
@@ -14,6 +15,13 @@ interface CertificateListProps {
   onRegister?: (certificate: Certificate) => void;
   onCopy?: (hash: string) => void;
   className?: string;
+  pagination?: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+  onPageChange?: (page: number) => void;
 }
 
 export function CertificateList({ 
@@ -21,7 +29,9 @@ export function CertificateList({
   onView, 
   onRegister, 
   onCopy,
-  className = "" 
+  className = "",
+  pagination,
+  onPageChange,
 }: CertificateListProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'verified' | 'pending'>('all');
@@ -95,17 +105,29 @@ export function CertificateList({
 
       {/* Certificate Grid */}
       {filteredCertificates.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredCertificates.map((certificate) => (
-            <CertificateCard
-              key={certificate.id}
-              certificate={certificate}
-              onView={() => onView?.(certificate)}
-              onRegister={() => onRegister?.(certificate)}
-              onCopy={() => onCopy?.(certificate.fileHash)}
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredCertificates.map((certificate) => (
+              <CertificateCard
+                key={certificate.id}
+                certificate={certificate}
+                onView={() => onView?.(certificate)}
+                onRegister={() => onRegister?.(certificate)}
+                onCopy={() => onCopy?.(certificate.fileHash)}
+              />
+            ))}
+          </div>
+
+          {/* Pagination */}
+          {pagination && pagination.totalPages > 1 && onPageChange && (
+            <Pagination
+              currentPage={pagination.page}
+              totalPages={pagination.totalPages}
+              onPageChange={onPageChange}
+              className="mt-6"
             />
-          ))}
-        </div>
+          )}
+        </>
       ) : (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12 text-center">

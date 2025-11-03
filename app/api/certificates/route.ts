@@ -1,11 +1,9 @@
 import { CertificateService } from "@/core/services/certificate.service";
-import { CertificateRepository } from "@/core/repositories/certificate.repository";
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 
 const certificateService = new CertificateService();
-const certificateRepo = new CertificateRepository();
 
 export async function POST(request: Request) {
   try {
@@ -92,7 +90,7 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     // Xác thực người dùng
     const session = await auth();
@@ -114,21 +112,50 @@ export async function GET() {
       );
     }
 
+    // Get pagination params from URL
+    const { searchParams } = new URL(request.url);
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '10');
+    const skip = (page - 1) * limit;
+
     let certificates;
+    let total;
 
     // ADMIN: Xem tất cả certificates
     if (currentUser.role === "ADMIN") {
-      certificates = await certificateRepo.findAll();
+      [certificates, total] = await Promise.all([
+        prisma.certificate.findMany({
+          skip,
+          take: limit,
+          orderBy: { issuedAt: "desc" },
+        }),
+        prisma.certificate.count(),
+      ]);
     }
     // STUDENT: Chỉ xem certificates của chính mình
     else {
-      certificates = await prisma.certificate.findMany({
-        where: { userId: currentUser.id },
-        orderBy: { issuedAt: "desc" },
-      });
+      [certificates, total] = await Promise.all([
+        prisma.certificate.findMany({
+          where: { userId: currentUser.id },
+          skip,
+          take: limit,
+          orderBy: { issuedAt: "desc" },
+        }),
+        prisma.certificate.count({
+          where: { userId: currentUser.id },
+        }),
+      ]);
     }
 
-    return NextResponse.json(certificates);
+    return NextResponse.json({
+      data: certificates,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    });
   } catch (error) {
     console.error("Error fetching certificates:", error);
     return NextResponse.json(
