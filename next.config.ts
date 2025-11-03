@@ -2,6 +2,10 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  
+  // Empty turbopack config to silence the warning
+  turbopack: {},
+  
   webpack: (config, { isServer }) => {
     // Fix for PDF.js in Node.js environment
     if (isServer) {

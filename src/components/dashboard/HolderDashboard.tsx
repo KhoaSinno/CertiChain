@@ -8,12 +8,12 @@ import { Download, Eye, FileText, QrCode, Share2 } from 'lucide-react';
 import Link from 'next/link';
 
 export function HolderDashboard() {
-  const { certificates, loading, error } = useCertificates();
+  const { certificates, isLoading, error } = useCertificates();
   
   // Filter certificates for current user (in real app, this would be based on user context)
   const myCertificates = certificates || [];
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="space-y-8">
         <div>
@@ -42,7 +42,7 @@ export function HolderDashboard() {
       <div className="space-y-8">
         <div>
           <h1 className="text-3xl font-bold mb-2">Chứng chỉ của tôi</h1>
-          <p className="text-destructive">Lỗi khi tải dữ liệu: {error}</p>
+          <p className="text-destructive">Lỗi khi tải dữ liệu: {error.message}</p>
         </div>
       </div>
     );

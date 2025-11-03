@@ -1,0 +1,15 @@
+# Ignore smart contract folder during Vercel deployment
+contracts/
+contracts/**
+**/hardhat.config.ts
+**/hardhat.config.js
+
+# Other files that shouldn't be deployed to Vercel
+*.log
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Optional: Ignore other development files
+README.md
