@@ -5,6 +5,7 @@ import {
   createPublicClient,
   createWalletClient,
   http,
+  Hex,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { sepolia } from "viem/chains";
@@ -48,6 +49,28 @@ const walletClient = createWalletClient({
   transport: http(RPC_URL),
 });
 
+/**
+ * Convert SHA-256 hash string to bytes32 format (0x + 64 hex chars)
+ */
+function normalizeHashToBytes32(hash: string): Hex {
+  // Remove any existing 0x prefix
+  const cleanHash = hash.replace(/^0x/, "");
+
+  // Ensure it's exactly 64 hex characters
+  if (cleanHash.length !== 64) {
+    throw new Error(
+      `Invalid hash length: expected 64 chars, got ${cleanHash.length}`
+    );
+  }
+
+  // Validate hex format
+  if (!/^[0-9a-fA-F]{64}$/.test(cleanHash)) {
+    throw new Error("Hash contains invalid hex characters");
+  }
+
+  return `0x${cleanHash}` as Hex;
+}
+
 export class BlockchainService {
   /**
    * Call the smart contract to register a certificate on the blockchain
@@ -60,12 +83,17 @@ export class BlockchainService {
   ) {
     try {
       console.log("Đang gọi Smart Contract (viem): registerCertificate()...");
+
+      // Normalize hashes to bytes32 format
+      const normalizedFileHash = normalizeHashToBytes32(fileHash);
+      const normalizedStudentIdHash = normalizeHashToBytes32(studentIdHash);
+
       const { request } = await publicClient.simulateContract({
         account: adminAccount,
         address: CONTRACT_ADDRESS as Address,
         abi: ABI,
         functionName: "registerCertificate",
-        args: [fileHash, studentIdHash],
+        args: [normalizedFileHash, normalizedStudentIdHash],
       });
       const txHash = await walletClient.writeContract(request);
 
@@ -87,11 +115,14 @@ export class BlockchainService {
 
   async verifyOnChain(fileHash: string): Promise<VerifyCertificateOutput> {
     try {
+      // Normalize hash before verification
+      const normalizedFileHash = normalizeHashToBytes32(fileHash);
+
       const certVerified = (await publicClient.readContract({
         address: CONTRACT_ADDRESS as Address,
         abi: ABI,
         functionName: "verifyCertificate",
-        args: [fileHash],
+        args: [normalizedFileHash],
       })) as [boolean, Address, bigint, string, boolean];
 
       return {
