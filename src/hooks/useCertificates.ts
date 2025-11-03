@@ -1,26 +1,29 @@
 import { api } from '@/src/lib/api';
 import { useDataStore } from '@/src/state/data';
-import { Certificate, CreateCertificateRequest } from '@/src/types/certificate';
+import { CreateCertificateRequest } from '@/src/types/certificate';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
 import { useRegisterCertificate as useBlockchainRegisterCertificate } from './useBlockchain'; // Alias to avoid conflict
 
-export function useCertificates() {
+export function useCertificates(initialPage = 1, initialLimit = 10) {
   const { certificates, setCertificates, searchTerm, filterStatus } = useDataStore();
   const queryClient = useQueryClient();
+  const [page, setPage] = useState(initialPage);
+  const [limit, setLimit] = useState(initialLimit);
 
-  const { data, isLoading, error } = useQuery<Certificate[]>({
-    queryKey: ['certificates'],
-    queryFn: api.certificates.getAll,
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['certificates', page, limit],
+    queryFn: () => api.certificates.getAll(page, limit),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
   });
 
   // Update Zustand store when data changes
-  if (data && certificates.length === 0) {
-    setCertificates(data);
+  if (data?.data && certificates.length === 0) {
+    setCertificates(data.data);
   }
 
-  const filteredCertificates = certificates.filter((cert) => {
+  const filteredCertificates = (data?.data || certificates).filter((cert) => {
     const matchesSearch = cert.studentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           cert.courseName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           cert.studentId.toLowerCase().includes(searchTerm.toLowerCase());
@@ -33,9 +36,14 @@ export function useCertificates() {
 
   return {
     certificates: filteredCertificates,
-    allCertificates: certificates, // Return all for statistics
+    allCertificates: data?.data || certificates, // Return all for statistics
+    pagination: data?.pagination,
     isLoading,
     error,
+    page,
+    limit,
+    setPage,
+    setLimit,
     refetch: () => queryClient.invalidateQueries({ queryKey: ['certificates'] }),
   };
 }
