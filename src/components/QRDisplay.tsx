@@ -100,9 +100,14 @@ export function QRDisplay({
               Copy
             </Button>
           </div>
-          <code className="text-xs text-muted-foreground break-all block">
+          <a 
+            href={value} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-xs text-primary hover:text-primary/80 underline underline-offset-2 break-all block transition-colors"
+          >
             {value}
-          </code>
+          </a>
         </div>
 
         {/* Actions */}

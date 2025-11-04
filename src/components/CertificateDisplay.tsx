@@ -329,9 +329,14 @@ export function CertificateDisplay({
               {verificationUrl && (
                 <div className="mt-6 text-center">
                   <p className="text-xs text-gray-600 mb-1">Xác minh tại:</p>
-                  <p className="text-xs font-mono text-blue-700 break-all">
+                  <a 
+                    href={verificationUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs font-mono text-blue-700 hover:text-blue-900 underline underline-offset-2 break-all inline-block transition-colors"
+                  >
                     {verificationUrl}
-                  </p>
+                  </a>
                 </div>
               )}
             </div>

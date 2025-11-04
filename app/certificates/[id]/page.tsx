@@ -164,9 +164,14 @@ export default function CertificateDetailPage() {
           <p className="text-sm text-muted-foreground mb-2">
             Chia sẻ link này để nhà tuyển dụng có thể xác minh chứng chỉ:
           </p>
-          <p className="text-sm font-mono bg-background p-2 rounded break-all">
+          <a 
+            href={verificationUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm font-mono bg-background p-2 rounded break-all block text-primary hover:text-primary/80 underline underline-offset-2 transition-colors"
+          >
             {verificationUrl}
-          </p>
+          </a>
         </div>
       </div>
     </Layout>

@@ -6,12 +6,29 @@ import { Input } from '@/src/components/ui/input';
 import { VerifyResult } from '@/src/components/VerifyResult';
 import { useVerifyCertificate } from '@/src/hooks/useVerify';
 import { Hash, Search } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 export default function VerifyPage() {
-  const [hash, setHash] = useState('');
-  const [searchHash, setSearchHash] = useState('');
-  const [hashType, setHashType] = useState<'auto' | 'file' | 'tx'>('auto');
+  const searchParams = useSearchParams();
+  
+  // Parse hash from URL and determine its type
+  const hashFromUrl = searchParams.get('hash') || '';
+  const initialHashData = useMemo(() => {
+    if (!hashFromUrl) return { hash: '', searchHash: '', hashType: 'auto' as const };
+    
+    const trimmed = hashFromUrl.trim();
+    if (trimmed.startsWith('0x') && trimmed.length === 66) {
+      return { hash: trimmed, searchHash: trimmed, hashType: 'tx' as const };
+    } else if (trimmed.length === 64) {
+      return { hash: trimmed, searchHash: trimmed, hashType: 'file' as const };
+    }
+    return { hash: trimmed, searchHash: '', hashType: 'auto' as const };
+  }, [hashFromUrl]);
+  
+  const [hash, setHash] = useState(initialHashData.hash);
+  const [searchHash, setSearchHash] = useState(initialHashData.searchHash);
+  const [hashType, setHashType] = useState<'auto' | 'file' | 'tx'>(initialHashData.hashType);
   const resultRef = useRef<HTMLDivElement | null>(null);
   
   const { data: verifyResult, isLoading, error } = useVerifyCertificate(searchHash);

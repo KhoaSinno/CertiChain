@@ -34,9 +34,7 @@ export function CertificateCard({
   const isPending = certificate.status === "pending";
 
   // Check transaction hash (support both transactionHash and blockchainTx field names)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const txHash =
-    certificate.transactionHash || (certificate as any).blockchainTx;
+  const txHash = certificate.transactionHash || certificate.blockchainTx;
   const hasTransaction = !!txHash;
 
   // ✅ Safety check: Return early if student data is missing
