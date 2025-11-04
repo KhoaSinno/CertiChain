@@ -121,11 +121,11 @@ export default function CertificateDetailPage() {
               {certificate.transactionHash && (
                 <Button
                   variant="outline"
-                  onClick={() => window.open(`https://sepolia.basescan.org/tx/${certificate.transactionHash}`, '_blank')}
+                  onClick={() => window.open(`https://sepolia.etherscan.io/tx/${certificate.transactionHash}`, '_blank')}
                   className="transition-transform hover:scale-105 active:scale-95"
                 >
                   <ExternalLink className="h-4 w-4 mr-2" />
-                  Xem trên BaseScan
+                  Xem trên Etherscan
                 </Button>
               )}
 

@@ -7,13 +7,15 @@ export interface Certificate {
   issuedAt: Date;
   status: "verified" | "pending" | "failed"; // ✅ Added "failed" status
   blockchainTx?: string; // ✅ Added blockchainTx field
-  userId: number; // ✅ Added userId field
-  student: {
+  userId?: number; // ✅ Added userId field
+  student?: {
     id: number; // ✅ Changed from string to number
     studentId: string;
     studentName: string;
   };
-  // Legacy support for old field names
+  // Legacy support for old field names and flattened structure
+  studentName?: string; // Flattened from verify API
+  studentId?: string; // Flattened from verify API
   transactionHash?: string; // Alias for blockchainTx
   isVerified?: boolean; // Computed from status
 }

@@ -66,6 +66,7 @@ export async function GET(request: Request) {
       verified: certOnChain.isValid,
       certificate: {
         studentName: certificate.student.studentName,
+        studentId: certificate.student.studentId,
         courseName: certificate.courseName,
         issuedAt: certOnChain.issuedAt, // onChain data
         status: certificate.status,

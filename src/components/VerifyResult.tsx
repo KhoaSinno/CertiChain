@@ -113,148 +113,90 @@ export function VerifyResult({
           </div>
         </CardHeader>
 
-        <CardContent className="space-y-4">
-          {/* Primary info */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div className="flex items-center gap-2">
-              <User className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-              <div>
-                <span className="text-xs text-muted-foreground">Sinh viên</span>
-                <p className="text-sm font-medium">
-                  {certificate.student?.studentName || "N/A"}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-              <div>
-                <span className="text-xs text-muted-foreground">
-                  Ngày xác thực
-                </span>
-                <p className="text-sm font-medium">
-                  {formatDate(certificate.issuedAt)}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Course */}
-          <div className="bg-muted/50 rounded-lg p-3">
-            <h4 className="text-xs font-medium text-muted-foreground mb-1">
-              Khóa học
-            </h4>
-            <p className="text-sm font-medium">{certificate.courseName}</p>
-          </div>
-
-          {/* Hash (copiable) */}
-          <div className="bg-muted/50 rounded-lg p-3">
-            <div className="flex items-center justify-between mb-1.5">
-              <h4 className="text-xs font-medium text-muted-foreground">
-                File Hash
-              </h4>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigator.clipboard.writeText(hash)}
-                className="h-7 px-2 text-xs gap-1"
-              >
-                <Copy className="h-3 w-3" />
-                Copy
-              </Button>
-            </div>
-            <code className="text-xs text-muted-foreground break-all block">
-              {hash}
-            </code>
-          </div>
-
-          {/* On-chain transaction banner */}
-          {certificate.transactionHash && (
-            <div className="rounded-lg p-3 bg-green-600 text-white shadow-md">
-              <div className="flex items-start gap-2.5 mb-2">
-                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center flex-shrink-0">
-                  <CheckCircle className="h-5 w-5 text-green-600" />
+        <CardContent className="space-y-3">
+          {/* Course Name - Prominent */}
+          <div className="relative overflow-hidden rounded-lg p-4 bg-gradient-to-br from-primary/10 via-purple-500/10 to-pink-500/10 border-2 border-primary/30">
+            {/* Background decoration */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/20 to-purple-500/20 rounded-full blur-3xl -z-10" />
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-pink-500/20 to-primary/20 rounded-full blur-2xl -z-10" />
+            
+            <div className="relative">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center">
+                  <GraduationCap className="h-4 w-4 text-primary" />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="font-bold text-sm flex flex-wrap items-center gap-2">
-                    Đã ghi lên blockchain
-                    <Badge
-                      variant="secondary"
-                      className="bg-white text-green-600 text-[10px] px-1.5"
-                    >
-                      Base Sepolia
-                    </Badge>
-                  </h4>
-                  <p className="text-xs text-green-50 mt-0.5">
-                    Giao dịch được xác nhận và lưu trữ vĩnh viễn
-                  </p>
+                <h4 className="text-xs font-semibold text-primary uppercase tracking-wider">
+                  Khóa học
+                </h4>
+              </div>
+              <p className="text-lg font-bold text-foreground leading-tight mb-3">{certificate.courseName}</p>
+              
+              {/* Student & Date Badges */}
+              <div className="flex flex-wrap gap-2 pt-2 border-t border-primary/20">
+                <Badge className="gap-1.5 bg-white/60 dark:bg-white/10 hover:bg-white/80 dark:hover:bg-white/20 text-primary dark:text-primary-foreground border border-primary/30 py-1.5 px-3 backdrop-blur-sm">
+                  <User className="h-3.5 w-3.5 flex-shrink-0" />
+                  <span className="text-sm font-semibold">
+                    {certificate.student?.studentName || certificate.studentName || "N/A"}
+                    {(certificate.student?.studentId || certificate.studentId) && (
+                      <span className="opacity-75"> | {certificate.student?.studentId || certificate.studentId}</span>
+                    )}
+                  </span>
+                </Badge>
+                <Badge className="gap-1.5 bg-white/60 dark:bg-white/10 hover:bg-white/80 dark:hover:bg-white/20 text-primary dark:text-primary-foreground border border-primary/30 py-1.5 px-3 backdrop-blur-sm">
+                  <Calendar className="h-3.5 w-3.5 flex-shrink-0" />
+                  <span className="text-sm font-semibold">
+                    {formatDate(certificate.issuedAt)}
+                  </span>
+                </Badge>
+              </div>
+            </div>
+          </div>
+
+          {/* Transaction Hash Badge */}
+          {(certificate.transactionHash || certificate.blockchainTx) && (
+            <div className="bg-green-600 rounded-lg p-3">
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <h4 className="text-xs font-semibold text-white flex items-center gap-1.5">
+                  <CheckCircle className="h-3.5 w-3.5" />
+                  Transaction Hash
+                </h4>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => navigator.clipboard.writeText(certificate.transactionHash || certificate.blockchainTx || '')}
+                    className="h-6 w-6 p-0 hover:bg-white/20 text-white"
+                  >
+                    <Copy className="h-3 w-3" />
+                  </Button>
+                  <Badge 
+                    className="bg-white/20 hover:bg-white/30 text-white border-0 py-1 px-2 cursor-pointer transition-colors gap-1"
+                    onClick={() =>
+                      window.open(
+                        `https://sepolia.etherscan.io/tx/${
+                          certificate.transactionHash || certificate.blockchainTx
+                        }`,
+                        "_blank"
+                      )
+                    }
+                  >
+                    <ExternalLink className="h-3 w-3" />
+                    Etherscan
+                  </Badge>
                 </div>
               </div>
-              <div className="bg-white rounded-md p-2">
-                <p className="text-[10px] text-muted-foreground mb-0.5">
-                  Transaction Hash:
-                </p>
-                <code className="text-[10px] font-mono text-green-700 break-all block">
-                  {certificate.transactionHash}
-                </code>
-              </div>
+              <code className="text-xs text-white/90 break-all block font-mono">
+                {certificate.transactionHash || certificate.blockchainTx}
+              </code>
             </div>
           )}
         </CardContent>
       </Card>
 
-      {/* Secondary actions */}
-      {(certificate.ipfsCid ||
-        certificate.transactionHash ||
-        certificate.blockchainTx) && (
-        <div
-          className={`grid gap-2 ${
-            certificate.ipfsCid &&
-            (certificate.transactionHash || certificate.blockchainTx)
-              ? "grid-cols-2"
-              : "grid-cols-1"
-          }`}
-        >
-          {certificate.ipfsCid && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() =>
-                window.open(
-                  `https://ipfs.io/ipfs/${certificate.ipfsCid}`,
-                  "_blank"
-                )
-              }
-              className="transition-transform hover:scale-105 active:scale-95"
-            >
-              <ExternalLink className="h-3.5 w-3.5 mr-1.5" />
-              Xem file gốc
-            </Button>
-          )}
-          {(certificate.transactionHash || certificate.blockchainTx) && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() =>
-                window.open(
-                  `https://sepolia.basescan.org/tx/${
-                    certificate.transactionHash || certificate.blockchainTx
-                  }`,
-                  "_blank"
-                )
-              }
-              className="transition-transform hover:scale-105 active:scale-95"
-            >
-              <ExternalLink className="h-3.5 w-3.5 mr-1.5" />
-              BaseScan
-            </Button>
-          )}
-        </div>
-      )}
-
       {/* Footnote */}
       <div className="mt-4 text-center">
         <p className="text-[10px] text-muted-foreground">
-          Kết quả xác minh được lấy từ blockchain Base Sepolia
+          Kết quả xác minh được lấy từ blockchain Ethereum Sepolia
         </p>
       </div>
     </div>
