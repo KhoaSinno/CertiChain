@@ -133,13 +133,6 @@ export function QRDisplay({
             Chia sẻ
           </Button>
         </div>
-
-        {/* Instructions */}
-        <div className="text-center">
-          <p className="text-xs text-muted-foreground">
-            Nhà tuyển dụng có thể quét mã QR này để xác minh chứng chỉ
-          </p>
-        </div>
       </CardContent>
     </Card>
   );

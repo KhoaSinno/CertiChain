@@ -2,10 +2,14 @@
 
 import { Layout } from '@/src/components/Layout';
 import { QRDisplay } from '@/src/components/QRDisplay';
+import { Badge } from '@/src/components/ui/badge';
 import { Button } from '@/src/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/card';
 import { useCertificate } from '@/src/hooks/useCertificates';
-import { ArrowLeft, ExternalLink, FileText, Share2 } from 'lucide-react';
+import { formatDate } from '@/src/lib/utils';
+import { ArrowLeft, Calendar, CheckCircle2, Copy, ExternalLink, FileText, GraduationCap, Hash, Share2, User } from 'lucide-react';
 import { notFound, useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export default function CertificateDetailPage() {
   const params = useParams();
@@ -35,143 +39,216 @@ export default function CertificateDetailPage() {
   // Use transaction hash if available, fallback to file hash
   const verificationHash = certificate.transactionHash || certificate.fileHash;
   const verificationUrl = `${window.location.origin}/verify?hash=${verificationHash}`;
+  const txHash = certificate.transactionHash || certificate.blockchainTx;
+  const hasTransaction = !!txHash;
+
+  const [copiedField, setCopiedField] = useState<string | null>(null);
+
+  const handleCopy = (text: string, field: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedField(field);
+    setTimeout(() => setCopiedField(null), 2000);
+  };
 
   return (
     <Layout>
       <div className="container mx-auto px-6 py-8">
-        {/* Back Button */}
-        <Button
-          variant="outline"
-          onClick={() => router.back()}
-          className="mb-6 transition-transform hover:scale-105 active:scale-95"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Quay lại
-        </Button>
+        {/* Header with Back Button and Actions */}
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+          <Button
+            variant="outline"
+            onClick={() => router.back()}
+            className="transition-transform hover:scale-105 active:scale-95"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Quay lại
+          </Button>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Certificate Information */}
-          <div className="space-y-6">
-            <div>
-              <h1 className="text-3xl font-bold mb-2">{certificate.courseName}</h1>
-              <p className="text-xl text-muted-foreground">{certificate.student?.studentName || 'N/A'}</p>
-            </div>
+          <div className="flex flex-wrap gap-3">
+            <Button
+              variant="ghost"
+              onClick={() => router.push(`/certificates/view/${id}`)}
+              className="gap-2 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-600 dark:hover:text-white"
+            >
+              <FileText className="h-4 w-4" />
+              Xem chứng chỉ
+            </Button>
 
-            <div className="space-y-4">
-              <div>
-                <h3 className="font-semibold text-sm text-muted-foreground">Mã sinh viên</h3>
-                <p className="text-lg">{certificate.student?.studentId || 'N/A'}</p>
-              </div>
-
-              <div>
-                <h3 className="font-semibold text-sm text-muted-foreground">Ngày xác thực</h3>
-                <p className="text-lg">{certificate.issuedAt.toLocaleDateString('vi-VN')}</p>
-              </div>
-
-              <div>
-                <h3 className="font-semibold text-sm text-muted-foreground">Trạng thái</h3>
-                <span className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${
-                  certificate.status === 'verified'
-                    ? 'bg-green-100 text-green-800'
-                    : 'bg-orange-100 text-orange-800'
-                }`}>
-                  {certificate.status === 'verified' ? 'Đã xác thực' : 'Chờ xác thực'}
-                </span>
-              </div>
-
-              <div>
-                <h3 className="font-semibold text-sm text-muted-foreground">File Hash</h3>
-                <p className="text-sm font-mono bg-muted p-2 rounded break-all">
-                  {certificate.fileHash}
-                </p>
-              </div>
-
-              {certificate.transactionHash && (
-                <div>
-                  <h3 className="font-semibold text-sm text-muted-foreground">Transaction Hash</h3>
-                  <p className="text-sm font-mono bg-muted p-2 rounded break-all">
-                    {certificate.transactionHash}
-                  </p>
-                </div>
-              )}
-            </div>
-
-            {/* Actions */}
-            <div className="flex flex-wrap gap-3">
-                             <Button
-                 variant="default"
-                 onClick={() => router.push(`/certificates/view/${id}`)}
-                 className="gap-2 transition-transform hover:scale-105 active:scale-95"
-               >
-                 <FileText className="h-4 w-4" />
-                 Xem chứng chỉ
-               </Button>
-
-              {certificate.ipfsCid && (
-                <Button
-                  variant="outline"
-                  onClick={() => window.open(`https://ipfs.io/ipfs/${certificate.ipfsCid}`, '_blank')}
-                  className="transition-transform hover:scale-105 active:scale-95"
-                >
-                  <ExternalLink className="h-4 w-4 mr-2" />
-                  Xem file gốc
-                </Button>
-              )}
-
-              {certificate.transactionHash && (
-                <Button
-                  variant="outline"
-                  onClick={() => window.open(`https://sepolia.etherscan.io/tx/${certificate.transactionHash}`, '_blank')}
-                  className="transition-transform hover:scale-105 active:scale-95"
-                >
-                  <ExternalLink className="h-4 w-4 mr-2" />
-                  Xem trên Etherscan
-                </Button>
-              )}
-
+            {certificate.ipfsCid && (
               <Button
-                variant="outline"
-                onClick={() => navigator.share({ 
-                  title: 'Chứng chỉ CertiChain',
-                  text: `Chứng chỉ ${certificate.courseName} của ${certificate.student?.studentName || 'N/A'}`,
-                  url: verificationUrl 
-                })}
-                className="transition-transform hover:scale-105 active:scale-95"
+                variant="ghost"
+                onClick={() => window.open(`https://ipfs.io/ipfs/${certificate.ipfsCid}`, '_blank')}
+                className="gap-2 text-blue-600 dark:text-blue-400 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white"
               >
-                <Share2 className="h-4 w-4 mr-2" />
-                Chia sẻ
+                <ExternalLink className="h-4 w-4" />
+                File gốc
               </Button>
-            </div>
-          </div>
+            )}
 
-          {/* QR Code */}
-          <div className="flex justify-center">
-            <QRDisplay
-              value={verificationUrl}
-              title="Mã QR xác minh"
-              description={certificate.transactionHash 
-                ? "Quét mã QR để xác minh chứng chỉ trên blockchain" 
-                : "Quét mã QR để xác minh chứng chỉ (chưa đăng ký on-chain)"
-              }
-              size={250}
-            />
+            {txHash && (
+              <Button
+                variant="ghost"
+                onClick={() => window.open(`https://sepolia.etherscan.io/tx/${txHash}`, '_blank')}
+                className="gap-2 text-green-600 dark:text-green-400 hover:bg-green-600 hover:text-white dark:hover:bg-green-600 dark:hover:text-white"
+              >
+                <ExternalLink className="h-4 w-4" />
+                Etherscan
+              </Button>
+            )}
+
+            <Button
+              variant="ghost"
+              onClick={() => navigator.share({ 
+                title: 'Chứng chỉ CertiChain',
+                text: `Chứng chỉ ${certificate.courseName} của ${certificate.student?.studentName || 'N/A'}`,
+                url: verificationUrl 
+              })}
+              className="gap-2 text-purple-600 dark:text-purple-400 hover:bg-purple-600 hover:text-white dark:hover:bg-purple-600 dark:hover:text-white"
+            >
+              <Share2 className="h-4 w-4" />
+              Chia sẻ
+            </Button>
           </div>
         </div>
 
-        {/* Verification Link */}
-        <div className="mt-8 p-4 bg-muted rounded-lg">
-          <h3 className="font-semibold mb-2">Link xác minh</h3>
-          <p className="text-sm text-muted-foreground mb-2">
-            Chia sẻ link này để nhà tuyển dụng có thể xác minh chứng chỉ:
-          </p>
-          <a 
-            href={verificationUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm font-mono bg-background p-2 rounded break-all block text-primary hover:text-primary/80 underline underline-offset-2 transition-colors"
-          >
-            {verificationUrl}
-          </a>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left Column - Main Info */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Course Card */}
+            <Card className="bg-gradient-to-br from-primary/10 via-purple-500/10 to-pink-500/10 border-2 border-white/60 dark:border-white/20">
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center">
+                    <GraduationCap className="h-6 w-6 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <CardTitle className="text-2xl">{certificate.courseName}</CardTitle>
+                    <p className="text-sm text-muted-foreground mt-1">Certificate Details</p>
+                  </div>
+                  {hasTransaction && (
+                    <Badge className="bg-green-600 text-white border-0 gap-1.5">
+                      <CheckCircle2 className="h-3.5 w-3.5" />
+                      On-chain
+                    </Badge>
+                  )}
+                </div>
+              </CardHeader>
+            </Card>
+
+            {/* Student & Date Info */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Student Card */}
+              <Card className="glass-effect border-2 border-white/60 dark:border-white/20">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center gap-2">
+                    <User className="h-4 w-4 text-blue-600" />
+                    <CardTitle className="text-sm font-medium text-muted-foreground">Thông tin sinh viên</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-lg font-semibold text-foreground mb-1">
+                    {certificate.student?.studentName || 'N/A'}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    MSSV: {certificate.student?.studentId || 'N/A'}
+                  </p>
+                </CardContent>
+              </Card>
+
+              {/* Date Card */}
+              <Card className="glass-effect border-2 border-white/60 dark:border-white/20">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4 text-indigo-600" />
+                    <CardTitle className="text-sm font-medium text-muted-foreground">Ngày xác thực</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-lg font-semibold text-foreground">
+                    {formatDate(certificate.issuedAt)}
+                  </p>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {certificate.status === 'verified' ? 'Đã xác thực' : 'Chờ xác thực'}
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Hash Information */}
+            <Card className="glass-effect border-2 border-white/60 dark:border-white/20">
+              <CardHeader>
+                <div className="flex items-center gap-2">
+                  <Hash className="h-4 w-4 text-primary" />
+                  <CardTitle className="text-base">Mã băm chứng chỉ</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* File Hash */}
+                <div>
+                  <label className="text-xs font-medium text-muted-foreground mb-2 block">
+                    File Hash
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <code className="flex-1 text-xs font-mono bg-background/60 p-3 rounded-lg break-all">
+                      {certificate.fileHash}
+                    </code>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleCopy(certificate.fileHash, 'fileHash')}
+                      className="flex-shrink-0"
+                    >
+                      {copiedField === 'fileHash' ? (
+                        <CheckCircle2 className="h-4 w-4 text-green-600" />
+                      ) : (
+                        <Copy className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Transaction Hash */}
+                {txHash && (
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground mb-2 block">
+                      Transaction Hash
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <code className="flex-1 text-xs font-mono bg-green-600/10 text-green-700 dark:text-green-400 p-3 rounded-lg break-all">
+                        {txHash}
+                      </code>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleCopy(txHash, 'txHash')}
+                        className="flex-shrink-0"
+                      >
+                        {copiedField === 'txHash' ? (
+                          <CheckCircle2 className="h-4 w-4 text-green-600" />
+                        ) : (
+                          <Copy className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Right Column - QR Code */}
+          <div className="space-y-6">
+            {/* QR Code */}
+            <QRDisplay
+              value={verificationUrl}
+              title="Mã QR xác minh"
+              description={hasTransaction 
+                ? "Quét để xác minh on-chain" 
+                : "Quét để xác minh"
+              }
+              size={220}
+            />
+          </div>
         </div>
       </div>
     </Layout>

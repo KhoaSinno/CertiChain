@@ -6,8 +6,8 @@ import { Input } from '@/src/components/ui/input';
 import { VerifyResult } from '@/src/components/VerifyResult';
 import { useVerifyCertificate } from '@/src/hooks/useVerify';
 import { Hash, Search } from 'lucide-react';
-import { useEffect, useRef, useState, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 export default function VerifyPage() {
   const searchParams = useSearchParams();
