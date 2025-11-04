@@ -149,8 +149,14 @@ export async function GET(request: Request) {
       ]);
     }
 
+    // Map certificates to ensure consistent format
+    const mappedCertificates = certificates.map(cert => ({
+      ...cert,
+      transactionHash: cert.blockchainTx, // Add alias for compatibility
+    }));
+
     return NextResponse.json({
-      data: certificates,
+      data: mappedCertificates,
       pagination: {
         page,
         limit,

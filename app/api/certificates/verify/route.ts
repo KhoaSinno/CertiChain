@@ -65,6 +65,7 @@ export async function GET(request: Request) {
     return NextResponse.json({
       verified: certOnChain.isValid,
       certificate: {
+        id: certificate.id, // Add certificate ID for navigation
         studentName: certificate.student.studentName,
         studentId: certificate.student.studentId,
         courseName: certificate.courseName,

@@ -16,6 +16,7 @@ import {
 import { Pagination } from '@/src/components/ui/pagination';
 import { Certificate } from '@/src/types/certificate';
 import { FileText, Filter } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 interface CertificateListSectionProps {
@@ -52,6 +53,7 @@ export function CertificateListSection({
   description = 'Danh sách các chứng chỉ',
   emptyMessage = 'Không có chứng chỉ nào',
 }: CertificateListSectionProps) {
+  const router = useRouter();
   const [statusFilter, setStatusFilter] = useState<'all' | 'verified' | 'pending'>('all');
 
   // Client-side filtering based on status
@@ -153,7 +155,7 @@ export function CertificateListSection({
               <CertificateCard
                 key={certificate.id}
                 certificate={certificate}
-                onView={() => window.location.href = `/certificates/${certificate.id}`}
+                onView={() => router.push(`/certificates/${certificate.id}`)}
                 onRegister={onRegisterOnChain && certificate.status === 'pending' ? () => onRegisterOnChain(certificate.id.toString()) : undefined}
                 isRegistering={registeringIds.has(certificate.id.toString())}
                 onCopy={() => {

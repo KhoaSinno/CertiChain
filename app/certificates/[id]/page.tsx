@@ -16,6 +16,15 @@ export default function CertificateDetailPage() {
   const id = params.id as string;
   const router = useRouter();
   const { data: certificate, isLoading, error } = useCertificate(id);
+  
+  // ✅ All hooks must be called before any conditional returns
+  const [copiedField, setCopiedField] = useState<string | null>(null);
+
+  const handleCopy = (text: string, field: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedField(field);
+    setTimeout(() => setCopiedField(null), 2000);
+  };
 
   if (isLoading) {
     return (
@@ -41,14 +50,6 @@ export default function CertificateDetailPage() {
   const verificationUrl = `${window.location.origin}/verify?hash=${verificationHash}`;
   const txHash = certificate.transactionHash || certificate.blockchainTx;
   const hasTransaction = !!txHash;
-
-  const [copiedField, setCopiedField] = useState<string | null>(null);
-
-  const handleCopy = (text: string, field: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedField(field);
-    setTimeout(() => setCopiedField(null), 2000);
-  };
 
   return (
     <Layout>
@@ -238,16 +239,41 @@ export default function CertificateDetailPage() {
 
           {/* Right Column - QR Code */}
           <div className="space-y-6">
-            {/* QR Code */}
-            <QRDisplay
-              value={verificationUrl}
-              title="Mã QR xác minh"
-              description={hasTransaction 
-                ? "Quét để xác minh on-chain" 
-                : "Quét để xác minh"
-              }
-              size={220}
-            />
+            {hasTransaction ? (
+              /* QR Code - On-chain */
+              <QRDisplay
+                value={verificationUrl}
+                title="Mã QR xác minh"
+                description="Quét để xác minh on-chain"
+                size={220}
+              />
+            ) : (
+              /* Alternative UI - Pending */
+              <Card className="glass-effect border-2 border-orange-500/30 bg-orange-500/5">
+                <CardHeader className="text-center pb-4">
+                  <div className="w-16 h-16 mx-auto mb-3 bg-orange-500/10 rounded-full flex items-center justify-center">
+                    <Hash className="h-8 w-8 text-orange-600" />
+                  </div>
+                  <CardTitle className="text-lg font-semibold">Chưa đăng ký on-chain</CardTitle>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Chứng chỉ này chưa được đăng ký lên blockchain
+                  </p>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="bg-orange-500/10 rounded-lg p-4 border border-orange-500/20">
+                    <p className="text-xs text-muted-foreground mb-2">File Hash</p>
+                    <code className="text-xs font-mono break-all block text-orange-700 dark:text-orange-400">
+                      {certificate.fileHash}
+                    </code>
+                  </div>
+                  <div className="text-center pt-2">
+                    <p className="text-xs text-muted-foreground">
+                      Mã QR sẽ khả dụng sau khi đăng ký on-chain
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </div>
         </div>
       </div>
