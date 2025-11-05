@@ -39,6 +39,8 @@ export function CertificateForm({
   const [students, setStudents] = useState<Student[]>([]);
   const [isLoadingStudents, setIsLoadingStudents] = useState(true);
   const [studentsError, setStudentsError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSelectOpen, setIsSelectOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Fetch students list on mount
@@ -69,6 +71,12 @@ export function CertificateForm({
       [name]: value
     }));
   };
+
+  // Filter students based on search query
+  const filteredStudents = students.filter(student => 
+    student.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    student.studentId.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -228,27 +236,43 @@ export function CertificateForm({
                         studentId: student.studentId,
                         studentName: student.studentName
                       }));
+                      setSearchQuery('');
+                      setIsSelectOpen(false);
                     }
                   }}
+                  open={isSelectOpen}
+                  onOpenChange={setIsSelectOpen}
                 >
                   <SelectTrigger className="h-10 md:h-11">
-                    <SelectValue placeholder="Chọn sinh viên từ danh sách" />
+                    <SelectValue placeholder="Tìm kiếm sinh viên..." />
                   </SelectTrigger>
                   <SelectContent>
-                    {students.length === 0 ? (
-                      <SelectItem value="no-students" disabled>
-                        Không có sinh viên nào
-                      </SelectItem>
-                    ) : (
-                      students.map((student) => (
-                        <SelectItem key={student.id} value={student.studentId}>
-                          <div className="flex items-center gap-2">
-                            <span className="font-medium">{student.studentName}</span>
-                            <span className="text-xs text-muted-foreground">({student.studentId})</span>
-                          </div>
-                        </SelectItem>
-                      ))
-                    )}
+                    <div className="p-2 sticky top-0 bg-popover z-10">
+                      <input
+                        type="text"
+                        placeholder="Tìm theo tên hoặc mã sinh viên..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full px-3 py-2 text-sm rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-ring"
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    </div>
+                    <div className="max-h-[300px] overflow-y-auto">
+                      {filteredStudents.length === 0 ? (
+                        <div className="p-3 text-sm text-center text-muted-foreground">
+                          {searchQuery ? 'Không tìm thấy sinh viên' : 'Không có sinh viên nào'}
+                        </div>
+                      ) : (
+                        filteredStudents.map((student) => (
+                          <SelectItem key={student.id} value={student.studentId}>
+                            <div className="flex items-center gap-2">
+                              <span className="font-medium">{student.studentName}</span>
+                              <span className="text-xs text-muted-foreground">({student.studentId})</span>
+                            </div>
+                          </SelectItem>
+                        ))
+                      )}
+                    </div>
                   </SelectContent>
                 </Select>
               )}
