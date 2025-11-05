@@ -25,6 +25,8 @@ Sau đó admin có nhiệm vụ là verify, thực hiện đẩy lên blockchain
 
 Người interviewer có thể verify hay bất cứ người nào mà không cần login. Người này chỉ cần nhập cái mã file hash dô (Có thể bằng link hoặc qr cho tiện). Lúc này quan trọng đó là nếu như smartContract xác thực thành công thì trả về ok (Có thể kèm data một số trường cần thiết) hoặc thất bại
 
+    // "contractAddress": "0xF82d44De7D594f8d47c38a2c7208Fac85554C0d8",
+
  -->
 
 # **🎓 CertiChain – Hệ thống Xác thực Chứng chỉ Giáo dục trên Blockchain**

@@ -14,7 +14,6 @@ import { sepolia } from "viem/chains";
 type VerifyCertificateOutput = {
   issuerAddress: Address;
   issuedAt: Date;
-  studentIdHash: string;
   isValid: boolean;
 };
 
@@ -84,14 +83,14 @@ export class BlockchainService {
       const normalizedFileHash = normalizeHashToBytes32(fileHash);
       
       // TODO: FIX THIS LATER
-      const normalizedStudentIdHash = normalizeHashToBytes32(fileHash);
+      // const normalizedStudentIdHash = normalizeHashToBytes32(fileHash);
 
       const { request } = await publicClient.simulateContract({
         account: adminAccount,
         address: CONTRACT_ADDRESS as Address,
         abi: ABI,
         functionName: "registerCertificate",
-        args: [normalizedFileHash, normalizedStudentIdHash],
+        args: [normalizedFileHash],
       });
       const txHash = await walletClient.writeContract(request);
 
@@ -121,99 +120,17 @@ export class BlockchainService {
         abi: ABI,
         functionName: "verifyCertificate",
         args: [normalizedFileHash],
-      })) as [Address, bigint, string, boolean];
+      })) as [Address, bigint, boolean];
 
       return {
         issuerAddress: certVerified[0],
         issuedAt: new Date(Number(certVerified[1]) * 1000),
-        studentIdHash: certVerified[2],
-        isValid: certVerified[3],
+        isValid: certVerified[2],
       };
     } catch (error) {
       console.log("Verify error with server: ", error);
       throw new Error("Blockchain verification failed");
     }
   }
-
-  /**
-   * Get certificate info from transaction hash
-   * This reads the transaction receipt and extracts CertificateRegistered event data
-   */
-  async getCertificateFromTxHash(txHash: string): Promise<{
-    fileHash: string;
-    studentIdHash: string;
-    issuerAddress: Address;
-    issuedAt: Date;
-  }> {
-    try {
-      // Get transaction receipt
-      const receipt = await publicClient.getTransactionReceipt({
-        hash: txHash as Hex,
-      });
-
-      if (!receipt || receipt.status !== 'success') {
-        throw new Error('Transaction not found or failed');
-      }
-
-      // Find CertificateRegistered event in logs
-      const certificateEvent = receipt.logs.find((log) => {
-        // Check if log is from our contract
-        if (log.address.toLowerCase() !== CONTRACT_ADDRESS?.toLowerCase()) {
-          return false;
-        }
-
-        // CertificateRegistered event signature
-        // event CertificateRegistered(bytes32 indexed fileHash, address indexed issuer, bytes32 studentidHash, uint256 issuedAt)
-        const eventSignature = '0xfb62d7d96831a0779f5c8ccf8a667f70cda9dabbef7e461f674c05fbe93423d9';
-        return log.topics[0] === eventSignature;
-      });
-
-      if (!certificateEvent || !certificateEvent.topics) {
-        throw new Error('CertificateRegistered event not found in transaction');
-      }
-
-      // Parse event data
-      // topics[0] = event signature
-      // topics[1] = fileHash (indexed)
-      // topics[2] = issuer (indexed)
-      // data = studentIdHash + issuedAt (non-indexed)
-      const fileHash = certificateEvent.topics[1];
-      const issuerTopic = certificateEvent.topics[2];
-      
-      console.log("[BLOCKCHAIN] Event topics:", {
-        fileHash,
-        issuerTopic,
-        data: certificateEvent.data,
-      });
-      
-      if (!fileHash || !issuerTopic) {
-        throw new Error('Invalid event data: missing topics');
-      }
-      
-      const issuerAddress = `0x${issuerTopic.slice(26)}` as Address; // address (last 20 bytes)
-
-      // Decode data field (studentIdHash + issuedAt)
-      const data = certificateEvent.data;
-      const studentIdHash = data.slice(0, 66); // First 32 bytes (0x + 64 chars)
-      const issuedAtHex = `0x${data.slice(66)}` as Hex; // Remaining bytes
-      const issuedAt = new Date(Number(BigInt(issuedAtHex)) * 1000);
-
-      console.log("[BLOCKCHAIN] Parsed data:", {
-        fileHash,
-        studentIdHash,
-        issuerAddress,
-        issuedAt,
-      });
-
-      return {
-        fileHash,
-        studentIdHash,
-        issuerAddress,
-        issuedAt,
-      };
-    } catch (error) {
-      console.log("Error getting certificate from tx hash:", error);
-      throw new Error("Failed to get certificate from transaction hash");
-    }
-  }
+  
 }
