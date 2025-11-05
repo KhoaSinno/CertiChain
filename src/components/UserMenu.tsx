@@ -3,11 +3,11 @@
 import { Badge } from "@/src/components/ui/badge";
 import { Button } from "@/src/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
 } from "@/src/components/ui/dropdown-menu";
 import { useAuth } from "@/src/hooks/useAuth";
 import { Building2, Cog, LogIn, LogOut, User } from "lucide-react";
@@ -84,7 +84,7 @@ export function UserMenu() {
   };
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
@@ -113,6 +113,15 @@ export function UserMenu() {
         sideOffset={8}
         className="w-64"
         avoidCollisions={true}
+        collisionPadding={8}
+        sticky="always"
+        onInteractOutside={(e) => {
+          // Only close when clicking outside, not on scroll
+          if (e.type === 'pointerdown') {
+            return; // Allow default close behavior
+          }
+          e.preventDefault(); // Prevent close on other interactions like scroll
+        }}
       >
         {/* Account section */}
         <div className="px-3 py-2">
