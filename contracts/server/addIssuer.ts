@@ -12,7 +12,7 @@ import { sepolia } from "viem/chains";
 
 const RPC = process.env.SEPOLIA_RPC_URL;
 let PK = process.env.PRIVATE_KEY;
-const CONTRACT = "0xF82d44De7D594f8d47c38a2c7208Fac85554C0d8";
+const CONTRACT = "0x9C114C532f34f2eEa48fF9Ed2Bea5111f22F1099";
 
 if (!RPC) throw new Error("Missing SEPOLIA_RPC_URL in .env");
 if (!PK) throw new Error("Missing PRIVATE_KEY in .env");

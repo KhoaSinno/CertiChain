@@ -2,9 +2,8 @@
 pragma solidity ^0.8.0;
 
 contract CertiChain{
-    //cau truc cua chung chi - Certificate: ipfsCID, studentIdHash, issuer, issuedAt, isValid
+    //cau truc cua chung chi - Certificate: ipfsCID, issuer, issuedAt, isValid
     struct Certificate{
-        bytes32 studentIdHash; //ma sinh vien da duoc hash
         address issuer; //dia chi vi cua (issuer)
         uint256 issuedAt; //timestamp khi chung chi duoc phat hanh
         bool isValid; //trang thai hop le cua chung chi
@@ -25,7 +24,6 @@ contract CertiChain{
     event CertificateRegistered(
         bytes32 indexed fileHash,
         address indexed issuer,
-        bytes32 studentidHash,
         uint256 issuedAt
     );  
     // cap phep cho 1 address lam issuer: IssuerAuthorized
@@ -70,15 +68,13 @@ contract CertiChain{
     //---chuc nang chinh cua he thong---
     // phat hanh chung chi: registerCertificate
     function registerCertificate(
-        bytes32 _fileHash,
-        bytes32 _studentIdHash 
+        bytes32 _fileHash
     )public onlyAuthorizedIssuer{
         //dam bao chung chi chua phat hanh
         require(certificates[_fileHash].issuedAt == 0, "Certificate already registered.");
 
         //luu thong tin chung chi
         certificates[_fileHash] = Certificate(
-            _studentIdHash,
             msg.sender,
             block.timestamp,
             true
@@ -88,7 +84,6 @@ contract CertiChain{
         emit CertificateRegistered(
             _fileHash, 
             msg.sender, 
-            _studentIdHash, 
             block.timestamp
         );
     }
@@ -98,7 +93,6 @@ contract CertiChain{
     returns(
         address _issuer,
         uint _isssedAt,
-        bytes32 _studentIdHash,
         bool _isValid
     ){
         //lay du lieu
@@ -110,7 +104,6 @@ contract CertiChain{
         return (
             cert.issuer,
             cert.issuedAt,
-            cert.studentIdHash,
             cert.isValid
         );
     }
