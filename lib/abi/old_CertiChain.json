@@ -1,0 +1,185 @@
+{
+    "_format": "hh3-artifact-1",
+    "contractName": "CertiChain",
+    "sourceName": "contracts/CertiChain.sol",
+    "contractAddress": "0x9C114C532f34f2eEa48fF9Ed2Bea5111f22F1099",
+    "abi": [
+        {
+            "inputs": [],
+            "stateMutability": "nonpayable",
+            "type": "constructor"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": true,
+                    "internalType": "bytes32",
+                    "name": "fileHash",
+                    "type": "bytes32"
+                },
+                {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "issuer",
+                    "type": "address"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "issuedAt",
+                    "type": "uint256"
+                }
+            ],
+            "name": "CertificateRegistered",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "issuerAddress",
+                    "type": "address"
+                }
+            ],
+            "name": "IssuerAuthorized",
+            "type": "event"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_issuerAddress",
+                    "type": "address"
+                }
+            ],
+            "name": "authorizeIssuer",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "bytes32",
+                    "name": "",
+                    "type": "bytes32"
+                }
+            ],
+            "name": "certificates",
+            "outputs": [
+                {
+                    "internalType": "address",
+                    "name": "issuer",
+                    "type": "address"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "issuedAt",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "isValid",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "contractOwner",
+            "outputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "name": "isAuthorizedIssuer",
+            "outputs": [
+                {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "bytes32",
+                    "name": "_fileHash",
+                    "type": "bytes32"
+                }
+            ],
+            "name": "registerCertificate",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_issuerAddress",
+                    "type": "address"
+                }
+            ],
+            "name": "revokeIssuer",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "bytes32",
+                    "name": "_fileHash",
+                    "type": "bytes32"
+                }
+            ],
+            "name": "verifyCertificate",
+            "outputs": [
+                {
+                    "internalType": "address",
+                    "name": "_issuer",
+                    "type": "address"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_isssedAt",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "_isValid",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        }
+    ],
+    "linkReferences": {},
+    "deployedLinkReferences": {},
+    "immutableReferences": {},
+    "inputSourceName": "project/contracts/CertiChain.sol",
+    "buildInfoId": "solc-0_8_28-98a5633abecd0bdf7386daf3acfd835c9f675a3c"
+}
