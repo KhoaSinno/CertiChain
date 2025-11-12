@@ -79,7 +79,8 @@ export async function POST(request: Request) {
         fileHash: result.fileHash,
         ipfsCid: result.ipfsCid,
         certificateId: result.id,
-        ipfsUrl: result.url, // Thêm URL này cho FE dùng luôn
+        ipfsUrl: result.fileURL, // Thêm URL này cho FE dùng luôn
+        metadataUrl: result.metadataURL,
       },
       { status: 201 }
     );
@@ -150,7 +151,7 @@ export async function GET(request: Request) {
     }
 
     // Map certificates to ensure consistent format
-    const mappedCertificates = certificates.map(cert => ({
+    const mappedCertificates = certificates.map((cert) => ({
       ...cert,
       transactionHash: cert.blockchainTx, // Add alias for compatibility
     }));

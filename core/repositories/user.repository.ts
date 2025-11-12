@@ -2,9 +2,9 @@ import { prisma } from "@/lib/db";
 
 const db = prisma;
 export class UserRepository {
-  async findUserById(userId: string) {
+  async findUserById(userId: number) {
     return db.user.findUnique({
-      where: { id: Number(userId) },
+      where: { id: userId },
     });
   }
 

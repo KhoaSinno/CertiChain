@@ -2,7 +2,7 @@ import { UserRepository } from "../repositories/user.repository";
 
 const userRepository = new UserRepository();
 export class UserService {
-  async getUserById(userId: string) {
+  async getUserById(userId: number) {
     return userRepository.findUserById(userId);
   }
 
