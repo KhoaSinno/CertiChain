@@ -91,12 +91,12 @@ export default function VerifyPage() {
               <svg width="46" height="46" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" className="">
                 <defs>
                   <linearGradient id="badgeBlue" x1="0" y1="0" x2="44" y2="44" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stop-color="var(--primary)"/>
-                    <stop offset="100%" stop-color="oklch(0.48 0.19 258)"/>
+                    <stop offset="0%" stopColor="var(--primary)"/>
+                    <stop offset="100%" stopColor="oklch(0.48 0.19 258)"/>
                   </linearGradient>
                 </defs>
                 <circle cx="22" cy="22" r="20" fill="url(#badgeBlue)" />
-                <path d="M15.5 22.5l4.5 4.5L28.5 18.5" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M15.5 22.5l4.5 4.5L28.5 18.5" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </span>
           </div>
