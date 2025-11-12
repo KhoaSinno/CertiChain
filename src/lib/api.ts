@@ -5,7 +5,7 @@ type ApiCertificate = {
   id: number;
   courseName: string;
   fileHash: string;
-  ipfsCid: string;
+  ipfsFile: string;
   issuerAddress: string;
   blockchainTx: string | null;
   status: "pending" | "verified" | "failed" | string;
@@ -24,7 +24,7 @@ function mapApiCertificateToClient(apiCert: ApiCertificate): Certificate {
     id: apiCert.id,
     courseName: apiCert.courseName,
     fileHash: apiCert.fileHash,
-    ipfsCid: apiCert.ipfsCid,
+    ipfsFile: apiCert.ipfsFile,
     issuerAddress: apiCert.issuerAddress,
     issuedAt: new Date(apiCert.issuedAt),
     status:
@@ -58,7 +58,7 @@ export const api = {
         throw new Error("Failed to create certificate");
       }
       // Return raw creation response as provided by API spec
-      // { status, fileHash, ipfsCid, certificateId, ipfsUrl }
+      // { status, fileHash, ipfsFile, certificateId, ipfsUrl }
       return response.json();
     },
 

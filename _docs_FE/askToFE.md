@@ -18,7 +18,7 @@
         studentName: string;
         courseName: string;
         fileHash: string;
-        ipfsCid: string;
+        ipfsFile: string;
         issuerAddress: string;
         blockchainTx: string | null;
         issuedAt: Date;
@@ -29,7 +29,7 @@
         studentName: string;
         courseName: string;
         fileHash: string;
-        ipfsCid: string;
+        ipfsFile: string;
         issuerAddress: string;
         blockchainTx: string | null;
         issuedAt: Date;
@@ -60,7 +60,7 @@
 {
     status: string;
     fileHash: string; // as efb4a5be48895fe42a447dc80651303e862b1311fc81be6bc8e9e41941b9853b
-    ipfsCid: string; // as bafkreihpwss34sejl7scurd5zadfcmb6qyvrgep4qg7gxshj4qmudomfhm
+    ipfsFile: string; // as bafkreihpwss34sejl7scurd5zadfcmb6qyvrgep4qg7gxshj4qmudomfhm
     certificateId: number;
     ipfsUrl: string;
 }
@@ -102,7 +102,7 @@ certificateId: string
         issuedAt: Date;
         status: string;
         issuerAddress: string;
-        ipfsCid: string;
+        ipfsFile: string;
         blockchainTx: string | null;
     };
     hash: string;
@@ -281,7 +281,7 @@ export default function CreateCertificatePage() {
               <div>
                 <span className="font-medium text-gray-700">IPFS CID:</span>
                 <code className="ml-2 text-xs font-mono bg-gray-100 px-2 py-1 rounded">
-                  {result.ipfsCid}
+                  {result.ipfsFile}
                 </code>
               </div>
               <div>
@@ -504,7 +504,7 @@ export default async function CertificatePage({ params }: PageProps) {
               IPFS CID
             </label>
             <p className="mt-1 text-sm text-gray-900 font-mono break-all">
-              {certificate.ipfsCid}
+              {certificate.ipfsFile}
             </p>
           </div>
 
@@ -618,12 +618,12 @@ export default async function VerifyPage({ params }: PageProps) {
               <div>
                 <span className="font-medium text-gray-700">IPFS:</span>
                 <a
-                  href={`https://ipfs.io/ipfs/${certificate.ipfsCid}`}
+                  href={`https://ipfs.io/ipfs/${certificate.ipfsFile}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="ml-2 text-blue-600 hover:text-blue-800 text-xs font-mono break-all"
                 >
-                  {certificate.ipfsCid}
+                  {certificate.ipfsFile}
                 </a>
               </div>
             </div>

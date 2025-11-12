@@ -3,7 +3,6 @@ import { useDataStore } from "@/src/state/data";
 import { CreateCertificateRequest } from "@/src/types/certificate";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { useRegisterCertificate as useBlockchainRegisterCertificate } from "./useBlockchain"; // Alias to avoid conflict
 
 export function useCertificates(initialPage = 1, initialLimit = 10) {
   const { searchTerm, filterStatus } = useDataStore();
@@ -86,24 +85,10 @@ export function useCreateCertificate() {
 export function useRegisterCertificate() {
   const queryClient = useQueryClient();
   const { updateCertificate } = useDataStore();
-  const { registerCertificate: blockchainRegister } =
-    useBlockchainRegisterCertificate();
 
   return useMutation({
-    mutationFn: async ({
-      certificateId,
-      fileHash,
-      ipfsHash,
-      studentIdHash,
-    }: {
-      certificateId: string;
-      fileHash: `0x${string}`;
-      ipfsHash: string;
-      studentIdHash: `0x${string}`;
-    }) => {
-      // First, register on blockchain
-      await blockchainRegister(fileHash, ipfsHash, studentIdHash);
-      // Then, update backend/mock API
+    mutationFn: async (certificateId: string) => {
+      // Backend API handles blockchain registration via ethers.js
       return api.certificates.register(certificateId);
     },
     onSuccess: (updatedCert) => {

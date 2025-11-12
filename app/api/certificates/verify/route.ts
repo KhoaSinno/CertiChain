@@ -17,15 +17,13 @@ export async function GET(request: Request) {
       );
     }
 
-    // Try to find certificate by fileHash first, then by blockchainTx
+    // 2 OPT: By file hash and by blockchain/ transaction hash
     let certificate = await certificateRepo.findByHash(hash);
-
     if (!certificate) {
-      // If not found by fileHash, try blockchainTx
       certificate = await certificateRepo.findByTxHash(hash);
     }
 
-    // Validate certificate data layer 1: DATABASE
+    // Validate certificate data layer 1: DATABASE - OFFchain
     if (!certificate) {
       return NextResponse.json({
         verified: false,
@@ -34,7 +32,7 @@ export async function GET(request: Request) {
       });
     }
 
-    // ✅ Certificate already includes student from findByHash
+    //  Standard check form data response
     if (!certificate.student) {
       return NextResponse.json({
         verified: false,
@@ -48,7 +46,7 @@ export async function GET(request: Request) {
       certificate.fileHash
     );
 
-    // Validate certificate data layer 2: ONCHAIN
+    // ----- Validate certificate data layer 2: ONCHAIN -----
     if (
       !certOnChain.isValid ||
       certOnChain.issuerAddress.toLowerCase() !==
@@ -56,7 +54,7 @@ export async function GET(request: Request) {
     ) {
       return NextResponse.json({
         verified: false,
-        message: "Certificate is not valid on blockchain!",
+        message: "Certificate is invalid on blockchain!",
         hash: hash,
       });
     }
@@ -72,7 +70,7 @@ export async function GET(request: Request) {
         issuedAt: certOnChain.issuedAt, // onChain data
         status: certificate.status,
         issuerAddress: certOnChain.issuerAddress, // onChain data
-        ipfsCid: certificate.ipfsCid,
+        ipfsFile: certificate.ipfsFile,
         blockchainTx: certificate.blockchainTx,
       },
       hash: hash, // file hash

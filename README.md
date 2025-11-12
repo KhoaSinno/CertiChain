@@ -8,7 +8,7 @@ Certificate {
   studentIdHash hash dựa trên: certSha256(Buffer.from(studentId + studentName + courseName));
   courseName    Đã có
   fileHash      Đã có hash từ nội dung file được đẩy lên
-  ipfsCid       cid từ pinata trả về
+  ipfsFile       cid từ pinata trả về
   issuerAddress Đã cố định
   blockchainTx  null, chưa có vì chưa thực hiện verify
   status        pending khi mới tạo, verified và failed thì trả về khi thực hiện verify onchain
@@ -24,6 +24,8 @@ Lúc này student có tài khoản trước đó rồi, login vào thấy đư�
 Sau đó admin có nhiệm vụ là verify, thực hiện đẩy lên blockchain với các thông tin: fileHash, studentIdHash (Là ở đây tôi có thể thay thế studentIdHash thành studentId được không). Nếu thành công sẽ cập nhật status = verified (failed nếu thất bại), blockchainTx = transactionHash 
 
 Người interviewer có thể verify hay bất cứ người nào mà không cần login. Người này chỉ cần nhập cái mã file hash dô (Có thể bằng link hoặc qr cho tiện). Lúc này quan trọng đó là nếu như smartContract xác thực thành công thì trả về ok (Có thể kèm data một số trường cần thiết) hoặc thất bại
+
+    // "contractAddress": "0xF82d44De7D594f8d47c38a2c7208Fac85554C0d8",
 
  -->
 

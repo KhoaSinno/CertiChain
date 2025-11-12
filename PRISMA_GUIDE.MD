@@ -4,6 +4,10 @@
 npx prisma db push
 ```
 
+```bash
+npx prisma generate
+```
+
 ## Production command
 
 ```bash

@@ -1,7 +1,13 @@
+'use client';
+
+import { useAuth } from '@/src/hooks/useAuth';
 import { Github, GraduationCap, Linkedin, Twitter } from 'lucide-react';
 import Link from 'next/link';
 
 export function Footer() {
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'ADMIN';
+
   return (
     <footer className="border-t bg-background">
       <div className="container mx-auto px-6 py-8">
@@ -14,7 +20,7 @@ export function Footer() {
             </div>
             <p className="text-sm text-muted-foreground">
               Hệ thống xác thực chứng chỉ dựa trên blockchain, 
-              kết hợp IPFS để lưu trữ và Base Sepolia để xác minh.
+              kết hợp IPFS để lưu trữ và Ethereum Sepolia để xác minh.
             </p>
           </div>
 
@@ -27,16 +33,20 @@ export function Footer() {
                   Trang chủ
                 </Link>
               </li>
-              <li>
-                <Link href="/dashboard" className="text-muted-foreground hover:text-primary">
-                  Dashboard
-                </Link>
-              </li>
-              <li>
-                <Link href="/certificates/create" className="text-muted-foreground hover:text-primary">
-                  Tạo chứng chỉ
-                </Link>
-              </li>
+              {user && (
+                <li>
+                  <Link href="/dashboard" className="text-muted-foreground hover:text-primary">
+                    Dashboard
+                  </Link>
+                </li>
+              )}
+              {isAdmin && (
+                <li>
+                  <Link href="/certificates/create" className="text-muted-foreground hover:text-primary">
+                    Tạo chứng chỉ
+                  </Link>
+                </li>
+              )}
               <li>
                 <Link href="/verify" className="text-muted-foreground hover:text-primary">
                   Xác minh

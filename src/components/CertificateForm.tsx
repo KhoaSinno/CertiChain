@@ -2,13 +2,19 @@
 
 import { Button } from '@/src/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/card';
-import { Input } from '@/src/components/ui/input';
 import { Progress } from '@/src/components/ui/progress';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/src/components/ui/select';
 import { Textarea } from '@/src/components/ui/textarea';
 import { CreateCertificateRequest } from '@/src/types/certificate';
-import { BookOpen, FileText, Hash, Upload, User } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { AlertCircle, BookOpen, FileText, Upload, User } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { FilePreview } from './FilePreview';
+
+interface Student {
+  id: number;
+  studentId: string;
+  studentName: string;
+}
 
 interface CertificateFormProps {
   onSubmit: (data: CreateCertificateRequest) => void;
@@ -30,7 +36,33 @@ export function CertificateForm({
   });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);
+  const [students, setStudents] = useState<Student[]>([]);
+  const [isLoadingStudents, setIsLoadingStudents] = useState(true);
+  const [studentsError, setStudentsError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSelectOpen, setIsSelectOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Fetch students list on mount
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        const response = await fetch('/api/students');
+        if (!response.ok) {
+          throw new Error('Failed to fetch students');
+        }
+        const data = await response.json();
+        setStudents(data);
+      } catch (error) {
+        console.error('Error fetching students:', error);
+        setStudentsError('Không thể tải danh sách sinh viên');
+      } finally {
+        setIsLoadingStudents(false);
+      }
+    };
+
+    fetchStudents();
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -39,6 +71,12 @@ export function CertificateForm({
       [name]: value
     }));
   };
+
+  // Filter students based on search query
+  const filteredStudents = students.filter(student => 
+    student.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    student.studentId.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -171,36 +209,73 @@ export function CertificateForm({
 
           {/* Right Column - Form Fields */}
           <div className="space-y-4 md:space-y-6 flex flex-col">
-            {/* Student Name */}
+            {/* Student Selection */}
             <div className="space-y-2">
               <label className="text-sm md:text-base font-semibold flex items-center gap-2">
                 <User className="h-4 w-4 text-primary" />
-                Tên sinh viên
+                Chọn sinh viên
               </label>
-              <Input
-                name="studentName"
-                value={formData.studentName}
-                onChange={handleInputChange}
-                placeholder="Nhập tên sinh viên"
-                className="text-sm md:text-base h-10 md:h-11"
-                required
-              />
-            </div>
-            
-            {/* Student ID */}
-            <div className="space-y-2">
-              <label className="text-sm md:text-base font-semibold flex items-center gap-2">
-                <Hash className="h-4 w-4 text-primary" />
-                Mã sinh viên
-              </label>
-              <Input
-                name="studentId"
-                value={formData.studentId}
-                onChange={handleInputChange}
-                placeholder="Nhập mã sinh viên"
-                className="text-sm md:text-base h-10 md:h-11"
-                required
-              />
+              
+              {isLoadingStudents ? (
+                <div className="h-10 md:h-11 rounded-md border bg-muted animate-pulse flex items-center justify-center">
+                  <span className="text-xs text-muted-foreground">Đang tải...</span>
+                </div>
+              ) : studentsError ? (
+                <div className="p-3 rounded-md border border-red-200 bg-red-50 dark:bg-red-950/20 flex items-center gap-2">
+                  <AlertCircle className="h-4 w-4 text-red-600" />
+                  <span className="text-xs text-red-600">{studentsError}</span>
+                </div>
+              ) : (
+                <Select
+                  value={formData.studentId}
+                  onValueChange={(value) => {
+                    const student = students.find(s => s.studentId === value);
+                    if (student) {
+                      setFormData(prev => ({
+                        ...prev,
+                        studentId: student.studentId,
+                        studentName: student.studentName
+                      }));
+                      setSearchQuery('');
+                      setIsSelectOpen(false);
+                    }
+                  }}
+                  open={isSelectOpen}
+                  onOpenChange={setIsSelectOpen}
+                >
+                  <SelectTrigger className="h-10 md:h-11">
+                    <SelectValue placeholder="Tìm kiếm sinh viên..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <div className="p-2 sticky top-0 bg-popover z-10">
+                      <input
+                        type="text"
+                        placeholder="Tìm theo tên hoặc mã sinh viên..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full px-3 py-2 text-sm rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-ring"
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    </div>
+                    <div className="max-h-[300px] overflow-y-auto">
+                      {filteredStudents.length === 0 ? (
+                        <div className="p-3 text-sm text-center text-muted-foreground">
+                          {searchQuery ? 'Không tìm thấy sinh viên' : 'Không có sinh viên nào'}
+                        </div>
+                      ) : (
+                        filteredStudents.map((student) => (
+                          <SelectItem key={student.id} value={student.studentId}>
+                            <div className="flex items-center gap-2">
+                              <span className="font-medium">{student.studentName}</span>
+                              <span className="text-xs text-muted-foreground">({student.studentId})</span>
+                            </div>
+                          </SelectItem>
+                        ))
+                      )}
+                    </div>
+                  </SelectContent>
+                </Select>
+              )}
             </div>
 
             {/* Course Information */}
