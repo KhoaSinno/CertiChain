@@ -47,11 +47,7 @@ export async function GET(request: Request) {
     );
 
     // ----- Validate certificate data layer 2: ONCHAIN -----
-    if (
-      !certOnChain.isValid ||
-      certOnChain.issuerAddress.toLowerCase() !==
-        certificate.issuerAddress.toLowerCase()
-    ) {
+    if (!certOnChain.isValid) {
       return NextResponse.json({
         verified: false,
         message: "Certificate is invalid on blockchain!",

@@ -2,6 +2,7 @@ import { pinata } from "@/utils/config";
 import { CertificateRepository } from "../repositories/certificate.repository";
 import crypto from "crypto";
 import { UserService } from "./user.service";
+import { BlockchainService } from "../repositories/blockchain.repository";
 
 type CertificateUploadInput = {
   file: File;
@@ -17,6 +18,7 @@ export const certSha256 = (buffer: Buffer) =>
 export class CertificateService {
   private certRepo = new CertificateRepository();
   private userService = new UserService();
+  private blockchainService = new BlockchainService();
 
   // -- UPLOAD + IPFS FILE --
   async createCertificate({
@@ -34,6 +36,15 @@ export class CertificateService {
 
     // HASH FILE
     const fileHash = certSha256(Buffer.from(await file.arrayBuffer()));
+
+    // ✅ CHECK DUPLICATE CERTIFICATE
+    const existingCert = await this.certRepo.findByHash(fileHash);
+    if (existingCert) {
+      throw new Error(
+        `Certificate already exists with ID: ${existingCert.id}. This file has been uploaded before.`
+      );
+    }
+
     // file IPFS upload
     const { cid: fileCID } = await pinata.upload.public.file(file);
     const fileURL = await pinata.gateways.public.convert(fileCID);
@@ -66,9 +77,20 @@ export class CertificateService {
       ipfsFile: fileURL, // MOCK test
       issuerAddress,
       userId,
+      // status: "verified",
     });
 
-    // return NextResponse.json(fileURL, { status: 200 });
+    // Call store onchain // TODO: Add more metadata urls if needed
+    // await this.blockchainService.registerOnChain(fileHash);
+
+    const blockchainTx = await this.blockchainService.registerOnChain(fileHash);
+
+    // Update the status to verified
+    await this.certRepo.updateStatus(
+      cert.id.toString(),
+      "verified",
+      blockchainTx
+    );
 
     return {
       id: cert.id,
