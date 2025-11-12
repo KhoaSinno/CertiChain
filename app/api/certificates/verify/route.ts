@@ -70,7 +70,7 @@ export async function GET(request: Request) {
         issuedAt: certOnChain.issuedAt, // onChain data
         status: certificate.status,
         issuerAddress: certOnChain.issuerAddress, // onChain data
-        ipfsCid: certificate.ipfsCid,
+        ipfsFile: certificate.ipfsFile,
         blockchainTx: certificate.blockchainTx,
       },
       hash: hash, // file hash

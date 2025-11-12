@@ -10,8 +10,8 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
   // directUrl = env("DIRECT_URL")
 }
 
@@ -34,16 +34,19 @@ model User {
 }
 
 model Certificate {
-  id            Int      @id @default(autoincrement())
+  id            Int       @id @default(autoincrement())
   courseName    String
-  fileHash      String   @unique
-  ipfsCid       String
+  fileHash      String    @unique
+  ipfsFile      String
+  ipfsMetadata  String?   @default("")
   issuerAddress String
-  blockchainTx  String?
-  status        String   @default("pending") // pending | verified | failed
-  issuedAt      DateTime @default(now())
+  blockchainTx  String?   @default("")
+  startDate     DateTime? @default(now())
+  endDate       DateTime? @default(now())
+  status        String    @default("pending") // pending | verified | failed
+  issuedAt      DateTime  @default(now())
 
   // Relations
-  userId Int
+  userId  Int
   student User @relation(fields: [userId], references: [id])
 }

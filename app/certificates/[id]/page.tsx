@@ -1,22 +1,38 @@
-'use client';
+"use client";
 
-import { Layout } from '@/src/components/Layout';
-import { QRDisplay } from '@/src/components/QRDisplay';
-import { Badge } from '@/src/components/ui/badge';
-import { Button } from '@/src/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/card';
-import { useCertificate } from '@/src/hooks/useCertificates';
-import { formatDate } from '@/src/lib/utils';
-import { ArrowLeft, Calendar, CheckCircle2, Copy, ExternalLink, FileText, GraduationCap, Hash, Share2, User } from 'lucide-react';
-import { notFound, useParams, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { Layout } from "@/src/components/Layout";
+import { QRDisplay } from "@/src/components/QRDisplay";
+import { Badge } from "@/src/components/ui/badge";
+import { Button } from "@/src/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/src/components/ui/card";
+import { useCertificate } from "@/src/hooks/useCertificates";
+import { formatDate } from "@/src/lib/utils";
+import {
+  ArrowLeft,
+  Calendar,
+  CheckCircle2,
+  Copy,
+  ExternalLink,
+  FileText,
+  GraduationCap,
+  Hash,
+  Share2,
+  User,
+} from "lucide-react";
+import { notFound, useParams, useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function CertificateDetailPage() {
   const params = useParams();
   const id = params.id as string;
   const router = useRouter();
   const { data: certificate, isLoading, error } = useCertificate(id);
-  
+
   // ✅ All hooks must be called before any conditional returns
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
@@ -33,7 +49,9 @@ export default function CertificateDetailPage() {
           <div className="flex items-center justify-center h-64">
             <div className="text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-              <p className="text-muted-foreground">Đang tải thông tin chứng chỉ...</p>
+              <p className="text-muted-foreground">
+                Đang tải thông tin chứng chỉ...
+              </p>
             </div>
           </div>
         </div>
@@ -75,10 +93,10 @@ export default function CertificateDetailPage() {
               Xem chứng chỉ
             </Button>
 
-            {certificate.ipfsCid && (
+            {certificate.ipfsFile && (
               <Button
                 variant="ghost"
-                onClick={() => window.open(`https://ipfs.io/ipfs/${certificate.ipfsCid}`, '_blank')}
+                onClick={() => window.open(`${certificate.ipfsFile}`, "_blank")}
                 className="gap-2 text-blue-600 dark:text-blue-400 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white"
               >
                 <ExternalLink className="h-4 w-4" />
@@ -89,7 +107,12 @@ export default function CertificateDetailPage() {
             {txHash && (
               <Button
                 variant="ghost"
-                onClick={() => window.open(`https://sepolia.etherscan.io/tx/${txHash}`, '_blank')}
+                onClick={() =>
+                  window.open(
+                    `https://sepolia.etherscan.io/tx/${txHash}`,
+                    "_blank"
+                  )
+                }
                 className="gap-2 text-green-600 dark:text-green-400 hover:bg-green-600 hover:text-white dark:hover:bg-green-600 dark:hover:text-white"
               >
                 <ExternalLink className="h-4 w-4" />
@@ -99,11 +122,15 @@ export default function CertificateDetailPage() {
 
             <Button
               variant="ghost"
-              onClick={() => navigator.share({ 
-                title: 'Chứng chỉ CertiChain',
-                text: `Chứng chỉ ${certificate.courseName} của ${certificate.student?.studentName || 'N/A'}`,
-                url: verificationUrl 
-              })}
+              onClick={() =>
+                navigator.share({
+                  title: "Chứng chỉ CertiChain",
+                  text: `Chứng chỉ ${certificate.courseName} của ${
+                    certificate.student?.studentName || "N/A"
+                  }`,
+                  url: verificationUrl,
+                })
+              }
               className="gap-2 text-purple-600 dark:text-purple-400 hover:bg-purple-600 hover:text-white dark:hover:bg-purple-600 dark:hover:text-white"
             >
               <Share2 className="h-4 w-4" />
@@ -123,8 +150,12 @@ export default function CertificateDetailPage() {
                     <GraduationCap className="h-6 w-6 text-primary" />
                   </div>
                   <div className="flex-1">
-                    <CardTitle className="text-2xl">{certificate.courseName}</CardTitle>
-                    <p className="text-sm text-muted-foreground mt-1">Certificate Details</p>
+                    <CardTitle className="text-2xl">
+                      {certificate.courseName}
+                    </CardTitle>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Certificate Details
+                    </p>
                   </div>
                   {hasTransaction && (
                     <Badge className="bg-green-600 text-white border-0 gap-1.5">
@@ -143,15 +174,17 @@ export default function CertificateDetailPage() {
                 <CardHeader className="pb-3">
                   <div className="flex items-center gap-2">
                     <User className="h-4 w-4 text-blue-600" />
-                    <CardTitle className="text-sm font-medium text-muted-foreground">Thông tin sinh viên</CardTitle>
+                    <CardTitle className="text-sm font-medium text-muted-foreground">
+                      Thông tin sinh viên
+                    </CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent>
                   <p className="text-lg font-semibold text-foreground mb-1">
-                    {certificate.student?.studentName || 'N/A'}
+                    {certificate.student?.studentName || "N/A"}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    MSSV: {certificate.student?.studentId || 'N/A'}
+                    MSSV: {certificate.student?.studentId || "N/A"}
                   </p>
                 </CardContent>
               </Card>
@@ -161,7 +194,9 @@ export default function CertificateDetailPage() {
                 <CardHeader className="pb-3">
                   <div className="flex items-center gap-2">
                     <Calendar className="h-4 w-4 text-indigo-600" />
-                    <CardTitle className="text-sm font-medium text-muted-foreground">Ngày xác thực</CardTitle>
+                    <CardTitle className="text-sm font-medium text-muted-foreground">
+                      Ngày xác thực
+                    </CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -169,7 +204,9 @@ export default function CertificateDetailPage() {
                     {formatDate(certificate.issuedAt)}
                   </p>
                   <p className="text-sm text-muted-foreground mt-1">
-                    {certificate.status === 'verified' ? 'Đã xác thực' : 'Chờ xác thực'}
+                    {certificate.status === "verified"
+                      ? "Đã xác thực"
+                      : "Chờ xác thực"}
                   </p>
                 </CardContent>
               </Card>
@@ -196,10 +233,12 @@ export default function CertificateDetailPage() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => handleCopy(certificate.fileHash, 'fileHash')}
+                      onClick={() =>
+                        handleCopy(certificate.fileHash, "fileHash")
+                      }
                       className="flex-shrink-0"
                     >
-                      {copiedField === 'fileHash' ? (
+                      {copiedField === "fileHash" ? (
                         <CheckCircle2 className="h-4 w-4 text-green-600" />
                       ) : (
                         <Copy className="h-4 w-4" />
@@ -221,10 +260,10 @@ export default function CertificateDetailPage() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleCopy(txHash, 'txHash')}
+                        onClick={() => handleCopy(txHash, "txHash")}
                         className="flex-shrink-0"
                       >
-                        {copiedField === 'txHash' ? (
+                        {copiedField === "txHash" ? (
                           <CheckCircle2 className="h-4 w-4 text-green-600" />
                         ) : (
                           <Copy className="h-4 w-4" />
@@ -254,14 +293,18 @@ export default function CertificateDetailPage() {
                   <div className="w-16 h-16 mx-auto mb-3 bg-orange-500/10 rounded-full flex items-center justify-center">
                     <Hash className="h-8 w-8 text-orange-600" />
                   </div>
-                  <CardTitle className="text-lg font-semibold">Chưa đăng ký on-chain</CardTitle>
+                  <CardTitle className="text-lg font-semibold">
+                    Chưa đăng ký on-chain
+                  </CardTitle>
                   <p className="text-sm text-muted-foreground mt-2">
                     Chứng chỉ này chưa được đăng ký lên blockchain
                   </p>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="bg-orange-500/10 rounded-lg p-4 border border-orange-500/20">
-                    <p className="text-xs text-muted-foreground mb-2">File Hash</p>
+                    <p className="text-xs text-muted-foreground mb-2">
+                      File Hash
+                    </p>
                     <code className="text-xs font-mono break-all block text-orange-700 dark:text-orange-400">
                       {certificate.fileHash}
                     </code>

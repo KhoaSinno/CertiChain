@@ -8,7 +8,7 @@ Certificate {
   studentIdHash hash dựa trên: certSha256(Buffer.from(studentId + studentName + courseName));
   courseName    Đã có
   fileHash      Đã có hash từ nội dung file được đẩy lên
-  ipfsCid       cid từ pinata trả về
+  ipfsFile       cid từ pinata trả về
   issuerAddress Đã cố định
   blockchainTx  null, chưa có vì chưa thực hiện verify
   status        pending khi mới tạo, verified và failed thì trả về khi thực hiện verify onchain

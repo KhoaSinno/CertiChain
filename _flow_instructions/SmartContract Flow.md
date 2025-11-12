@@ -44,7 +44,7 @@ contract CertificateRegistry {
 
     // Cấu trúc dữ liệu chứng chỉ  
     struct Certificate {  
-        string ipfsCid;        // CID IPFS nơi lưu file PDF  
+        string ipfsFile;        // CID IPFS nơi lưu file PDF  
         bytes32 fileHash;      // Hash SHA-256 của file chứng chỉ  
         bytes32 studentIdHash; // Mã sinh viên đã hash  
         address issuer;        // Địa chỉ ví của nhà trường  
@@ -57,7 +57,7 @@ contract CertificateRegistry {
     // Sự kiện phát hành chứng chỉ  
     event CertificateIssued(  
         bytes32 indexed fileHash,  
-        string ipfsCid,  
+        string ipfsFile,  
         bytes32 indexed studentIdHash,  
         address indexed issuer,  
         uint256 issuedAt  
@@ -75,7 +75,7 @@ contract CertificateRegistry {
         require(certificates\[\_hash\].issuedAt \== 0, "Certificate already exists");
 
         certificates\[\_hash\] \= Certificate({  
-            ipfsCid: \_ipfsCid,  
+            ipfsFile: \_ipfsCid,  
             fileHash: \_hash,  
             studentIdHash: \_studentIdHash,  
             issuer: msg.sender,  
@@ -87,7 +87,7 @@ contract CertificateRegistry {
 
     /// @notice Kiểm tra chứng chỉ có tồn tại hay không  
     /// @param \_hash Hash của file chứng chỉ  
-    /// @return Certificate struct (ipfsCid, issuer, issuedAt)  
+    /// @return Certificate struct (ipfsFile, issuer, issuedAt)  
     function verifyCertificate(bytes32 \_hash) external view returns (Certificate memory) {  
         require(certificates\[\_hash\].issuedAt \!= 0, "Certificate not found");  
         return certificates\[\_hash\];  
@@ -132,7 +132,7 @@ Nhập:
 \_ipfsCid: QmABC123xyz...  
 \_studentIdHash: 0x3bd6f9...
 
-2.   
+2.
 3. Nhấn **transact** → ký giao dịch MetaMask
 
 4. Xem kết quả:
@@ -155,13 +155,13 @@ Nhập:
 
 Kết quả trả về:
 
- ipfsCid: QmABC123xyz...  
+ ipfsFile: QmABC123xyz...  
 fileHash: 0x8a7f3c...  
 studentIdHash: 0x3bd6f9...  
 issuer: 0xYourUniversityWallet  
 issuedAt: 1729592585
 
-4. 
+4.
 
 ✅ → Nếu ra đúng dữ liệu, chứng chỉ đã được ghi thành công.
 
@@ -214,7 +214,7 @@ Sau khi compile trên Remix, mở tab “Compilation Details” → copy JSON AB
     "outputs": \[  
       {  
         "components": \[  
-          { "internalType": "string", "name": "ipfsCid", "type": "string" },  
+          { "internalType": "string", "name": "ipfsFile", "type": "string" },  
           { "internalType": "bytes32", "name": "fileHash", "type": "bytes32" },  
           { "internalType": "bytes32", "name": "studentIdHash", "type": "bytes32" },  
           { "internalType": "address", "name": "issuer", "type": "address" },  
@@ -281,4 +281,3 @@ Sau khi compile trên Remix, mở tab “Compilation Details” → copy JSON AB
 | 3️⃣ Test | Dùng hàm register / verify / isRegistered | Xác minh logic |
 | 4️⃣ Export ABI | Dán cho BE & FE team | Đồng bộ API |
 | 5️⃣ Ghi lại contract info | `.env` hoặc `README.md` | Team BE dùng deploy info |
-

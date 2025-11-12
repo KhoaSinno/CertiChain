@@ -64,7 +64,7 @@ model Certificate {
   studentIdHash  String  
   courseName     String  
   fileHash       String   @unique  
-  ipfsCid        String  
+  ipfsFile        String  
   issuerAddress  String  
   blockchainTx   String?  
   status         String   @default("pending") // pending | verified | failed  
@@ -73,7 +73,7 @@ model Certificate {
 
 ---
 
-## 
+##
 
 ## **🔁 5\. Business Flow chi tiết (step-by-step)**
 
@@ -89,7 +89,7 @@ model Certificate {
 
    2. File PDF chứng chỉ
 
-2. **BE xử lý:**   
+2. **BE xử lý:**
    1. Hash file bằng SHA-256
 
        import crypto from "crypto";
@@ -111,16 +111,16 @@ const cid \= await client.put(\[file\]);
 
 await prisma.certificate.create({
 
-  data: { studentName, courseName, fileHash: hash, ipfsCid: cid, studentIdHash, issuerAddress }  
+  data: { studentName, courseName, fileHash: hash, ipfsFile: cid, studentIdHash, issuerAddress }  
 });
 
 5. Trả về JSON:
 
     {
 
-  "status": "pending",  
+"status": "pending",  
   "fileHash": "0xabc123...",  
-  "ipfsCid": "QmXYZ...",  
+  "ipfsFile": "QmXYZ...",  
   "certificateId": 1  
 }  
 ---
@@ -139,14 +139,14 @@ await prisma.certificate.create({
 
 **Luồng xử lý:**
 
-1. Lấy record từ DB → `{ fileHash, ipfsCid, studentIdHash }`
+1. Lấy record từ DB → `{ fileHash, ipfsFile, studentIdHash }`
 
 Gọi smart contract (qua `ethers.js`):
 
  const provider \= new ethers.JsonRpcProvider(process.env.BASE\_RPC);  
 const wallet \= new ethers.Wallet(process.env.PRIVATE\_KEY, provider);  
 const contract \= new ethers.Contract(process.env.CONTRACT\_ADDRESS, abi, wallet);  
-const tx \= await contract.registerCertificate(fileHash, ipfsCid, studentIdHash);  
+const tx \= await contract.registerCertificate(fileHash, ipfsFile, studentIdHash);  
 const receipt \= await tx.wait();
 
 2. Cập nhật DB:
@@ -163,7 +163,7 @@ const receipt \= await tx.wait();
 
   "status": "verified",  
   "txHash": "0xabc123...",  
-  "explorer": "https://basescan.org/tx/0xabc123..."  
+  "explorer": "<https://basescan.org/tx/0xabc123>..."  
 }
 
 ---
@@ -201,7 +201,7 @@ Gọi smart contract để kiểm tra:
 
  const cert \= await contract.verifyCertificate(fileHash);
 
-2.   
+2.
 3. So sánh:
 
    * Hash có tồn tại không?
@@ -213,13 +213,13 @@ Trả về kết quả:
  {  
   "verified": true,  
   "issuer": "0x123...",  
-  "ipfsCid": "QmXyz...",  
+  "ipfsFile": "QmXyz...",  
   "txHash": "0xabc...",  
   "issuedAt": 1729555555,  
-  "viewOnChain": "https://basescan.org/tx/0xabc..."  
+  "viewOnChain": "<https://basescan.org/tx/0xabc>..."  
 }
 
-4.   
+4.
 5. Nếu không tồn tại → trả `verified: false`.
 
 ---
@@ -254,7 +254,7 @@ Nếu muốn tối ưu, bạn có thể dùng **background job** để:
 
 Ví dụ event watcher:
 
-contract.on("CertificateIssued", async (hash, ipfsCid, issuer, timestamp) \=\> {  
+contract.on("CertificateIssued", async (hash, ipfsFile, issuer, timestamp) \=\> {  
   await prisma.certificate.updateMany({  
     where: { fileHash: hash },  
     data: { status: "verified" }  
@@ -267,7 +267,7 @@ contract.on("CertificateIssued", async (hash, ipfsCid, issuer, timestamp) \=\> {
 
 DATABASE\_URL=postgresql://user:password@host:port/db  
 WEB3\_TOKEN=YOUR\_WEB3\_STORAGE\_TOKEN  
-BASE\_RPC=https://base-sepolia.g.alchemy.com/v2/yourKey  
+BASE\_RPC=<https://base-sepolia.g.alchemy.com/v2/yourKey>  
 CONTRACT\_ADDRESS=0xYourContractAddress  
 PRIVATE\_KEY=0xYourPrivateKey  
 ISSUER\_WALLET=0xUniversityWallet
@@ -299,4 +299,3 @@ FE hiển thị QR \+ link verify
 | **Blockchain module** | Gọi contract, verify hash |
 | **DB module (Prisma)** | Lưu và đồng bộ trạng thái |
 | **Auth middleware (optional)** | Giới hạn ai có thể tạo chứng chỉ |
-

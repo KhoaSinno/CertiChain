@@ -32,20 +32,15 @@ export class CertificateService {
       throw new Error("Student not found");
     }
 
-    // Upload file to IPFS
+    // HASH FILE
     const fileHash = certSha256(Buffer.from(await file.arrayBuffer()));
-    // const studentIdHash = certSha256(
-    //   Buffer.from(studentId + studentName + courseName)
-    // );
-
-    // const { cid } = await pinata.upload.public.file(file);
-    // const url = await pinata.gateways.public.convert(cid);
-
+    // file IPFS upload
     const { cid: fileCID } = await pinata.upload.public.file(file);
     const fileURL = await pinata.gateways.public.convert(fileCID);
     console.log("📄 File URL:", fileURL);
+    // METADATA JSON upload
     const { cid: metadataCID } = await pinata.upload.public.json({
-      name: `Certificate: ${courseName} - David Sinoo`,
+      name: `Certificate: ${courseName} - KDN Team`,
       // description: `Official blockchain certificate issued by KDN Business.`,
       // external_url: fileURL, // Change it to website URL verify + Put var in .env
       image: fileURL, // file PDF (IPFS gateway link)
@@ -62,13 +57,13 @@ export class CertificateService {
     const metadataURL = await pinata.gateways.public.convert(metadataCID);
     console.log("📝 Metadata URL:", metadataURL);
 
-    const cid_URL = fileURL.toString() + "\n // " + metadataURL.toString();
     const issuerAddress = process.env.ISSUER_WALLET!;
 
+    // DB store certificate
     const cert = await this.certRepo.createWithUserId({
       courseName,
       fileHash,
-      ipfsCid: cid_URL, // MOCK test
+      ipfsFile: fileURL, // MOCK test
       issuerAddress,
       userId,
     });
@@ -78,7 +73,7 @@ export class CertificateService {
     return {
       id: cert.id,
       fileHash,
-      ipfsCid: cid_URL,
+      ipfsFile: fileURL,
       fileURL,
       status: cert.status,
       metadataURL,

@@ -307,7 +307,7 @@ return NextResponse.json({ error: "Error message" }, { status: 400 });
 return NextResponse.json({
   status: "pending",
   fileHash: "0xabc...",
-  ipfsCid: "Qm...",
+  ipfsFile: "Qm...",
   certificateId: 1,
 });
 ```
@@ -693,7 +693,7 @@ export async function POST(request: Request) {
       {
         status: result.status,
         fileHash: result.fileHash,
-        ipfsCid: result.ipfsCid,
+        ipfsFile: result.ipfsFile,
         certificateId: result.id,
         ipfsUrl: result.url, // Thêm URL này cho FE dùng luôn
       },
@@ -866,7 +866,7 @@ export async function GET(request: Request) {
         issuedAt: certOnChain.issuedAt, // onChain data
         status: certificate.status,
         issuerAddress: certOnChain.issuerAddress, // onChain data
-        ipfsCid: certificate.ipfsCid,
+        ipfsFile: certificate.ipfsFile,
         blockchainTx: certificate.blockchainTx,
       },
       hash: hash, // file hash
@@ -1190,10 +1190,10 @@ export default function CertificateDetailPage() {
               Xem chứng chỉ
             </Button>
 
-            {certificate.ipfsCid && (
+            {certificate.ipfsFile && (
               <Button
                 variant="ghost"
-                onClick={() => window.open(`https://ipfs.io/ipfs/${certificate.ipfsCid}`, '_blank')}
+                onClick={() => window.open(`https://ipfs.io/ipfs/${certificate.ipfsFile}`, '_blank')}
                 className="gap-2 text-blue-600 dark:text-blue-400 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white"
               >
                 <ExternalLink className="h-4 w-4" />
@@ -4181,14 +4181,14 @@ export class CertificateService {
     const cert = await this.certRepo.createWithUserId({
       courseName,
       fileHash,
-      ipfsCid: cid,
+      ipfsFile: cid,
       issuerAddress,
       userId,
     });
 
     // return NextResponse.json(url, { status: 200 });
 
-    return { id: cert.id, fileHash, ipfsCid: cid, url, status: cert.status };
+    return { id: cert.id, fileHash, ipfsFile: cid, url, status: cert.status };
   }
 
   // -- GET USER BY CERTIFICATE ID --
@@ -4735,7 +4735,7 @@ async function main() {
         courseName: "Certificate of Getting Ready for the CPA Board Exam",
         fileHash:
           "2efb9c8e48e3ae48c92778cf08fcea01ba8091cfdbacd2609d97747db3b34001",
-        ipfsCid: "bafybeibrhlewfkp7uxs7luzgxsg4bhbey5dfapw47aypzbsgtxwbqs3bbu",
+        ipfsFile: "bafybeibrhlewfkp7uxs7luzgxsg4bhbey5dfapw47aypzbsgtxwbqs3bbu",
         issuerAddress: "0xbEb7518cD8F8f096A23426AE3c8a9d778b4CBf00",
         blockchainTx: "", // empty because not yet registered
         status: "pending",
@@ -4746,7 +4746,7 @@ async function main() {
         courseName: "Certificate of Achievement in Blockchain",
         fileHash:
           "24d3300b4cb276e7110527d6d5e7f3856c5b2f049c9ccc5a9d3080d9b610b11b",
-        ipfsCid: "bafkreibe2myawtfso3trcbjh23k6p44fnrns6be4ttgfvhjqqdm3mefrdm",
+        ipfsFile: "bafkreibe2myawtfso3trcbjh23k6p44fnrns6be4ttgfvhjqqdm3mefrdm",
         issuerAddress: "0xbEb7518cD8F8f096A23426AE3c8a9d778b4CBf00",
         blockchainTx: "", // empty because not yet registered
         status: "pending",
@@ -4757,7 +4757,7 @@ async function main() {
         courseName: "Certificate of Getting Ready for the CPA Board Exam",
         fileHash:
           "cbddcf032651fc6983fb61ccbceb226e1e436dd41f697e9692f17377eb8d6e78",
-        ipfsCid: "bafkreigl3xhqgjsr7ruyh63bzs6owitodzbw3va7nf7jnexron36xdlopa",
+        ipfsFile: "bafkreigl3xhqgjsr7ruyh63bzs6owitodzbw3va7nf7jnexron36xdlopa",
         issuerAddress: "0xbEb7518cD8F8f096A23426AE3c8a9d778b4CBf00",
         blockchainTx: "", // empty because not yet registered
         status: "pending",
@@ -4768,7 +4768,7 @@ async function main() {
         courseName: "Toeic Certificate",
         fileHash:
           "fc085bee6fa69a7fd8a93b25c75162acf7ebc9c5c0ee563d822d4a1683cc7f8b",
-        ipfsCid: "bafybeiewbaqggkvurvlj5onej2bsdtmu6kgsregi777f2w7lj7jse6z4re",
+        ipfsFile: "bafybeiewbaqggkvurvlj5onej2bsdtmu6kgsregi777f2w7lj7jse6z4re",
         issuerAddress: "0xbEb7518cD8F8f096A23426AE3c8a9d778b4CBf00",
         blockchainTx: "", // empty because not yet registered
         status: "pending",
@@ -4779,7 +4779,7 @@ async function main() {
         courseName: "Certificate of Achievement in Blockchain",
         fileHash:
           "d48d31973a2676fff595a3a4ab2c6a8735589b83d9b2c0619f16e7663e4d4321",
-        ipfsCid: "bafkreiguruyzoorgo377lfndusvsy2uhgvmjxa6zwlagdhyw45td4tkdee",
+        ipfsFile: "bafkreiguruyzoorgo377lfndusvsy2uhgvmjxa6zwlagdhyw45td4tkdee",
         issuerAddress: "0xbEb7518cD8F8f096A23426AE3c8a9d778b4CBf00",
         blockchainTx: "", // empty because not yet registered
         status: "pending",
@@ -4790,7 +4790,7 @@ async function main() {
         courseName: "Certificate of The best Employee learn Blockchain",
         fileHash:
           "33c393dcc9a8c0210d48798cac743e5741aa1d9d074f554ca4fdbfc85454756a",
-        ipfsCid:
+        ipfsFile:
           "bafkreibtyoj5zsniyaqq2sdzrswhipsxigvb3hihj5kuzjh5kuzjh5x7efivdvni",
         issuerAddress: "0xbEb7518cD8F8f096A23426AE3c8a9d778b4CBf00",
         blockchainTx: "", // empty because not yet registered
@@ -4802,7 +4802,7 @@ async function main() {
         courseName: "Certificate of Completion CraftMyPDF education program",
         fileHash:
           "f1383e98fe7a20c51cdd8e42ecf5667c9d29510fb84de75e3e4ab696861ded3a",
-        ipfsCid: "bafkreihrha7jr7t2edcrzxmoilwpkzt4tuuvcd5yjxtv4pskw2limhpnhi",
+        ipfsFile: "bafkreihrha7jr7t2edcrzxmoilwpkzt4tuuvcd5yjxtv4pskw2limhpnhi",
         issuerAddress: "0xbEb7518cD8F8f096A23426AE3c8a9d778b4CBf00",
         blockchainTx: "", // empty because not yet registered
         status: "pending",
@@ -4813,7 +4813,7 @@ async function main() {
       //   courseName: "Vstep Certificate",
       //   fileHash:
       //     "146687b95c77271ad1e4922a3999bf857ba69b87a5ca5c37eb723dbda0350c04",
-      //   ipfsCid: "bafkreiaum2d3sxdxe4nndzesfi4ztp4fpotjxb5fzjodp23shw62animaq",
+      //   ipfsFile: "bafkreiaum2d3sxdxe4nndzesfi4ztp4fpotjxb5fzjodp23shw62animaq",
       //   issuerAddress: "0xbEb7518cD8F8f096A23426AE3c8a9d778b4CBf00",
       //   blockchainTx: "", // empty because not yet registered
       //   status: "pending",
@@ -4824,7 +4824,7 @@ async function main() {
         courseName: "The best student of the year certificate",
         fileHash:
           "7e0dc866e2870a67a4d37189ec57a819467c63711202008b6f1b437255874368",
-        ipfsCid: "bafybeicfx2eq3ctrysypp2yahjk3utfb62in6i2flkibgyqf75dgfimk4m",
+        ipfsFile: "bafybeicfx2eq3ctrysypp2yahjk3utfb62in6i2flkibgyqf75dgfimk4m",
         issuerAddress: "0xbEb7518cD8F8f096A23426AE3c8a9d778b4CBf00",
         blockchainTx:
           "0x1021a9642622445cbea10af15f1c2350ab3edce3d966a8aa6af32d036b210045",
@@ -4931,7 +4931,7 @@ Certificate {
   studentIdHash hash dựa trên: certSha256(Buffer.from(studentId + studentName + courseName));
   courseName    Đã có
   fileHash      Đã có hash từ nội dung file được đẩy lên
-  ipfsCid       cid từ pinata trả về
+  ipfsFile       cid từ pinata trả về
   issuerAddress Đã cố định
   blockchainTx  null, chưa có vì chưa thực hiện verify
   status        pending khi mới tạo, verified và failed thì trả về khi thực hiện verify onchain
@@ -10229,7 +10229,7 @@ type ApiCertificate = {
   id: number;
   courseName: string;
   fileHash: string;
-  ipfsCid: string;
+  ipfsFile: string;
   issuerAddress: string;
   blockchainTx: string | null;
   status: "pending" | "verified" | "failed" | string;
@@ -10248,7 +10248,7 @@ function mapApiCertificateToClient(apiCert: ApiCertificate): Certificate {
     id: apiCert.id,
     courseName: apiCert.courseName,
     fileHash: apiCert.fileHash,
-    ipfsCid: apiCert.ipfsCid,
+    ipfsFile: apiCert.ipfsFile,
     issuerAddress: apiCert.issuerAddress,
     issuedAt: new Date(apiCert.issuedAt),
     status:
@@ -10282,7 +10282,7 @@ export const api = {
         throw new Error("Failed to create certificate");
       }
       // Return raw creation response as provided by API spec
-      // { status, fileHash, ipfsCid, certificateId, ipfsUrl }
+      // { status, fileHash, ipfsFile, certificateId, ipfsUrl }
       return response.json();
     },
 
@@ -10513,7 +10513,7 @@ export interface Certificate {
   id: number; // ✅ Changed from string to number (matches Prisma Int)
   courseName: string;
   fileHash: string;
-  ipfsCid: string; // ✅ Changed from ipfsHash to ipfsCid (matches schema)
+  ipfsFile: string; // ✅ Changed from ipfsHash to ipfsFile (matches schema)
   issuerAddress: string; // ✅ Changed from issuer to issuerAddress
   issuedAt: Date;
   status: "verified" | "pending" | "failed"; // ✅ Added "failed" status
@@ -11397,7 +11397,7 @@ export const pinata = new PinataSDK({
         studentName: string;
         courseName: string;
         fileHash: string;
-        ipfsCid: string;
+        ipfsFile: string;
         issuerAddress: string;
         blockchainTx: string | null;
         issuedAt: Date;
@@ -11408,7 +11408,7 @@ export const pinata = new PinataSDK({
         studentName: string;
         courseName: string;
         fileHash: string;
-        ipfsCid: string;
+        ipfsFile: string;
         issuerAddress: string;
         blockchainTx: string | null;
         issuedAt: Date;
@@ -11439,7 +11439,7 @@ export const pinata = new PinataSDK({
 {
     status: string;
     fileHash: string; // as efb4a5be48895fe42a447dc80651303e862b1311fc81be6bc8e9e41941b9853b
-    ipfsCid: string; // as bafkreihpwss34sejl7scurd5zadfcmb6qyvrgep4qg7gxshj4qmudomfhm
+    ipfsFile: string; // as bafkreihpwss34sejl7scurd5zadfcmb6qyvrgep4qg7gxshj4qmudomfhm
     certificateId: number;
     ipfsUrl: string;
 }
@@ -11481,7 +11481,7 @@ certificateId: string
         issuedAt: Date;
         status: string;
         issuerAddress: string;
-        ipfsCid: string;
+        ipfsFile: string;
         blockchainTx: string | null;
     };
     hash: string;
@@ -11660,7 +11660,7 @@ export default function CreateCertificatePage() {
               <div>
                 <span className="font-medium text-gray-700">IPFS CID:</span>
                 <code className="ml-2 text-xs font-mono bg-gray-100 px-2 py-1 rounded">
-                  {result.ipfsCid}
+                  {result.ipfsFile}
                 </code>
               </div>
               <div>
@@ -11883,7 +11883,7 @@ export default async function CertificatePage({ params }: PageProps) {
               IPFS CID
             </label>
             <p className="mt-1 text-sm text-gray-900 font-mono break-all">
-              {certificate.ipfsCid}
+              {certificate.ipfsFile}
             </p>
           </div>
 
@@ -11997,12 +11997,12 @@ export default async function VerifyPage({ params }: PageProps) {
               <div>
                 <span className="font-medium text-gray-700">IPFS:</span>
                 <a
-                  href={`https://ipfs.io/ipfs/${certificate.ipfsCid}`}
+                  href={`https://ipfs.io/ipfs/${certificate.ipfsFile}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="ml-2 text-blue-600 hover:text-blue-800 text-xs font-mono break-all"
                 >
-                  {certificate.ipfsCid}
+                  {certificate.ipfsFile}
                 </a>
               </div>
             </div>
@@ -13151,6 +13151,7 @@ This middleware is compatible with:
 ### Authentication Files Structure
 
 ```
+
 certi_chain/
 ├── src/
 │   └── auth.ts                    # NextAuth configuration
@@ -13165,6 +13166,7 @@ certi_chain/
 │   └── providers.tsx             # Client-side providers
 ├── test-auth.ts                  # Auth API test script
 └── test-auth-simple.ts           # Database auth test script
+
 ```
 
 ### Environment Variables
@@ -13349,7 +13351,7 @@ model Certificate {
   studentIdHash  String  
   courseName     String  
   fileHash       String   @unique  
-  ipfsCid        String  
+  ipfsFile        String  
   issuerAddress  String  
   blockchainTx   String?  
   status         String   @default("pending") // pending | verified | failed  
@@ -13396,7 +13398,7 @@ const cid \= await client.put(\[file\]);
 
 await prisma.certificate.create({
 
-  data: { studentName, courseName, fileHash: hash, ipfsCid: cid, studentIdHash, issuerAddress }  
+  data: { studentName, courseName, fileHash: hash, ipfsFile: cid, studentIdHash, issuerAddress }  
 });
 
 5. Trả về JSON:
@@ -13405,7 +13407,7 @@ await prisma.certificate.create({
 
   "status": "pending",  
   "fileHash": "0xabc123...",  
-  "ipfsCid": "QmXYZ...",  
+  "ipfsFile": "QmXYZ...",  
   "certificateId": 1  
 }  
 ---
@@ -13424,14 +13426,14 @@ await prisma.certificate.create({
 
 **Luồng xử lý:**
 
-1. Lấy record từ DB → `{ fileHash, ipfsCid, studentIdHash }`
+1. Lấy record từ DB → `{ fileHash, ipfsFile, studentIdHash }`
 
 Gọi smart contract (qua `ethers.js`):
 
  const provider \= new ethers.JsonRpcProvider(process.env.BASE\_RPC);  
 const wallet \= new ethers.Wallet(process.env.PRIVATE\_KEY, provider);  
 const contract \= new ethers.Contract(process.env.CONTRACT\_ADDRESS, abi, wallet);  
-const tx \= await contract.registerCertificate(fileHash, ipfsCid, studentIdHash);  
+const tx \= await contract.registerCertificate(fileHash, ipfsFile, studentIdHash);  
 const receipt \= await tx.wait();
 
 2. Cập nhật DB:
@@ -13498,7 +13500,7 @@ Trả về kết quả:
  {  
   "verified": true,  
   "issuer": "0x123...",  
-  "ipfsCid": "QmXyz...",  
+  "ipfsFile": "QmXyz...",  
   "txHash": "0xabc...",  
   "issuedAt": 1729555555,  
   "viewOnChain": "https://basescan.org/tx/0xabc..."  
@@ -13539,7 +13541,7 @@ Nếu muốn tối ưu, bạn có thể dùng **background job** để:
 
 Ví dụ event watcher:
 
-contract.on("CertificateIssued", async (hash, ipfsCid, issuer, timestamp) \=\> {  
+contract.on("CertificateIssued", async (hash, ipfsFile, issuer, timestamp) \=\> {  
   await prisma.certificate.updateMany({  
     where: { fileHash: hash },  
     data: { status: "verified" }  
@@ -13996,7 +13998,7 @@ contract CertificateRegistry {
 
     // Cấu trúc dữ liệu chứng chỉ  
     struct Certificate {  
-        string ipfsCid;        // CID IPFS nơi lưu file PDF  
+        string ipfsFile;        // CID IPFS nơi lưu file PDF  
         bytes32 fileHash;      // Hash SHA-256 của file chứng chỉ  
         bytes32 studentIdHash; // Mã sinh viên đã hash  
         address issuer;        // Địa chỉ ví của nhà trường  
@@ -14009,7 +14011,7 @@ contract CertificateRegistry {
     // Sự kiện phát hành chứng chỉ  
     event CertificateIssued(  
         bytes32 indexed fileHash,  
-        string ipfsCid,  
+        string ipfsFile,  
         bytes32 indexed studentIdHash,  
         address indexed issuer,  
         uint256 issuedAt  
@@ -14027,7 +14029,7 @@ contract CertificateRegistry {
         require(certificates\[\_hash\].issuedAt \== 0, "Certificate already exists");
 
         certificates\[\_hash\] \= Certificate({  
-            ipfsCid: \_ipfsCid,  
+            ipfsFile: \_ipfsCid,  
             fileHash: \_hash,  
             studentIdHash: \_studentIdHash,  
             issuer: msg.sender,  
@@ -14039,7 +14041,7 @@ contract CertificateRegistry {
 
     /// @notice Kiểm tra chứng chỉ có tồn tại hay không  
     /// @param \_hash Hash của file chứng chỉ  
-    /// @return Certificate struct (ipfsCid, issuer, issuedAt)  
+    /// @return Certificate struct (ipfsFile, issuer, issuedAt)  
     function verifyCertificate(bytes32 \_hash) external view returns (Certificate memory) {  
         require(certificates\[\_hash\].issuedAt \!= 0, "Certificate not found");  
         return certificates\[\_hash\];  
@@ -14107,7 +14109,7 @@ Nhập:
 
 Kết quả trả về:
 
- ipfsCid: QmABC123xyz...  
+ ipfsFile: QmABC123xyz...  
 fileHash: 0x8a7f3c...  
 studentIdHash: 0x3bd6f9...  
 issuer: 0xYourUniversityWallet  
@@ -14166,7 +14168,7 @@ Sau khi compile trên Remix, mở tab “Compilation Details” → copy JSON AB
     "outputs": \[  
       {  
         "components": \[  
-          { "internalType": "string", "name": "ipfsCid", "type": "string" },  
+          { "internalType": "string", "name": "ipfsFile", "type": "string" },  
           { "internalType": "bytes32", "name": "fileHash", "type": "bytes32" },  
           { "internalType": "bytes32", "name": "studentIdHash", "type": "bytes32" },  
           { "internalType": "address", "name": "issuer", "type": "address" },  

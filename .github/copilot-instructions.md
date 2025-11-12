@@ -114,7 +114,7 @@ return NextResponse.json({ error: "Error message" }, { status: 400 });
 return NextResponse.json({
   status: "pending",
   fileHash: "0xabc...",
-  ipfsCid: "Qm...",
+  ipfsFile: "Qm...",
   certificateId: 1,
 });
 ```

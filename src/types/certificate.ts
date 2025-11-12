@@ -2,7 +2,7 @@ export interface Certificate {
   id: number; // ✅ Changed from string to number (matches Prisma Int)
   courseName: string;
   fileHash: string;
-  ipfsCid: string; // ✅ Changed from ipfsHash to ipfsCid (matches schema)
+  ipfsFile: string; // ✅ Changed from ipfsHash to ipfsFile (matches schema)
   issuerAddress: string; // ✅ Changed from issuer to issuerAddress
   issuedAt: Date;
   status: "verified" | "pending" | "failed"; // ✅ Added "failed" status

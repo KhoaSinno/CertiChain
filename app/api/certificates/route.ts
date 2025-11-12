@@ -77,7 +77,7 @@ export async function POST(request: Request) {
       {
         status: result.status,
         fileHash: result.fileHash,
-        ipfsCid: result.ipfsCid,
+        ipfsFile: result.ipfsFile,
         certificateId: result.id,
         ipfsUrl: result.fileURL, // Thêm URL này cho FE dùng luôn
         metadataUrl: result.metadataURL,
