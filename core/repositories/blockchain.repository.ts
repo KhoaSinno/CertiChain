@@ -45,7 +45,7 @@ const walletClient = createWalletClient({
   transport: http(RPC_URL),
 });
 
-export class BlockchainService {
+export class BlockchainRepository {
   // -- REGISTER CERTIFICATE ONCHAIN --
   async registerOnChain(fileHash: string) {
     try {

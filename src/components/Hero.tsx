@@ -31,7 +31,7 @@ export function Hero() {
           Hệ thống chứng chỉ số minh bạch
           <br />
           <span className="text-gradient-primary font-bold">
-            dựa trên blockchain
+            dựa trên blockchain (NFT)
           </span>
         </h1>
 

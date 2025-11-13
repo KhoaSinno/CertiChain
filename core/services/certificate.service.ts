@@ -2,7 +2,7 @@ import { pinata } from "@/utils/config";
 import { CertificateRepository } from "../repositories/certificate.repository";
 import crypto from "crypto";
 import { UserService } from "./user.service";
-import { BlockchainService } from "../repositories/blockchain.repository";
+import { BlockchainRepository } from "../repositories/blockchain.repository";
 
 type CertificateUploadInput = {
   file: File;
@@ -18,7 +18,7 @@ export const certSha256 = (buffer: Buffer) =>
 export class CertificateService {
   private certRepo = new CertificateRepository();
   private userService = new UserService();
-  private blockchainService = new BlockchainService();
+  private blockchainRepository = new BlockchainRepository();
 
   // -- UPLOAD + IPFS FILE --
   async createCertificate({
@@ -71,7 +71,9 @@ export class CertificateService {
     const issuerAddress = process.env.ISSUER_WALLET!;
 
     // Call store onchain // TODO: Add more metadata urls if needed
-    const registerTx = await this.blockchainService.registerOnChain(fileHash);
+    const registerTx = await this.blockchainRepository.registerOnChain(
+      fileHash
+    );
 
     // Update the status to verified
     // await this.certRepo.updateStatus(
@@ -82,9 +84,9 @@ export class CertificateService {
 
     const tokenURI = `ipfs://${metadataCID}`;
 
-    // call function blockchainService => mint nft
+    // call function blockchainRepository => mint nft
     const { tokenId, txHash: mintTx } =
-      await this.blockchainService.mintCertificate(fileHash, tokenURI);
+      await this.blockchainRepository.mintCertificate(fileHash, tokenURI);
 
     console.log("mintTX", mintTx);
 

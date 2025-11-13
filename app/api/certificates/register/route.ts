@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { CertificateRepository } from "@/core/repositories/certificate.repository";
-import { BlockchainService } from "@/core/repositories/blockchain.repository";
+import { BlockchainRepository } from "@/core/repositories/blockchain.repository";
 
 const certificateRepo = new CertificateRepository();
-const blockchainService = new BlockchainService();
+const blockchainRepository = new BlockchainRepository();
 
 export async function POST(request: Request) {
   try {
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     }
 
     // Register on blockchain
-    const blockchainTx = await blockchainService.registerOnChain(
+    const blockchainTx = await blockchainRepository.registerOnChain(
       certificate.fileHash
     );
 
