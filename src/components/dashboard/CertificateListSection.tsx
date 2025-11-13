@@ -51,13 +51,65 @@ export function CertificateListSection({
 }: CertificateListSectionProps) {
   const router = useRouter();
   const [statusFilter, setStatusFilter] = useState<'all' | 'verified' | 'processing'>('all');
+  const [timeFilter, setTimeFilter] = useState<'all' | 'today' | 'week' | 'month' | 'year'>('all');
+  const [sortBy, setSortBy] = useState<'date-desc' | 'date-asc' | 'name-asc' | 'name-desc' | 'status'>('date-desc');
 
-  // Client-side filtering based on status
-  const filteredCertificates = statusFilter === 'all'
-    ? certificates
-    : certificates.filter(cert =>
-        statusFilter === 'verified' ? cert.status === 'verified' : cert.status === 'pending'
-      );
+  // Client-side filtering based on status and time
+  let filteredCertificates = certificates.filter(cert => {
+    // Status filter
+    const matchesStatus = statusFilter === 'all' 
+      ? true 
+      : statusFilter === 'verified' 
+        ? cert.status === 'verified' 
+        : cert.status === 'pending';
+
+    // Time filter
+    const now = new Date();
+    const certDate = new Date(cert.issuedAt);
+    let matchesTime = true;
+
+    if (timeFilter !== 'all') {
+      const diffMs = now.getTime() - certDate.getTime();
+      const diffDays = diffMs / (1000 * 60 * 60 * 24);
+
+      switch (timeFilter) {
+        case 'today':
+          matchesTime = diffDays < 1;
+          break;
+        case 'week':
+          matchesTime = diffDays <= 7;
+          break;
+        case 'month':
+          matchesTime = diffDays <= 30;
+          break;
+        case 'year':
+          matchesTime = diffDays <= 365;
+          break;
+      }
+    }
+
+    return matchesStatus && matchesTime;
+  });
+
+  // Sorting
+  filteredCertificates = [...filteredCertificates].sort((a, b) => {
+    switch (sortBy) {
+      case 'date-desc':
+        return new Date(b.issuedAt).getTime() - new Date(a.issuedAt).getTime();
+      case 'date-asc':
+        return new Date(a.issuedAt).getTime() - new Date(b.issuedAt).getTime();
+      case 'name-asc':
+        return a.courseName.localeCompare(b.courseName);
+      case 'name-desc':
+        return b.courseName.localeCompare(a.courseName);
+      case 'status':
+        // Verified first, then processing
+        if (a.status === b.status) return 0;
+        return a.status === 'verified' ? -1 : 1;
+      default:
+        return 0;
+    }
+  });
 
   return (
     <Card className="relative overflow-hidden border-primary/20 bg-gradient-to-br from-primary/5 via-background to-purple-500/5">
@@ -91,17 +143,41 @@ export function CertificateListSection({
                     >
                       <Filter className="h-4 w-4 mr-1.5" />
                       Lọc
-                      {statusFilter !== 'all' && (
-                        <Badge className="ml-1.5 bg-primary/90 text-white text-xs px-1.5 py-0 h-4">1</Badge>
+                      {(statusFilter !== 'all' || timeFilter !== 'all') && (
+                        <Badge className="ml-1.5 bg-primary/90 text-white text-xs px-1.5 py-0 h-4">
+                          {(statusFilter !== 'all' ? 1 : 0) + (timeFilter !== 'all' ? 1 : 0)}
+                        </Badge>
                       )}
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-48 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md">
+                  <DropdownMenuContent align="end" className="w-52 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md">
                     <DropdownMenuLabel>Trạng thái</DropdownMenuLabel>
                     <DropdownMenuRadioGroup value={statusFilter} onValueChange={(v) => setStatusFilter(v as 'all' | 'verified' | 'processing')}>
                       <DropdownMenuRadioItem value="all">Tất cả</DropdownMenuRadioItem>
                       <DropdownMenuRadioItem value="verified">Đã xác thực</DropdownMenuRadioItem>
                       <DropdownMenuRadioItem value="processing">Đang xử lý</DropdownMenuRadioItem>
+                    </DropdownMenuRadioGroup>
+
+                    <DropdownMenuSeparator />
+
+                    <DropdownMenuLabel>Thời gian phát hành</DropdownMenuLabel>
+                    <DropdownMenuRadioGroup value={timeFilter} onValueChange={(v) => setTimeFilter(v as 'all' | 'today' | 'week' | 'month' | 'year')}>
+                      <DropdownMenuRadioItem value="all">Tất cả</DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="today">Hôm nay</DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="week">7 ngày qua</DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="month">30 ngày qua</DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="year">1 năm qua</DropdownMenuRadioItem>
+                    </DropdownMenuRadioGroup>
+
+                    <DropdownMenuSeparator />
+
+                    <DropdownMenuLabel>Sắp xếp theo</DropdownMenuLabel>
+                    <DropdownMenuRadioGroup value={sortBy} onValueChange={(v) => setSortBy(v as 'date-desc' | 'date-asc' | 'name-asc' | 'name-desc' | 'status')}>
+                      <DropdownMenuRadioItem value="date-desc">Mới nhất</DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="date-asc">Cũ nhất</DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="name-asc">Tên A-Z</DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="name-desc">Tên Z-A</DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="status">Trạng thái</DropdownMenuRadioItem>
                     </DropdownMenuRadioGroup>
 
                     <DropdownMenuSeparator />
@@ -143,7 +219,9 @@ export function CertificateListSection({
           <div className="text-center py-8 text-muted-foreground">
             <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
             <p>{emptyMessage}</p>
-            {statusFilter !== 'all' && <p className="text-sm mt-1">Thử thay đổi bộ lọc</p>}
+            {(statusFilter !== 'all' || timeFilter !== 'all') && (
+              <p className="text-sm mt-1">Thử thay đổi bộ lọc</p>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
