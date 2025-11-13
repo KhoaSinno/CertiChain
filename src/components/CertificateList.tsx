@@ -27,7 +27,6 @@ interface CertificateListProps {
 export function CertificateList({
   certificates,
   onView,
-  onRegister,
   onCopy,
   className = "",
   pagination,
