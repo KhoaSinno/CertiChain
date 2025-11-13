@@ -1,5 +1,5 @@
-import { Badge } from '@/src/components/ui/badge';
-import { GraduationCap, Shield, Users } from 'lucide-react';
+import { Badge } from "@/src/components/ui/badge";
+import { GraduationCap, Shield, Users } from "lucide-react";
 
 export function Hero() {
   return (
@@ -20,19 +20,29 @@ export function Hero() {
       </div>
 
       <div className="container mx-auto px-6 text-center flex flex-col items-center justify-center">
-        <Badge variant="secondary" className="mb-4 bg-primary text-primary-foreground shadow-primary">
-          🚀 Blockchain + IPFS 2025
+        <Badge
+          variant="secondary"
+          className="mb-4 bg-primary text-primary-foreground shadow-primary"
+        >
+          <span>🚀 Blockchain + IPFS + NFT 2025</span> <b>-by NDK Team</b>
         </Badge>
-        
+
         <h1 className="text-4xl md:text-6xl font-bold mb-6 text-vietnamese leading-tight">
-          Hệ thống xác thực chứng chỉ
+          Hệ thống chứng chỉ số minh bạch
           <br />
-          <span className="text-gradient-primary font-bold">dựa trên blockchain</span>
+          <span className="text-gradient-primary font-bold">
+            dựa trên blockchain
+          </span>
         </h1>
-        
+
         <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-          CertiChain kết hợp IPFS để lưu trữ và Base Sepolia để xác minh, 
-          đảm bảo tính minh bạch, bất biến và không thể giả mạo.
+          CertiChain kết hợp IPFS để lưu trữ chứng chỉ và Base Sepolia
+          Blockchain để xác minh, đảm bảo tính minh bạch, bất biến và chống giả
+          mạo tuyệt đối.
+        </p>
+        <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
+          Mỗi chứng chỉ được mint thành NFT duy nhất, giúp người học thật sự sở
+          hữu chứng chỉ số của chính mình.
         </p>
 
         {/* Action buttons removed as requested */}
@@ -42,27 +52,33 @@ export function Hero() {
             <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 shadow-primary">
               <GraduationCap className="h-8 w-8 text-primary-foreground" />
             </div>
-            <h3 className="text-lg font-semibold mb-2 text-vietnamese">🏫 Nhà trường</h3>
+            <h3 className="text-lg font-semibold mb-2 text-vietnamese">
+              🏫 Nhà trường
+            </h3>
             <p className="text-muted-foreground text-vietnamese">
               Tạo và phát hành chứng chỉ kỹ thuật số minh bạch
             </p>
           </div>
-          
+
           <div className="text-center p-6 rounded-xl bg-background/50 supports-[backdrop-filter]:bg-background/30 backdrop-blur-md border border-border/40 shadow-lg hover:shadow-xl transition-shadow">
             <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 shadow-primary">
               <Users className="h-8 w-8 text-primary-foreground" />
             </div>
-            <h3 className="text-lg font-semibold mb-2 text-vietnamese">👩‍🎓 Sinh viên</h3>
+            <h3 className="text-lg font-semibold mb-2 text-vietnamese">
+              👩‍🎓 Sinh viên
+            </h3>
             <p className="text-muted-foreground text-vietnamese">
               Chia sẻ chứng chỉ dễ dàng với link hoặc QR code
             </p>
           </div>
-          
+
           <div className="text-center p-6 rounded-xl bg-background/50 supports-[backdrop-filter]:bg-background/30 backdrop-blur-md border border-border/40 shadow-lg hover:shadow-xl transition-shadow">
             <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 shadow-primary">
               <Shield className="h-8 w-8 text-primary-foreground" />
             </div>
-            <h3 className="text-lg font-semibold mb-2 text-vietnamese">🏢 Nhà tuyển dụng</h3>
+            <h3 className="text-lg font-semibold mb-2 text-vietnamese">
+              🏢 Nhà tuyển dụng
+            </h3>
             <p className="text-muted-foreground text-vietnamese">
               Xác minh chứng chỉ độc lập, không cần liên hệ trường
             </p>

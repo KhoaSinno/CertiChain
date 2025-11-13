@@ -46,6 +46,7 @@ const walletClient = createWalletClient({
 });
 
 export class BlockchainService {
+  // -- REGISTER CERTIFICATE ONCHAIN --
   async registerOnChain(fileHash: string) {
     try {
       const { request } = await publicClient.simulateContract({
@@ -61,12 +62,16 @@ export class BlockchainService {
       console.log("Transaction Hash:", txHash);
 
       // (Optional: wait transation to verify success)
-      const transaction = await publicClient.waitForTransactionReceipt({
+      const txObj = await publicClient.waitForTransactionReceipt({
         hash: txHash,
         confirmations: 1,
       });
-      console.log("Transaction success:", transaction);
 
+      if (txObj.status !== "success") {
+        throw new Error("Transaction failed on-chain");
+      }
+
+      console.log("Transaction success:", txObj);
       return txHash;
     } catch (error) {
       console.log("Error somethings when call contract with VIEM", error);
@@ -74,6 +79,7 @@ export class BlockchainService {
     }
   }
 
+  // -- VERIFY ONCHAIN CERTIFICATE --
   async verifyOnChain(fileHash: string): Promise<VerifyCertificateOutput> {
     try {
       // Normalize hash before verification
@@ -97,6 +103,7 @@ export class BlockchainService {
       throw new Error("Blockchain verification failed");
     }
   }
+
   // -- MINT NFT CERTIFICATE --
   async mintCertificate(fileHash: string, metadataIpfs: string) {
     try {
@@ -108,15 +115,25 @@ export class BlockchainService {
         args: [normalizeHashToBytes32(fileHash), metadataIpfs],
       });
 
-      const tokenId = await walletClient.writeContract(request);
-      console.log("Mint NFT transaction sent, token ID:", tokenId);
+      const txHash = await walletClient.writeContract(request);
+      console.log("Mint NFT transaction sent, transaction hash:", txHash);
 
-      const transaction = await publicClient.waitForTransactionReceipt({
-        hash: tokenId,
+      const txObj = await publicClient.waitForTransactionReceipt({
+        hash: txHash,
         confirmations: 1,
       });
 
-      return tokenId;
+      if (txObj.status !== "success") {
+        throw new Error("Transaction failed on-chain");
+      }
+
+      // Call early verifyOnChain to get tokenId
+      const { tokenId } = await this.verifyOnChain(fileHash);
+      if (!tokenId) {
+        throw new Error("Token ID not found after minting");
+      }
+
+      return { txHash, tokenId };
     } catch (error) {
       console.log("Mint NFT error with server: ", error);
       throw new Error("Mint NFT failed");
