@@ -71,7 +71,7 @@ export function CertificateList({
             <h2 className="text-xl font-semibold">Danh sách chứng chỉ</h2>
             <p className="text-sm text-muted-foreground">
               {certificates.length} chứng chỉ • {verifiedCount} đã xác thực •{" "}
-              {pendingCount} chờ xác thực
+              {pendingCount} đang xử lý
             </p>
           </div>
         </div>
@@ -109,7 +109,7 @@ export function CertificateList({
             size="sm"
             onClick={() => setFilterStatus("pending")}
           >
-            Chờ xác thực ({pendingCount})
+            Đang xử lý ({pendingCount})
           </Button>
         </div>
       </div>
@@ -123,7 +123,6 @@ export function CertificateList({
                 key={certificate.id}
                 certificate={certificate}
                 onView={() => onView?.(certificate)}
-                onRegister={() => onRegister?.(certificate)}
                 onCopy={() => onCopy?.(certificate.fileHash)}
               />
             ))}

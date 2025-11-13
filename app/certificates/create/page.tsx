@@ -68,7 +68,7 @@ export default function CreateCertificatePage() {
               Tạo <span className="flex flex-wrap text-gradient-primary px-2">chứng chỉ</span> mới
             </h1>
             <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto">
-              Tạo và đăng ký chứng chỉ mới trên blockchain với IPFS và Base Sepolia
+              Tải lên chứng chỉ - Tự động lưu trữ trên IPFS và đăng ký lên Base Sepolia blockchain
             </p>
           </div>
 

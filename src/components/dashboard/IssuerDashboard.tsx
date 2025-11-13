@@ -3,54 +3,20 @@
 import { Button } from '@/src/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/card';
 import { useCertificates } from '@/src/hooks/useCertificates';
-import { api } from '@/src/lib/api';
-import { useQueryClient } from '@tanstack/react-query';
 import { CheckCircle, Clock, FileText, Plus, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
 import { CertificateListSection } from './CertificateListSection';
 
 export function IssuerDashboard() {
   const { certificates, allCertificates, pagination, isLoading, error, setPage, limit, setLimit } = useCertificates(1, 10);
-  const queryClient = useQueryClient();
-  const [registeringIds, setRegisteringIds] = useState<Set<string>>(new Set());
 
   // Statistics
   const totalCertificates = pagination?.total || allCertificates.length;
   const verifiedCount = allCertificates.filter(c => c.status === 'verified').length;
-  const pendingCount = allCertificates.filter(c => c.status === 'pending').length;
-  const verificationRate = verifiedCount + pendingCount > 0 
-    ? Math.round((verifiedCount / (verifiedCount + pendingCount)) * 100) 
+  const processingCount = allCertificates.filter(c => c.status === 'pending').length;
+  const verificationRate = verifiedCount + processingCount > 0 
+    ? Math.round((verifiedCount / (verifiedCount + processingCount)) * 100) 
     : 0;
-
-  const handleRegisterOnChain = async (certificateId: string) => {
-    try {
-      setRegisteringIds(prev => new Set(prev).add(certificateId));
-      
-      const response = await api.certificates.register(certificateId);
-      
-      // Refresh certificates list
-      await queryClient.invalidateQueries({ queryKey: ['certificates'] });
-      
-      alert(`✅ Đăng ký thành công!\n\nTransaction Hash: ${response.txHash}`);
-    } catch (error) {
-      let errorMessage = 'Không thể đăng ký chứng chỉ lên blockchain.';
-      
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      } else if (typeof error === 'string') {
-        errorMessage = error;
-      }
-      
-      alert(`❌ ${errorMessage}`);
-    } finally {
-      setRegisteringIds(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(certificateId);
-        return newSet;
-      });
-    }
-  };
 
   return (
     <div className="space-y-8">
@@ -103,13 +69,13 @@ export function IssuerDashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Chờ xác thực</CardTitle>
+            <CardTitle className="text-sm font-medium">Đang xử lý</CardTitle>
             <Clock className="h-4 w-4 text-orange-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-orange-600">{pendingCount}</div>
+            <div className="text-2xl font-bold text-orange-600">{processingCount}</div>
             <p className="text-xs text-muted-foreground">
-              Cần đăng ký on-chain
+              Đang tải lên blockchain
             </p>
           </CardContent>
         </Card>
@@ -137,10 +103,8 @@ export function IssuerDashboard() {
         onPageChange={setPage}
         limit={limit}
         setLimit={setLimit}
-        onRegisterOnChain={handleRegisterOnChain}
-        registeringIds={registeringIds}
         title="Danh sách chứng chỉ"
-        description="Danh sách các chứng chỉ đã tạo và trạng thái của chúng"
+        description="Tất cả chứng chỉ được tải lên và tự động đăng ký trên blockchain"
         emptyMessage="Không có chứng chỉ nào"
       />
     </div>

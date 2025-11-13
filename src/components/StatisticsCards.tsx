@@ -31,10 +31,10 @@ export function StatisticsCards({ certificates, className = "" }: StatisticsCard
       bgColor: 'bg-green-50 dark:bg-green-950/20'
     },
     {
-      title: 'Chờ xác thực',
+      title: 'Đang xử lý',
       value: pendingCertificates,
       icon: Clock,
-      description: 'Cần đăng ký',
+      description: 'Đang tải lên',
       color: 'text-orange-600',
       bgColor: 'bg-orange-50 dark:bg-orange-950/20'
     },

@@ -5,24 +5,24 @@ import { QRDisplay } from "@/src/components/QRDisplay";
 import { Badge } from "@/src/components/ui/badge";
 import { Button } from "@/src/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
 } from "@/src/components/ui/card";
 import { useCertificate } from "@/src/hooks/useCertificates";
 import { formatDate } from "@/src/lib/utils";
 import {
-  ArrowLeft,
-  Calendar,
-  CheckCircle2,
-  Copy,
-  ExternalLink,
-  FileText,
-  GraduationCap,
-  Hash,
-  Share2,
-  User,
+    ArrowLeft,
+    Calendar,
+    CheckCircle2,
+    Copy,
+    ExternalLink,
+    FileText,
+    GraduationCap,
+    Hash,
+    Share2,
+    User,
 } from "lucide-react";
 import { notFound, useParams, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -206,7 +206,7 @@ export default function CertificateDetailPage() {
                   <p className="text-sm text-muted-foreground mt-1">
                     {certificate.status === "verified"
                       ? "Đã xác thực"
-                      : "Chờ xác thực"}
+                      : "Đang xử lý"}
                   </p>
                 </CardContent>
               </Card>
@@ -287,17 +287,17 @@ export default function CertificateDetailPage() {
                 size={220}
               />
             ) : (
-              /* Alternative UI - Pending */
+              /* Alternative UI - Processing */
               <Card className="glass-effect border-2 border-orange-500/30 bg-orange-500/5">
                 <CardHeader className="text-center pb-4">
                   <div className="w-16 h-16 mx-auto mb-3 bg-orange-500/10 rounded-full flex items-center justify-center">
-                    <Hash className="h-8 w-8 text-orange-600" />
+                    <div className="animate-spin rounded-full h-8 w-8 border-4 border-orange-600 border-t-transparent" />
                   </div>
                   <CardTitle className="text-lg font-semibold">
-                    Chưa đăng ký on-chain
+                    Đang xử lý
                   </CardTitle>
                   <p className="text-sm text-muted-foreground mt-2">
-                    Chứng chỉ này chưa được đăng ký lên blockchain
+                    Chứng chỉ đang được tải lên IPFS và đăng ký lên blockchain
                   </p>
                 </CardHeader>
                 <CardContent className="space-y-3">
@@ -311,7 +311,7 @@ export default function CertificateDetailPage() {
                   </div>
                   <div className="text-center pt-2">
                     <p className="text-xs text-muted-foreground">
-                      Mã QR sẽ khả dụng sau khi đăng ký on-chain
+                      Mã QR sẽ khả dụng sau khi hoàn tất xử lý
                     </p>
                   </div>
                 </CardContent>

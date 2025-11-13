@@ -32,8 +32,6 @@ interface CertificateListSectionProps {
   onPageChange: (page: number) => void;
   limit: number;
   setLimit: (limit: number) => void;
-  onRegisterOnChain?: (certificateId: string) => void;
-  registeringIds?: Set<string>;
   title?: string;
   description?: string;
   emptyMessage?: string;
@@ -47,14 +45,12 @@ export function CertificateListSection({
   onPageChange,
   limit,
   setLimit,
-  onRegisterOnChain,
-  registeringIds = new Set(),
   title = 'Danh sách chứng chỉ',
   description = 'Danh sách các chứng chỉ',
   emptyMessage = 'Không có chứng chỉ nào',
 }: CertificateListSectionProps) {
   const router = useRouter();
-  const [statusFilter, setStatusFilter] = useState<'all' | 'verified' | 'pending'>('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'verified' | 'processing'>('all');
 
   // Client-side filtering based on status
   const filteredCertificates = statusFilter === 'all'
@@ -102,10 +98,10 @@ export function CertificateListSection({
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-48 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md">
                     <DropdownMenuLabel>Trạng thái</DropdownMenuLabel>
-                    <DropdownMenuRadioGroup value={statusFilter} onValueChange={(v) => setStatusFilter(v as 'all' | 'verified' | 'pending')}>
+                    <DropdownMenuRadioGroup value={statusFilter} onValueChange={(v) => setStatusFilter(v as 'all' | 'verified' | 'processing')}>
                       <DropdownMenuRadioItem value="all">Tất cả</DropdownMenuRadioItem>
                       <DropdownMenuRadioItem value="verified">Đã xác thực</DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="pending">Chờ xác thực</DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="processing">Đang xử lý</DropdownMenuRadioItem>
                     </DropdownMenuRadioGroup>
 
                     <DropdownMenuSeparator />
@@ -156,8 +152,6 @@ export function CertificateListSection({
                 key={certificate.id}
                 certificate={certificate}
                 onView={() => router.push(`/certificates/${certificate.id}`)}
-                onRegister={onRegisterOnChain && certificate.status === 'pending' ? () => onRegisterOnChain(certificate.id.toString()) : undefined}
-                isRegistering={registeringIds.has(certificate.id.toString())}
                 onCopy={() => {
                   navigator.clipboard.writeText(certificate.fileHash);
                   alert('Đã copy hash!');
