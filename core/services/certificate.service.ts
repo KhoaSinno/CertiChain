@@ -2,7 +2,7 @@ import { pinata } from "@/utils/config";
 import { CertificateRepository } from "../repositories/certificate.repository";
 import crypto from "crypto";
 import { UserService } from "./user.service";
-import { BlockchainService } from "../repositories/blockchain.repository";
+import { BlockchainRepository } from "../repositories/blockchain.repository";
 
 type CertificateUploadInput = {
   file: File;
@@ -18,7 +18,7 @@ export const certSha256 = (buffer: Buffer) =>
 export class CertificateService {
   private certRepo = new CertificateRepository();
   private userService = new UserService();
-  private blockchainService = new BlockchainService();
+  private blockchainRepository = new BlockchainRepository();
 
   // -- UPLOAD + IPFS FILE --
   async createCertificate({
@@ -57,8 +57,8 @@ export class CertificateService {
       image: fileURL, // file PDF (IPFS gateway link)
       attributes: [
         { trait_type: "Course Name", value: courseName },
-        { trait_type: "Student Name", value: student.studentName },
         { trait_type: "Student ID", value: student.studentId },
+        { trait_type: "Student Name", value: student.studentName },
         { trait_type: "Issuer", value: process.env.ISSUER_WALLET },
         { trait_type: "Issued At", value: new Date().toISOString() },
         { trait_type: "File Hash", value: fileHash },
@@ -70,6 +70,26 @@ export class CertificateService {
 
     const issuerAddress = process.env.ISSUER_WALLET!;
 
+    // Call store onchain // TODO: Add more metadata urls if needed
+    const registerTx = await this.blockchainRepository.registerOnChain(
+      fileHash
+    );
+
+    // Update the status to verified
+    // await this.certRepo.updateStatus(
+    //   cert.id.toString(),
+    //   "verified",
+    //   registerTx
+    // );
+
+    const tokenURI = `ipfs://${metadataCID}`;
+
+    // call function blockchainRepository => mint nft
+    const { tokenId, txHash: mintTx } =
+      await this.blockchainRepository.mintCertificate(fileHash, tokenURI);
+
+    console.log("mintTX", mintTx);
+
     // DB store certificate
     const cert = await this.certRepo.createWithUserId({
       courseName,
@@ -78,34 +98,24 @@ export class CertificateService {
       issuerAddress,
       userId,
       ipfsMetadata: metadataURL,
-      // status: "verified",
+      blockchainTx: registerTx,
+      mintTx,
+      status: "verified",
+      tokenId: tokenId,
+      tokenURI,
+      issuedAt: new Date(),
     });
-
-    // Call store onchain // TODO: Add more metadata urls if needed
-    const registerTx = await this.blockchainService.registerOnChain(fileHash);
-
-    // Update the status to verified
-    await this.certRepo.updateStatus(
-      cert.id.toString(),
-      "verified",
-      registerTx
-    );
-
-    // call function blockchainService => mint nft
-    const txNFT = await this.blockchainService.mintCertificate(
-      fileHash,
-      `ipfs://${metadataCID}`
-    );
-
-    console.log("Tokens mint", txNFT);
 
     return {
       id: cert.id,
       fileHash,
       ipfsFile: fileURL,
       fileURL,
-      status: cert.status,
       metadataURL,
+      registerTx,
+      mintTx,
+      tokenId,
+      status: cert.status,
     };
   }
 

@@ -107,6 +107,8 @@ async function main() {
         startDate: new Date("2025-01-01"),
         endDate: new Date("2030-06-01"),
         ipfsMetadata: "abc_url",
+        tokenId: 0,
+        mintTx: "",
       },
       {
         courseName: "Certificate of Achievement in Blockchain",

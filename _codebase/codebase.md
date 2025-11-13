@@ -526,10 +526,10 @@ export { GET, POST } from "@/src/auth";
 ```ts
 import { NextResponse } from "next/server";
 import { CertificateRepository } from "@/core/repositories/certificate.repository";
-import { BlockchainService } from "@/core/repositories/blockchain.repository";
+import { BlockchainRepository } from "@/core/repositories/blockchain.repository";
 
 const certificateRepo = new CertificateRepository();
-const blockchainService = new BlockchainService();
+const blockchainRepository = new BlockchainRepository();
 
 export async function POST(request: Request) {
   try {
@@ -562,7 +562,7 @@ export async function POST(request: Request) {
     }
 
     // Register on blockchain
-    const blockchainTx = await blockchainService.registerOnChain(
+    const blockchainTx = await blockchainRepository.registerOnChain(
       certificate.fileHash
     );
 
@@ -796,10 +796,10 @@ export async function GET(request: Request) {
 ```ts
 import { NextResponse } from "next/server";
 import { CertificateRepository } from "@/core/repositories/certificate.repository";
-import { BlockchainService } from "@/core/repositories/blockchain.repository";
+import { BlockchainRepository } from "@/core/repositories/blockchain.repository";
 
 const certificateRepo = new CertificateRepository();
-const blockchainService = new BlockchainService();
+const blockchainRepository = new BlockchainRepository();
 
 export async function GET(request: Request) {
   try {
@@ -838,7 +838,7 @@ export async function GET(request: Request) {
     }
 
     // Find certificate on blockchain using fileHash
-    const certOnChain = await blockchainService.verifyOnChain(
+    const certOnChain = await blockchainRepository.verifyOnChain(
       certificate.fileHash
     );
 
@@ -3906,7 +3906,7 @@ function normalizeHashToBytes32(hash: string): Hex {
   return `0x${cleanHash}` as Hex;
 }
 
-export class BlockchainService {
+export class BlockchainRepository {
   /**
    * Call the smart contract to register a certificate on the blockchain
    */
