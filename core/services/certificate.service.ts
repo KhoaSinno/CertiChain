@@ -77,20 +77,27 @@ export class CertificateService {
       ipfsFile: fileURL, // MOCK test
       issuerAddress,
       userId,
+      ipfsMetadata: metadataURL,
       // status: "verified",
     });
 
     // Call store onchain // TODO: Add more metadata urls if needed
-    // await this.blockchainService.registerOnChain(fileHash);
-
-    const blockchainTx = await this.blockchainService.registerOnChain(fileHash);
+    const registerTx = await this.blockchainService.registerOnChain(fileHash);
 
     // Update the status to verified
     await this.certRepo.updateStatus(
       cert.id.toString(),
       "verified",
-      blockchainTx
+      registerTx
     );
+
+    // call function blockchainService => mint nft
+    const txNFT = await this.blockchainService.mintCertificate(
+      fileHash,
+      `ipfs://${metadataCID}`
+    );
+
+    console.log("Tokens mint", txNFT);
 
     return {
       id: cert.id,

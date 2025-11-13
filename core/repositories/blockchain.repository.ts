@@ -15,6 +15,7 @@ type VerifyCertificateOutput = {
   issuerAddress: Address;
   issuedAt: Date;
   isValid: boolean;
+  tokenId: bigint;
 };
 
 // 2. Lấy các biến môi trường
@@ -45,30 +46,14 @@ const walletClient = createWalletClient({
 });
 
 export class BlockchainService {
-  /**
-   * Call the smart contract to register a certificate on the blockchain
-   */
-
-  async registerOnChain(
-    fileHash: string
-    // ipfsHash: string,
-    // studentIdHash: string
-  ) {
+  async registerOnChain(fileHash: string) {
     try {
-      console.log("Đang gọi Smart Contract (viem): registerCertificate()...");
-
-      // Normalize hashes to bytes32 format
-      const normalizedFileHash = normalizeHashToBytes32(fileHash);
-
-      // TODO: FIX THIS LATER
-      // const normalizedStudentIdHash = normalizeHashToBytes32(fileHash);
-
       const { request } = await publicClient.simulateContract({
         account: adminAccount,
         address: CONTRACT_ADDRESS as Address,
         abi: ABI,
         functionName: "registerCertificate",
-        args: [normalizedFileHash],
+        args: [normalizeHashToBytes32(fileHash)], // Normalize hashes to bytes32 format
       });
       const txHash = await walletClient.writeContract(request);
 
@@ -78,6 +63,7 @@ export class BlockchainService {
       // (Optional: wait transation to verify success)
       const transaction = await publicClient.waitForTransactionReceipt({
         hash: txHash,
+        confirmations: 1,
       });
       console.log("Transaction success:", transaction);
 
@@ -98,16 +84,42 @@ export class BlockchainService {
         abi: ABI,
         functionName: "verifyCertificate",
         args: [normalizedFileHash],
-      })) as [Address, bigint, boolean];
+      })) as [Address, bigint, boolean, bigint];
 
       return {
         issuerAddress: certVerified[0],
         issuedAt: new Date(Number(certVerified[1]) * 1000),
         isValid: certVerified[2],
+        tokenId: certVerified[3],
       };
     } catch (error) {
       console.log("Verify error with server: ", error);
       throw new Error("Blockchain verification failed");
+    }
+  }
+  // -- MINT NFT CERTIFICATE --
+  async mintCertificate(fileHash: string, metadataIpfs: string) {
+    try {
+      const { request } = await publicClient.simulateContract({
+        account: adminAccount,
+        address: CONTRACT_ADDRESS as Address,
+        abi: ABI,
+        functionName: "mintCertificateNFT",
+        args: [normalizeHashToBytes32(fileHash), metadataIpfs],
+      });
+
+      const tokenId = await walletClient.writeContract(request);
+      console.log("Mint NFT transaction sent, token ID:", tokenId);
+
+      const transaction = await publicClient.waitForTransactionReceipt({
+        hash: tokenId,
+        confirmations: 1,
+      });
+
+      return tokenId;
+    } catch (error) {
+      console.log("Mint NFT error with server: ", error);
+      throw new Error("Mint NFT failed");
     }
   }
 }

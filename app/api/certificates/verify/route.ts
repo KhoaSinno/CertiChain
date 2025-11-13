@@ -68,6 +68,7 @@ export async function GET(request: Request) {
         issuerAddress: certOnChain.issuerAddress, // onChain data
         ipfsFile: certificate.ipfsFile,
         blockchainTx: certificate.blockchainTx,
+        tokenId: certOnChain.tokenId.toString(), // NFT token ID
       },
       hash: hash, // file hash
     });
