@@ -56,7 +56,11 @@ export function Pagination({ currentPage, totalPages, onPageChange, className = 
             variant="outline"
             size="sm"
             onClick={() => onPageChange(1)}
-            className="h-8 w-8 p-0"
+            className={`h-8 w-8 p-0 transition-all ${
+              currentPage === 1
+                ? 'bg-gradient-primary text-white hover:bg-gradient-primary border-primary shadow-primary'
+                : 'bg-white text-black hover:border-primary hover:text-primary'
+            }`}
           >
             1
           </Button>
@@ -67,10 +71,14 @@ export function Pagination({ currentPage, totalPages, onPageChange, className = 
       {pages.map((page) => (
         <Button
           key={page}
-          variant={currentPage === page ? 'default' : 'outline'}
+          variant="outline"
           size="sm"
           onClick={() => onPageChange(page)}
-          className="h-8 w-8 p-0"
+          className={`h-8 w-8 p-0 transition-all ${
+            currentPage === page
+              ? 'bg-gradient-primary text-white hover:bg-gradient-primary border-primary shadow-primary'
+              : 'bg-white text-black hover:border-primary hover:text-primary'
+          }`}
         >
           {page}
         </Button>
@@ -83,7 +91,11 @@ export function Pagination({ currentPage, totalPages, onPageChange, className = 
             variant="outline"
             size="sm"
             onClick={() => onPageChange(totalPages)}
-            className="h-8 w-8 p-0"
+            className={`h-8 w-8 p-0 transition-all ${
+              currentPage === totalPages
+                ? 'bg-gradient-primary text-white hover:bg-gradient-primary border-primary shadow-primary'
+                : 'bg-white text-black hover:border-primary hover:text-primary'
+            }`}
           >
             {totalPages}
           </Button>

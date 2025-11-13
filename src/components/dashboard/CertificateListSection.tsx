@@ -8,16 +8,21 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuLabel,
-    DropdownMenuRadioGroup,
-    DropdownMenuRadioItem,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/src/components/ui/dropdown-menu';
 import { Pagination } from '@/src/components/ui/pagination';
 import { Certificate } from '@/src/types/certificate';
-import { FileText, Filter } from 'lucide-react';
+import { 
+  FileText, 
+  Filter, 
+  CheckCircle2, 
+  Calendar, 
+  ArrowUpDown, 
+  List
+} from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
 interface CertificateListSectionProps {
   certificates: Certificate[];
@@ -54,62 +59,64 @@ export function CertificateListSection({
   const [timeFilter, setTimeFilter] = useState<'all' | 'today' | 'week' | 'month' | 'year'>('all');
   const [sortBy, setSortBy] = useState<'date-desc' | 'date-asc' | 'name-asc' | 'name-desc' | 'status'>('date-desc');
 
-  // Client-side filtering based on status and time
-  let filteredCertificates = certificates.filter(cert => {
-    // Status filter
-    const matchesStatus = statusFilter === 'all' 
-      ? true 
-      : statusFilter === 'verified' 
-        ? cert.status === 'verified' 
-        : cert.status === 'pending';
+  // Client-side filtering and sorting - memoized to avoid unnecessary recalculations
+  const filteredCertificates = useMemo(() => {
+    const filtered = certificates.filter(cert => {
+      // Status filter
+      const matchesStatus = statusFilter === 'all' 
+        ? true 
+        : statusFilter === 'verified' 
+          ? cert.status === 'verified' 
+          : cert.status === 'pending';
 
-    // Time filter
-    const now = new Date();
-    const certDate = new Date(cert.issuedAt);
-    let matchesTime = true;
+      // Time filter
+      const now = new Date();
+      const certDate = new Date(cert.issuedAt);
+      let matchesTime = true;
 
-    if (timeFilter !== 'all') {
-      const diffMs = now.getTime() - certDate.getTime();
-      const diffDays = diffMs / (1000 * 60 * 60 * 24);
+      if (timeFilter !== 'all') {
+        const diffMs = now.getTime() - certDate.getTime();
+        const diffDays = diffMs / (1000 * 60 * 60 * 24);
 
-      switch (timeFilter) {
-        case 'today':
-          matchesTime = diffDays < 1;
-          break;
-        case 'week':
-          matchesTime = diffDays <= 7;
-          break;
-        case 'month':
-          matchesTime = diffDays <= 30;
-          break;
-        case 'year':
-          matchesTime = diffDays <= 365;
-          break;
+        switch (timeFilter) {
+          case 'today':
+            matchesTime = diffDays < 1;
+            break;
+          case 'week':
+            matchesTime = diffDays <= 7;
+            break;
+          case 'month':
+            matchesTime = diffDays <= 30;
+            break;
+          case 'year':
+            matchesTime = diffDays <= 365;
+            break;
+        }
       }
-    }
 
-    return matchesStatus && matchesTime;
-  });
+      return matchesStatus && matchesTime;
+    });
 
-  // Sorting
-  filteredCertificates = [...filteredCertificates].sort((a, b) => {
-    switch (sortBy) {
-      case 'date-desc':
-        return new Date(b.issuedAt).getTime() - new Date(a.issuedAt).getTime();
-      case 'date-asc':
-        return new Date(a.issuedAt).getTime() - new Date(b.issuedAt).getTime();
-      case 'name-asc':
-        return a.courseName.localeCompare(b.courseName);
-      case 'name-desc':
-        return b.courseName.localeCompare(a.courseName);
-      case 'status':
-        // Verified first, then processing
-        if (a.status === b.status) return 0;
-        return a.status === 'verified' ? -1 : 1;
-      default:
-        return 0;
-    }
-  });
+    // Sorting
+    return [...filtered].sort((a, b) => {
+      switch (sortBy) {
+        case 'date-desc':
+          return new Date(b.issuedAt).getTime() - new Date(a.issuedAt).getTime();
+        case 'date-asc':
+          return new Date(a.issuedAt).getTime() - new Date(b.issuedAt).getTime();
+        case 'name-asc':
+          return a.courseName.localeCompare(b.courseName);
+        case 'name-desc':
+          return b.courseName.localeCompare(a.courseName);
+        case 'status':
+          // Verified first, then processing
+          if (a.status === b.status) return 0;
+          return a.status === 'verified' ? -1 : 1;
+        default:
+          return 0;
+      }
+    });
+  }, [certificates, statusFilter, timeFilter, sortBy]);
 
   return (
     <Card className="relative overflow-hidden border-primary/20 bg-gradient-to-br from-primary/5 via-background to-purple-500/5">
@@ -144,51 +151,151 @@ export function CertificateListSection({
                       <Filter className="h-4 w-4 mr-1.5" />
                       Lọc
                       {(statusFilter !== 'all' || timeFilter !== 'all') && (
-                        <Badge className="ml-1.5 bg-primary/90 text-white text-xs px-1.5 py-0 h-4">
+                        <Badge className="ml-1.5 bg-blue-600 text-white text-xs px-1.5 py-0 h-4 rounded-full min-w-[1rem] flex items-center justify-center border-0 shadow-sm">
                           {(statusFilter !== 'all' ? 1 : 0) + (timeFilter !== 'all' ? 1 : 0)}
                         </Badge>
                       )}
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-52 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md">
-                    <DropdownMenuLabel>Trạng thái</DropdownMenuLabel>
-                    <DropdownMenuRadioGroup value={statusFilter} onValueChange={(v) => setStatusFilter(v as 'all' | 'verified' | 'processing')}>
-                      <DropdownMenuRadioItem value="all">Tất cả</DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="verified">Đã xác thực</DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="processing">Đang xử lý</DropdownMenuRadioItem>
-                    </DropdownMenuRadioGroup>
+                  <DropdownMenuContent align="end" className="w-[480px] bg-white/95 dark:bg-slate-900/95 backdrop-blur-md p-4">
+                    {/* Status Filter */}
+                    <div className="space-y-2 mb-4">
+                      <DropdownMenuLabel className="text-xs font-semibold text-muted-foreground px-0 flex items-center gap-2">
+                        <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
+                        Trạng thái
+                      </DropdownMenuLabel>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setStatusFilter('all')}
+                          className={`flex-1 h-8 text-xs transition-all ${
+                            statusFilter === 'all'
+                              ? 'bg-gradient-primary text-white hover:bg-gradient-primary border-primary shadow-primary'
+                              : 'bg-white text-black hover:border-primary hover:text-primary'
+                          }`}
+                        >
+                          Tất cả
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setStatusFilter('verified')}
+                          className={`flex-1 h-8 text-xs transition-all ${
+                            statusFilter === 'verified'
+                              ? 'bg-green-600 text-white hover:bg-green-700 border-green-600 shadow-lg shadow-green-600/30'
+                              : 'bg-white text-black hover:border-green-500 hover:text-green-600'
+                          }`}
+                        >
+                          Đã xác thực
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setStatusFilter('processing')}
+                          className={`flex-1 h-8 text-xs transition-all ${
+                            statusFilter === 'processing'
+                              ? 'bg-orange-500 text-white hover:bg-orange-600 border-orange-500 shadow-lg shadow-orange-500/30'
+                              : 'bg-white text-black hover:border-orange-500 hover:text-orange-600'
+                          }`}
+                        >
+                          Đang xử lý
+                        </Button>
+                      </div>
+                    </div>
 
                     <DropdownMenuSeparator />
 
-                    <DropdownMenuLabel>Thời gian phát hành</DropdownMenuLabel>
-                    <DropdownMenuRadioGroup value={timeFilter} onValueChange={(v) => setTimeFilter(v as 'all' | 'today' | 'week' | 'month' | 'year')}>
-                      <DropdownMenuRadioItem value="all">Tất cả</DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="today">Hôm nay</DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="week">7 ngày qua</DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="month">30 ngày qua</DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="year">1 năm qua</DropdownMenuRadioItem>
-                    </DropdownMenuRadioGroup>
+                    {/* Time Filter */}
+                    <div className="space-y-2 my-4">
+                      <DropdownMenuLabel className="text-xs font-semibold text-muted-foreground px-0 flex items-center gap-2">
+                        <Calendar className="h-3.5 w-3.5 text-primary" />
+                        Thời gian phát hành
+                      </DropdownMenuLabel>
+                      <div className="grid grid-cols-3 gap-2">
+                        {[
+                          { value: 'all', label: 'Tất cả', span: false },
+                          { value: 'today', label: 'Hôm nay', span: false },
+                          { value: 'week', label: '7 ngày', span: false },
+                          { value: 'month', label: '30 ngày', span: false },
+                          { value: 'year', label: '1 năm', span: true },
+                        ].map((filter) => (
+                          <Button
+                            key={filter.value}
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setTimeFilter(filter.value as typeof timeFilter)}
+                            className={`h-8 text-xs transition-all ${filter.span ? 'col-span-2' : ''} ${
+                              timeFilter === filter.value
+                                ? 'bg-gradient-primary text-white hover:bg-gradient-primary border-primary shadow-primary'
+                                : 'bg-white text-black hover:border-primary hover:text-primary'
+                            }`}
+                          >
+                            {filter.label}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
 
                     <DropdownMenuSeparator />
 
-                    <DropdownMenuLabel>Sắp xếp theo</DropdownMenuLabel>
-                    <DropdownMenuRadioGroup value={sortBy} onValueChange={(v) => setSortBy(v as 'date-desc' | 'date-asc' | 'name-asc' | 'name-desc' | 'status')}>
-                      <DropdownMenuRadioItem value="date-desc">Mới nhất</DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="date-asc">Cũ nhất</DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="name-asc">Tên A-Z</DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="name-desc">Tên Z-A</DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="status">Trạng thái</DropdownMenuRadioItem>
-                    </DropdownMenuRadioGroup>
+                    {/* Sort Options */}
+                    <div className="space-y-2 my-4">
+                      <DropdownMenuLabel className="text-xs font-semibold text-muted-foreground px-0 flex items-center gap-2">
+                        <ArrowUpDown className="h-3.5 w-3.5 text-primary" />
+                        Sắp xếp theo
+                      </DropdownMenuLabel>
+                      <div className="grid grid-cols-3 gap-2">
+                        {[
+                          { value: 'date-desc', label: 'Mới nhất', span: false },
+                          { value: 'date-asc', label: 'Cũ nhất', span: false },
+                          { value: 'status', label: 'Trạng thái', span: false },
+                          { value: 'name-asc', label: 'A-Z', span: false },
+                          { value: 'name-desc', label: 'Z-A', span: true },
+                        ].map((sort) => (
+                          <Button
+                            key={sort.value}
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setSortBy(sort.value as typeof sortBy)}
+                            className={`h-8 text-xs transition-all ${sort.span ? 'col-span-2' : ''} ${
+                              sortBy === sort.value
+                                ? 'bg-gradient-primary text-white hover:bg-gradient-primary border-primary shadow-primary'
+                                : 'bg-white text-black hover:border-primary hover:text-primary'
+                            }`}
+                          >
+                            {sort.label}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
 
                     <DropdownMenuSeparator />
 
-                    <DropdownMenuLabel>Số lượng/trang</DropdownMenuLabel>
-                    <DropdownMenuRadioGroup value={String(limit)} onValueChange={(v) => { setLimit(Number(v)); onPageChange(1); }}>
-                      <DropdownMenuRadioItem value="5">5 mục</DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="10">10 mục</DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="20">20 mục</DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="50">50 mục</DropdownMenuRadioItem>
-                    </DropdownMenuRadioGroup>
+                    {/* Items Per Page */}
+                    <div className="space-y-2 mt-4">
+                      <DropdownMenuLabel className="text-xs font-semibold text-muted-foreground px-0 flex items-center gap-2">
+                        <List className="h-3.5 w-3.5 text-primary" />
+                        Số lượng mỗi trang
+                      </DropdownMenuLabel>
+                      <div className="grid grid-cols-4 gap-2">
+                        {[5, 10, 20, 50].map((num) => (
+                          <Button
+                            key={num}
+                            variant="outline"
+                            size="sm"
+                            onClick={() => { setLimit(num); onPageChange(1); }}
+                            className={`h-8 text-xs font-semibold transition-all ${
+                              limit === num
+                                ? 'bg-gradient-primary text-white hover:bg-gradient-primary border-primary shadow-primary'
+                                : 'bg-white text-black hover:border-primary hover:text-primary'
+                            }`}
+                          >
+                            {num}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
                   </DropdownMenuContent>
                 </DropdownMenu>
 
