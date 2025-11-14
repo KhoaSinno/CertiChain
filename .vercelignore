@@ -1,10 +1,12 @@
 # Ignore smart contract folder during Vercel deployment
+
 contracts/
 contracts/**
 **/hardhat.config.ts
 **/hardhat.config.js
 
 # Other files that shouldn't be deployed to Vercel
+
 *.log
 .env.local
 .env.development.local
@@ -12,4 +14,9 @@ contracts/**
 .env.production.local
 
 # Optional: Ignore other development files
+
 README.md
+
+# ✅ DON'T ignore Prisma generated files (needed for runtime)
+
+!app/generated/prisma/**
