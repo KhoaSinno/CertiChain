@@ -68,6 +68,7 @@ export async function GET(request: Request) {
         issuerAddress: certOnChain.issuerAddress, // onChain data
         ipfsFile: certificate.ipfsFile,
         blockchainTx: certificate.blockchainTx,
+        mintTx: certificate.mintTx || null, // NFT mint transaction hash
         tokenId: certOnChain.tokenId.toString(), // NFT token ID
       },
       hash: hash, // file hash

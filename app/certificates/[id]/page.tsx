@@ -272,6 +272,46 @@ export default function CertificateDetailPage() {
                     </div>
                   </div>
                 )}
+
+                {/* NFT Mint Transaction Hash */}
+                {certificate.mintTx && (
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground mb-2 block flex items-center gap-2">
+                      NFT Mint Transaction
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() =>
+                          window.open(
+                            `https://testnet.routescan.io/tx/${certificate.mintTx}`,
+                            "_blank"
+                          )
+                        }
+                        className="h-5 px-2 text-purple-600 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900"
+                      >
+                        <ExternalLink className="h-3 w-3 mr-1" />
+                        Routescan
+                      </Button>
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <code className="flex-1 text-xs font-mono bg-purple-600/10 text-purple-700 dark:text-purple-400 p-3 rounded-lg break-all">
+                        {certificate.mintTx}
+                      </code>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleCopy(certificate.mintTx || "", "mintTx")}
+                        className="flex-shrink-0"
+                      >
+                        {copiedField === "mintTx" ? (
+                          <CheckCircle2 className="h-4 w-4 text-purple-600" />
+                        ) : (
+                          <Copy className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>

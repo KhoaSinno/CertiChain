@@ -7,6 +7,8 @@ export interface Certificate {
   issuedAt: Date;
   status: "verified" | "pending" | "failed"; // ✅ Added "failed" status
   blockchainTx?: string; // ✅ Added blockchainTx field
+  mintTx?: string; // ✅ Added mintTx field (NFT mint transaction hash)
+  tokenId?: string | number; // ✅ Added tokenId field (NFT token ID)
   userId?: number; // ✅ Added userId field
   student?: {
     id: number; // ✅ Changed from string to number
@@ -33,5 +35,7 @@ export interface VerifyResult {
   issuer?: string;
   issuedAt?: Date;
   transactionHash?: string;
+  mintTx?: string; // NFT mint transaction hash
+  tokenId?: string; // NFT token ID
   error?: string;
 }

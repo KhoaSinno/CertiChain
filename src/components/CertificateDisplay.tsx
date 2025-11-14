@@ -339,6 +339,21 @@ export function CertificateDisplay({
                   </a>
                 </div>
               )}
+
+              {/* NFT Hash */}
+              {certificate.mintTx && (
+                <div className="mt-4 text-center border-t-2 border-blue-900 pt-4">
+                  <p className="text-xs text-gray-600 mb-1">NFT Mint Transaction:</p>
+                  <a 
+                    href={`https://testnet.routescan.io/tx/${certificate.mintTx}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs font-mono text-purple-700 hover:text-purple-900 underline underline-offset-2 break-all inline-block transition-colors"
+                  >
+                    {certificate.mintTx}
+                  </a>
+                </div>
+              )}
             </div>
           </div>
 

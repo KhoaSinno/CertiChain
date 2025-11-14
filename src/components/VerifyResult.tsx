@@ -190,6 +190,43 @@ export function VerifyResult({
               </code>
             </div>
           )}
+
+          {/* NFT Mint Transaction Hash Badge */}
+          {certificate.mintTx && (
+            <div className="bg-purple-600 rounded-lg p-3">
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <h4 className="text-xs font-semibold text-white flex items-center gap-1.5">
+                  <CheckCircle className="h-3.5 w-3.5" />
+                  NFT Mint Transaction
+                </h4>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => navigator.clipboard.writeText(certificate.mintTx || '')}
+                    className="h-6 w-6 p-0 hover:bg-white/20 text-white"
+                  >
+                    <Copy className="h-3 w-3" />
+                  </Button>
+                  <Badge 
+                    className="bg-white/20 hover:bg-white/30 text-white border-0 py-1 px-2 cursor-pointer transition-colors gap-1"
+                    onClick={() =>
+                      window.open(
+                        `https://testnet.routescan.io/tx/${certificate.mintTx}`,
+                        "_blank"
+                      )
+                    }
+                  >
+                    <ExternalLink className="h-3 w-3" />
+                    Routescan
+                  </Badge>
+                </div>
+              </div>
+              <code className="text-xs text-white/90 break-all block font-mono">
+                {certificate.mintTx}
+              </code>
+            </div>
+          )}
         </CardContent>
       </Card>
 

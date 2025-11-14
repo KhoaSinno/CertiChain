@@ -154,6 +154,7 @@ export async function GET(request: Request) {
     const mappedCertificates = certificates.map((cert) => ({
       ...cert,
       tokenId: cert.tokenId?.toString() || null,
+      mintTx: cert.mintTx || null,
       transactionHash: cert.blockchainTx, // Add alias for compatibility
     }));
 

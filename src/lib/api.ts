@@ -8,6 +8,8 @@ type ApiCertificate = {
   ipfsFile: string;
   issuerAddress: string;
   blockchainTx: string | null;
+  mintTx: string | null; // NFT mint transaction hash
+  tokenId: string | number | bigint | null; // NFT token ID
   status: "pending" | "verified" | "failed" | string;
   issuedAt: string;
   userId: number;
@@ -34,6 +36,8 @@ function mapApiCertificateToClient(apiCert: ApiCertificate): Certificate {
         ? "failed"
         : "pending",
     blockchainTx: apiCert.blockchainTx ?? undefined,
+    mintTx: apiCert.mintTx ?? undefined,
+    tokenId: apiCert.tokenId ? String(apiCert.tokenId) : undefined,
     userId: apiCert.userId,
     student: {
       id: apiCert.student.id,
