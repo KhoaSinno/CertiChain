@@ -24,7 +24,7 @@ export function Hero() {
           variant="secondary"
           className="mb-4 bg-primary text-primary-foreground shadow-primary"
         >
-          <span>🚀 Blockchain + IPFS + NFT 2025</span> <b>-by NDK Team</b>
+          <span>🚀 Blockchain + IPFS + NFT 2025</span> <b>-by KDN Team</b>
         </Badge>
 
         <h1 className="text-4xl md:text-6xl font-bold mb-6 text-vietnamese leading-tight">

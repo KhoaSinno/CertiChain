@@ -1,7 +1,7 @@
 // QUERY DATABASE FOR CERTIFICATES
 
 import { prisma } from "@/lib/db";
-import type { Prisma, Certificate, User } from "@/app/generated/prisma/client";
+import type { Prisma, Certificate, User } from "@prisma/client";
 
 const db = prisma;
 
