@@ -24,7 +24,7 @@ export function Hero() {
           variant="secondary"
           className="mb-4 bg-primary text-primary-foreground shadow-primary"
         >
-          <span>🚀 Blockchain + IPFS + NFT 2025</span> <b>-by KDN Team</b>
+          <span>🚀 Blockchain + IPFS + NFT 2025 | <b>by KDN Team</b></span>
         </Badge>
 
         <h1 className="text-4xl md:text-6xl font-bold mb-6 text-vietnamese leading-tight">
@@ -40,12 +40,6 @@ export function Hero() {
           Blockchain để xác minh, đảm bảo tính minh bạch, bất biến và chống giả
           mạo tuyệt đối.
         </p>
-        <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-          Mỗi chứng chỉ được mint thành NFT duy nhất, giúp người học thật sự sở
-          hữu chứng chỉ số của chính mình.
-        </p>
-
-        {/* Action buttons removed as requested */}
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
           <div className="text-center p-6 rounded-xl bg-background/50 supports-[backdrop-filter]:bg-background/30 backdrop-blur-md border border-border/40 shadow-lg hover:shadow-xl transition-shadow">
