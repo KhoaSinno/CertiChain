@@ -16,8 +16,7 @@ export async function proxy(request: NextRequest) {
   // Protected paths that require authentication
   const isProtectedPath =
     pathname.startsWith("/dashboard") ||
-    pathname.startsWith("/certificates/create") ||
-    pathname.startsWith("/certificates/view");
+    pathname.startsWith("/certificates/create");
 
   // Admin-only paths
   const isAdminPath = pathname.startsWith("/certificates/create");
