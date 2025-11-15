@@ -5,24 +5,24 @@ import { QRDisplay } from "@/src/components/QRDisplay";
 import { Badge } from "@/src/components/ui/badge";
 import { Button } from "@/src/components/ui/button";
 import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
 } from "@/src/components/ui/card";
 import { useCertificate } from "@/src/hooks/useCertificates";
 import { formatDate } from "@/src/lib/utils";
 import {
-    ArrowLeft,
-    Calendar,
-    CheckCircle2,
-    Copy,
-    ExternalLink,
-    FileText,
-    GraduationCap,
-    Hash,
-    Share2,
-    User,
+  ArrowLeft,
+  Calendar,
+  CheckCircle2,
+  Copy,
+  ExternalLink,
+  FileText,
+  GraduationCap,
+  Hash,
+  Share2,
+  User,
 } from "lucide-react";
 import { notFound, useParams, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -101,22 +101,6 @@ export default function CertificateDetailPage() {
               >
                 <ExternalLink className="h-4 w-4" />
                 File gốc
-              </Button>
-            )}
-
-            {txHash && (
-              <Button
-                variant="ghost"
-                onClick={() =>
-                  window.open(
-                    `https://sepolia.etherscan.io/tx/${txHash}`,
-                    "_blank"
-                  )
-                }
-                className="gap-2 text-green-600 dark:text-green-400 hover:bg-green-600 hover:text-white dark:hover:bg-green-600 dark:hover:text-white"
-              >
-                <ExternalLink className="h-4 w-4" />
-                Etherscan
               </Button>
             )}
 
@@ -214,101 +198,123 @@ export default function CertificateDetailPage() {
 
             {/* Hash Information */}
             <Card className="glass-effect border-2 border-white/60 dark:border-white/20">
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <Hash className="h-4 w-4 text-primary" />
-                  <CardTitle className="text-base">Mã băm chứng chỉ</CardTitle>
+              <CardHeader className="pb-4">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <Hash className="h-5 w-5 text-primary" />
+                  </div>
+                  <CardTitle className="text-xl font-semibold">Mã băm chứng chỉ</CardTitle>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-5">
                 {/* File Hash */}
-                <div>
-                  <label className="text-xs font-medium text-muted-foreground mb-2 block">
-                    File Hash
-                  </label>
-                  <div className="flex items-center gap-2">
-                    <code className="flex-1 text-xs font-mono bg-background/60 p-3 rounded-lg break-all">
-                      {certificate.fileHash}
-                    </code>
+                <div className="space-y-0">
+                  <div className="flex items-center gap-2 bg-slate-600 dark:bg-slate-700 px-2.5 py-1 rounded-tl-lg rounded-tr-lg border-2 border-b-0 border-slate-600 dark:border-slate-700 w-fit">
+                    <label className="text-xs font-semibold text-white">
+                      File Hash
+                    </label>
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() =>
                         handleCopy(certificate.fileHash, "fileHash")
                       }
-                      className="flex-shrink-0"
+                      className="h-5 w-5 p-0 hover:bg-slate-600 dark:hover:bg-slate-700"
                     >
                       {copiedField === "fileHash" ? (
-                        <CheckCircle2 className="h-4 w-4 text-green-600" />
+                        <CheckCircle2 className="h-3 w-3 text-green-400" />
                       ) : (
-                        <Copy className="h-4 w-4" />
+                        <Copy className="h-3 w-3 text-white" />
                       )}
                     </Button>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <code className="flex-1 text-xs font-mono bg-slate-700 dark:bg-slate-800 text-white px-3 py-2 rounded-b-lg rounded-tr-lg break-all border-2 border-slate-600 dark:border-slate-700 shadow-sm">
+                      {certificate.fileHash}
+                    </code>
                   </div>
                 </div>
 
                 {/* Transaction Hash */}
                 {txHash && (
-                  <div>
-                    <label className="text-xs font-medium text-muted-foreground mb-2 block">
-                      Transaction Hash
-                    </label>
+                  <div className="space-y-0">
+                    <div className="flex items-center gap-2 bg-green-600 dark:bg-green-700 px-2.5 py-1 rounded-tl-lg rounded-tr-lg border-2 border-b-0 border-green-600 dark:border-green-700 w-fit">
+                      <label className="text-xs font-semibold text-white">
+                        Transaction Hash
+                      </label>
+                      <div className="flex items-center gap-1.5">
+                        <Badge
+                          onClick={() =>
+                            window.open(
+                              `https://sepolia.etherscan.io/tx/${txHash}`,
+                              "_blank"
+                            )
+                          }
+                          className="cursor-pointer gap-1 px-1.5 py-0.5 bg-green-600 hover:bg-green-500 text-white border-0 text-[10px] h-5"
+                        >
+                          <ExternalLink className="h-2.5 w-2.5" />
+                          Etherscan
+                        </Badge>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleCopy(txHash, "txHash")}
+                          className="h-5 w-5 p-0 hover:bg-green-600 dark:hover:bg-green-700"
+                        >
+                          {copiedField === "txHash" ? (
+                            <CheckCircle2 className="h-3 w-3 text-green-400" />
+                          ) : (
+                            <Copy className="h-3 w-3 text-white" />
+                          )}
+                        </Button>
+                      </div>
+                    </div>
                     <div className="flex items-center gap-2">
-                      <code className="flex-1 text-xs font-mono bg-green-600/10 text-green-700 dark:text-green-400 p-3 rounded-lg break-all">
+                      <code className="flex-1 text-xs font-mono bg-green-700 dark:bg-green-800 text-white px-3 py-2 rounded-b-lg rounded-tr-lg break-all border-2 border-green-600 dark:border-green-700 shadow-sm">
                         {txHash}
                       </code>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleCopy(txHash, "txHash")}
-                        className="flex-shrink-0"
-                      >
-                        {copiedField === "txHash" ? (
-                          <CheckCircle2 className="h-4 w-4 text-green-600" />
-                        ) : (
-                          <Copy className="h-4 w-4" />
-                        )}
-                      </Button>
                     </div>
                   </div>
                 )}
 
                 {/* NFT Mint Transaction Hash */}
                 {certificate.mintTx && (
-                  <div>
-                    <label className="text-xs font-medium text-muted-foreground mb-2 block flex items-center gap-2">
-                      NFT Mint Transaction
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() =>
-                          window.open(
-                            `https://testnet.routescan.io/tx/${certificate.mintTx}`,
-                            "_blank"
-                          )
-                        }
-                        className="h-5 px-2 text-purple-600 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900"
-                      >
-                        <ExternalLink className="h-3 w-3 mr-1" />
-                        Routescan
-                      </Button>
-                    </label>
+                  <div className="space-y-0">
+                    <div className="flex items-center gap-2 bg-purple-600 dark:bg-purple-700 px-2.5 py-1 rounded-tl-lg rounded-tr-lg border-2 border-b-0 border-purple-600 dark:border-purple-700 w-fit">
+                      <label className="text-xs font-semibold text-white">
+                        NFT Mint Transaction
+                      </label>
+                      <div className="flex items-center gap-1.5">
+                        <Badge
+                          onClick={() =>
+                            window.open(
+                              `https://testnet.routescan.io/tx/${certificate.mintTx}`,
+                              "_blank"
+                            )
+                          }
+                          className="cursor-pointer gap-1 px-1.5 py-0.5 bg-purple-600 hover:bg-purple-500 text-white border-0 text-[10px] h-5"
+                        >
+                          <ExternalLink className="h-2.5 w-2.5" />
+                          Routescan
+                        </Badge>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleCopy(certificate.mintTx || "", "mintTx")}
+                          className="h-5 w-5 p-0 hover:bg-purple-600 dark:hover:bg-purple-700"
+                        >
+                          {copiedField === "mintTx" ? (
+                            <CheckCircle2 className="h-3 w-3 text-green-400" />
+                          ) : (
+                            <Copy className="h-3 w-3 text-white" />
+                          )}
+                        </Button>
+                      </div>
+                    </div>
                     <div className="flex items-center gap-2">
-                      <code className="flex-1 text-xs font-mono bg-purple-600/10 text-purple-700 dark:text-purple-400 p-3 rounded-lg break-all">
+                      <code className="flex-1 text-xs font-mono bg-purple-700 dark:bg-purple-800 text-white px-3 py-2 rounded-b-lg rounded-tr-lg break-all border-2 border-purple-600 dark:border-purple-700 shadow-sm">
                         {certificate.mintTx}
                       </code>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleCopy(certificate.mintTx || "", "mintTx")}
-                        className="flex-shrink-0"
-                      >
-                        {copiedField === "mintTx" ? (
-                          <CheckCircle2 className="h-4 w-4 text-purple-600" />
-                        ) : (
-                          <Copy className="h-4 w-4" />
-                        )}
-                      </Button>
                     </div>
                   </div>
                 )}
