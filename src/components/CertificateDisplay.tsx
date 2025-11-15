@@ -254,30 +254,30 @@ export function CertificateDisplay({
             <h1 className="text-5xl font-bold text-blue-900 mb-3">
               CHỨNG CHỈ HOÀN THÀNH
             </h1>
-            <h2 className="text-3xl font-semibold text-blue-700">
+            <h2 className="text-2xl font-semibold text-blue-700">
               CERTIFICATE OF COMPLETION
             </h2>
           </div>
 
           {/* Decorative Border */}
-          <div className="border-2 border-blue-900 my-6"></div>
+          <div className="border-t-4 border-blue-900 my-4"></div>
 
           {/* Main Content */}
           <div className="text-center mb-6">
-            <p className="text-xl mb-5">
+            <p className="text-xl">
               Hội đồng công nhận chứng chỉ CertiChain xác nhận rằng
             </p>
 
-            <div className="my-6">
-              <h3 className="text-6xl font-bold text-blue-900 mb-5 tracking-wide">
+            <div className="my-3">
+              <h3 className="text-6xl font-bold text-blue-900 tracking-wide">
                 {certificate.student?.studentName?.toUpperCase() || "N/A"}
               </h3>
-              <p className="text-xl text-gray-600 font-medium">
-                Mã sinh viên: {certificate.student?.studentId || "N/A"}
+              <p className="text-xl text-blue-900 font-medium">
+                Mã sinh viên: {certificate.student?.studentId?.toUpperCase() || "N/A"}
               </p>
             </div>
 
-            <p className="text-xl mb-3 font-medium">đã hoàn thành khóa học</p>
+            <p className="text-xl my-4 font-medium"><i>- Đã Hoàn Thành Khóa Học -</i></p>
 
             <h4 className="text-4xl font-bold text-blue-700 mb-6 px-12">
               {certificate.courseName}
@@ -286,7 +286,7 @@ export function CertificateDisplay({
 
           {/* Footer - Compact layout */}
           <div className="mt-auto">
-            <div className="border-t-2 border-blue-900 pt-6">
+            <div className="border-t-4 border-blue-900 pt-6">
               <div className="flex items-center justify-between">
                 {/* Left - Issuer */}
                 <div className="flex-1 text-left">
@@ -325,33 +325,38 @@ export function CertificateDisplay({
                 </div>
               </div>
 
-              {/* Verification URL */}
-              {verificationUrl && (
-                <div className="mt-6 text-center">
-                  <p className="text-xs text-gray-600 mb-1">Xác minh tại:</p>
-                  <a 
-                    href={verificationUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs font-mono text-blue-700 hover:text-blue-900 underline underline-offset-2 break-all inline-block transition-colors"
-                  >
-                    {verificationUrl}
-                  </a>
-                </div>
-              )}
+              {/* Verification URL and NFT Hash - 2 columns */}
+              {(verificationUrl || certificate.mintTx) && (
+                <div className="mt-6 grid grid-cols-2 gap-4">
+                  {/* Verification URL */}
+                  {verificationUrl && (
+                    <div className="text-center">
+                      <p className="text-xs text-gray-600 mb-1">Xác minh tại:</p>
+                      <a 
+                        href={verificationUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs font-mono text-blue-700 hover:text-blue-900 underline underline-offset-2 break-all inline-block transition-colors"
+                      >
+                        {verificationUrl}
+                      </a>
+                    </div>
+                  )}
 
-              {/* NFT Hash */}
-              {certificate.mintTx && (
-                <div className="mt-4 text-center border-t-2 border-blue-900 pt-4">
-                  <p className="text-xs text-gray-600 mb-1">NFT Mint Transaction:</p>
-                  <a 
-                    href={`https://testnet.routescan.io/tx/${certificate.mintTx}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs font-mono text-purple-700 hover:text-purple-900 underline underline-offset-2 break-all inline-block transition-colors"
-                  >
-                    {certificate.mintTx}
-                  </a>
+                  {/* NFT Hash */}
+                  {certificate.mintTx && (
+                    <div className="text-center">
+                      <p className="text-xs text-gray-600 mb-1">NFT Mint Transaction:</p>
+                      <a 
+                        href={`https://testnet.routescan.io/tx/${certificate.mintTx}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs font-mono text-purple-700 hover:text-purple-900 underline underline-offset-2 break-all inline-block transition-colors"
+                      >
+                        {certificate.mintTx}
+                      </a>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
