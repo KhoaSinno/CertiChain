@@ -69,15 +69,15 @@ export function CertificateCard({
 
       <CardHeader className="pb-4 relative z-0">
         <div className="flex items-center gap-3 min-h-[3.5rem]">
-          <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-300">
-            <GraduationCap className="h-6 w-6 text-primary group-hover:text-indigo-600 transition-colors duration-300" />
-          </div>
           <div className="flex-1 min-w-0">
             <CardTitle className="text-lg font-semibold line-clamp-2 leading-tight group-hover:bg-gradient-to-r group-hover:from-indigo-600 group-hover:to-purple-600 group-hover:bg-clip-text group-hover:text-transparent transition-all duration-300">
               {certificate.courseName}
             </CardTitle>
           </div>
-          <ExternalLink className="h-5 w-5 text-muted-foreground opacity-0 group-hover:opacity-100 group-hover:text-indigo-600 transition-all duration-300 flex-shrink-0" />
+          <div className="relative w-10 h-10 flex items-center justify-center flex-shrink-0">
+            <GraduationCap className="absolute h-6 w-6 text-primary group-hover:opacity-0 transition-all duration-300" />
+            <ExternalLink className="absolute h-5 w-5 text-indigo-600 opacity-0 group-hover:opacity-100 transition-all duration-300" />
+          </div>
         </div>
       </CardHeader>
 
@@ -87,7 +87,7 @@ export function CertificateCard({
           {/* Date Badge */}
           <Badge
             variant="secondary"
-            className="gap-1.5 bg-indigo-600/90 text-white border-0"
+            className="gap-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white border-0 shadow-sm"
           >
             <Calendar className="h-3 w-3" />
             {formatDate(certificate.issuedAt)}
@@ -98,7 +98,7 @@ export function CertificateCard({
             // On-chain: Hiển thị transaction hash màu xanh
             <Badge
               variant="secondary"
-              className="gap-1.5 font-mono text-xs bg-green-600/90 hover:bg-green-700/90 text-white border-0"
+              className="gap-1.5 font-mono text-xs bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white border-0 shadow-sm"
             >
               <span className="opacity-90">Hash:</span>
               {truncateAddress(txHash)}
@@ -118,18 +118,18 @@ export function CertificateCard({
           ) : null}
         </div>
 
-        {/* Student Info Card */}
-        <div className="glass-effect rounded-lg p-3 group-hover:bg-white/80 dark:group-hover:bg-white/5 transition-colors">
-          <div className="flex items-center gap-2 text-sm">
-            <User className="h-4 w-4 text-primary flex-shrink-0" />
-            <div className="flex flex-col gap-0.5 min-w-0">
-              <span className="font-semibold text-foreground leading-tight">
-                {certificate.student.studentName || ""}
-              </span>
-              <span className="text-xs text-muted-foreground leading-tight">
-                {certificate.student.studentId || ""}
-              </span>
-            </div>
+        {/* Student Info */}
+        <div className="flex items-center gap-2.5 pt-1">
+          <div className="w-9 h-9 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center flex-shrink-0 shadow-sm">
+            <User className="h-4.5 w-4.5 text-white" />
+          </div>
+          <div className="flex flex-col gap-0.5 min-w-0 flex-1">
+            <span className="font-semibold text-foreground leading-tight text-sm truncate">
+              {certificate.student.studentName || ""}
+            </span>
+            <span className="text-xs text-muted-foreground leading-tight font-mono">
+              {certificate.student.studentId || ""}
+            </span>
           </div>
         </div>
       </CardContent>
