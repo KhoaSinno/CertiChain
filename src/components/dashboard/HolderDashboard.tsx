@@ -3,7 +3,7 @@
 import { Badge } from '@/src/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card';
 import { useCertificates } from '@/src/hooks/useCertificates';
-import { FileText, Share2 } from 'lucide-react';
+import { CheckCircle, FileText, Share2 } from 'lucide-react';
 import { CertificateListSection } from './CertificateListSection';
 
 export function HolderDashboard() {
@@ -58,45 +58,73 @@ export function HolderDashboard() {
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Tổng chứng chỉ</CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{myCertificates.length}</div>
-            <p className="text-xs text-muted-foreground">
-              Đã được cấp
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Đã xác thực</CardTitle>
-            <Badge variant="default" className="w-fit">Verified</Badge>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">
-              {myCertificates.filter(c => c.status === 'verified').length}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Total Certificates */}
+        <Card className="group relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 border border-blue-200 shadow-sm bg-white">
+          <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-blue-500/10 to-indigo-500/10 blur-xl" />
+          
+          <CardContent className="relative z-10 px-4 py-4 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3 flex-1">
+              <div className="text-2xl font-bold text-blue-600">{myCertificates.length}</div>
+              <div>
+                <CardTitle className="text-xs font-medium text-muted-foreground">Tổng chứng chỉ</CardTitle>
+                <p className="text-xs text-muted-foreground">Đã được cấp</p>
+              </div>
             </div>
-            <p className="text-xs text-muted-foreground">
-              Trên blockchain
-            </p>
+            <div className="relative w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 group-hover:scale-105 bg-blue-50 border border-blue-100">
+              <FileText className="h-4 w-4 text-blue-600" />
+            </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Có thể chia sẻ</CardTitle>
-            <Share2 className="h-4 w-4 text-blue-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-blue-600">{myCertificates.length}</div>
-            <p className="text-xs text-muted-foreground">
-              Link & QR Code
-            </p>
+        {/* Verified Certificates */}
+        <Card className="group relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 border border-emerald-200 shadow-sm bg-white">
+          <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-emerald-500/10 to-teal-500/10 blur-xl" />
+          
+          <CardContent className="relative z-10 px-4 py-4">
+            <div className="flex items-center justify-between mb-2 gap-3">
+              <div className="flex items-center gap-3 flex-1">
+                <div className="text-2xl font-bold text-emerald-600">
+                  {myCertificates.filter(c => c.status === 'verified').length}
+                </div>
+                <div>
+                  <CardTitle className="text-xs font-medium text-muted-foreground">Đã xác thực</CardTitle>
+                  <p className="text-xs text-muted-foreground">Trên blockchain</p>
+                </div>
+              </div>
+              <div className="relative w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 group-hover:scale-105 bg-emerald-50 border border-emerald-100">
+                <CheckCircle className="h-4 w-4 text-emerald-600" />
+                <Badge variant="default" className="absolute -top-1 -right-1 h-4 w-4 rounded-full p-0 flex items-center justify-center bg-emerald-500 text-white text-[9px]">
+                  ✓
+                </Badge>
+              </div>
+            </div>
+            {myCertificates.length > 0 && (
+              <div className="h-1.5 rounded-full overflow-hidden bg-emerald-100">
+                <div 
+                  className="h-full rounded-full bg-emerald-500 transition-all duration-500 ease-out"
+                  style={{ width: `${Math.min((myCertificates.filter(c => c.status === 'verified').length / myCertificates.length) * 100, 100)}%` }}
+                />
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Shareable Certificates */}
+        <Card className="group relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 border border-cyan-200 shadow-sm bg-white">
+          <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-cyan-500/10 to-blue-500/10 blur-xl" />
+          
+          <CardContent className="relative z-10 px-4 py-4 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3 flex-1">
+              <div className="text-2xl font-bold text-cyan-600">{myCertificates.length}</div>
+              <div>
+                <CardTitle className="text-xs font-medium text-muted-foreground">Có thể chia sẻ</CardTitle>
+                <p className="text-xs text-muted-foreground">Link & QR Code</p>
+              </div>
+            </div>
+            <div className="relative w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 group-hover:scale-105 bg-cyan-50 border border-cyan-100">
+              <Share2 className="h-4 w-4 text-cyan-600" />
+            </div>
           </CardContent>
         </Card>
       </div>
