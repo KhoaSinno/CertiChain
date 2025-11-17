@@ -195,14 +195,14 @@ _flow_instructions
 
 ## Architecture Overview
 
-CertiChain is a blockchain-based certificate verification system using **Next.js 15 App Router + Prisma + Base Sepolia + IPFS (Pinata)**. The system enables educational institutions to issue tamper-proof digital certificates that can be independently verified by employers.
+CertiChain is a blockchain-based certificate verification system using **Next.js 15 App Router + Prisma + Sepolia + IPFS (Pinata)**. The system enables educational institutions to issue tamper-proof digital certificates that can be independently verified by employers.
 
 ### Core Components
 
 - **Frontend**: Next.js 15 with App Router (`/app` directory structure)
 - **Backend**: Next.js API routes with service/repository pattern in `/core`
 - **Database**: PostgreSQL with Prisma ORM (custom output to `/app/generated/prisma`)
-- **Blockchain**: Base Sepolia network integration with ethers.js
+- **Blockchain**: Sepolia network integration with ethers.js
 - **Storage**: IPFS via Pinata SDK for decentralized file storage
 - **Auth**: Environment-based issuer wallet system
 
@@ -338,7 +338,7 @@ core/
 
 ### Blockchain Integration
 
-- Uses Base Sepolia testnet
+- Uses Sepolia testnet
 - Smart contract handles `registerCertificate()` and `verifyCertificate()`
 - Ethers.js for contract interaction (not wagmi hooks in backend)
 
@@ -996,7 +996,7 @@ export default function CreateCertificatePage() {
               Tạo <span className="flex flex-wrap text-gradient-primary px-2">chứng chỉ</span> mới
             </h1>
             <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto">
-              Tạo và đăng ký chứng chỉ mới trên blockchain với IPFS và Base Sepolia
+              Tạo và đăng ký chứng chỉ mới trên blockchain với IPFS và Sepolia
             </p>
           </div>
 
@@ -1764,7 +1764,7 @@ import { auth } from "@/lib/auth";
 export const metadata: Metadata = {
   title: "CertiChain - Hệ thống xác thực chứng chỉ dựa trên blockchain",
   description:
-    "CertiChain là hệ thống xác thực chứng chỉ dựa trên blockchain, kết hợp IPFS để lưu trữ và Base Sepolia để xác minh. Dự án gồm dashboard quản trị cho nhà trường, giao diện người dùng cho sinh viên, và trang xác minh công khai cho nhà tuyển dụng.",
+    "CertiChain là hệ thống xác thực chứng chỉ dựa trên blockchain, kết hợp IPFS để lưu trữ và Sepolia để xác minh. Dự án gồm dashboard quản trị cho nhà trường, giao diện người dùng cho sinh viên, và trang xác minh công khai cho nhà tuyển dụng.",
 };
 
 export default async function RootLayout({
@@ -3658,7 +3658,7 @@ pragma solidity ^0.8.0;
 /**
  * @title CertificateVerifier
  * @dev Hợp đồng thông minh để đăng ký và xác minh chứng chỉ giáo dục sử dụng Blockchain và IPFS.
- * Được thiết kế để chạy trên mạng EVM (như Base Sepolia).
+ * Được thiết kế để chạy trên mạng EVM (như Sepolia).
  */
 contract CertificateVerifier {
     // Cấu trúc dữ liệu để lưu trữ thông tin chứng chỉ
@@ -5005,7 +5005,7 @@ Toàn bộ quy trình vận hành dựa trên **Blockchain (Base chain)** và **
 
    - Upload file lên **IPFS** → nhận **CID (Content Identifier)**.
 
-   - Gọi smart contract `registerCertificate(hash, CID, studentIdHash)` trên **mạng Base Sepolia**.
+   - Gọi smart contract `registerCertificate(hash, CID, studentIdHash)` trên **mạng Sepolia**.
 
 5. Smart contract lưu trữ:
 
@@ -7598,7 +7598,7 @@ export function Hero() {
         </h1>
         
         <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-          CertiChain kết hợp IPFS để lưu trữ và Base Sepolia để xác minh, 
+          CertiChain kết hợp IPFS để lưu trữ và Sepolia để xác minh, 
           đảm bảo tính minh bạch, bất biến và không thể giả mạo.
         </p>
 
@@ -8048,7 +8048,7 @@ export function Process() {
         'Upload file PDF chứng chỉ',
         'Hệ thống sinh SHA-256 hash',
         'Upload lên IPFS → nhận CID',
-        'Ghi lên blockchain Base Sepolia'
+        'Ghi lên blockchain Sepolia'
       ]
     },
     {
@@ -13297,7 +13297,7 @@ Xây dựng backend phục vụ cho 3 nhiệm vụ chính:
     → Lưu thông tin sinh viên, hash, IPFS CID vào Postgres (qua Prisma).
 
 2. **Ghi chứng chỉ lên blockchain (on-chain proof)**  
-    → Gọi smart contract `registerCertificate()` trên mạng Base Sepolia.
+    → Gọi smart contract `registerCertificate()` trên mạng Sepolia.
 
 3. **Xác thực chứng chỉ công khai**  
     → Cung cấp API verify hash → so khớp dữ liệu blockchain.
@@ -13311,7 +13311,7 @@ Xây dựng backend phục vụ cho 3 nhiệm vụ chính:
 | Framework | Next.js 15 (App Router) – dùng chung cho FE & BE |
 | ORM & DB | Prisma \+ PostgreSQL |
 | Storage | IPFS (qua `web3.storage` SDK hoặc Pinata) |
-| Blockchain | Base Sepolia \+ `ethers.js` (qua wagmi hoặc viem) |
+| Blockchain | Sepolia \+ `ethers.js` (qua wagmi hoặc viem) |
 | Hashing | Node.js `crypto` (SHA-256) |
 | Auth (optional) | JWT hoặc Simple admin key |
 | Deployment | Docker Compose \+ Vercel / Railway |
@@ -13569,7 +13569,7 @@ Lưu DB (pending)
    ↓  
 Gọi contract registerCertificate(hash, CID, studentId)  
    ↓  
-Base Sepolia ghi proof  
+Sepolia ghi proof  
    ↓  
 DB update status \= verified  
    ↓  
@@ -13593,7 +13593,7 @@ FE hiển thị QR \+ link verify
 ### _flow_instructions\FE Flow.md
 
 ```md
-**Next.js 15 (App Router) \+ Tailwind \+ wagmi \+ Prisma \+ Base Sepolia \+ IPFS**.
+**Next.js 15 (App Router) \+ Tailwind \+ wagmi \+ Prisma \+ Sepolia \+ IPFS**.
 
 ---
 
@@ -13622,7 +13622,7 @@ Frontend (Next.js) chịu trách nhiệm:
 | Framework | Next.js 15 (App Router) |
 | UI | Tailwind CSS \+ shadcn/ui \+ QRCode.react |
 | State | React Query (hoặc Zustand / useData store) |
-| Wallet | wagmi \+ MetaMask \+ Base Sepolia |
+| Wallet | wagmi \+ MetaMask \+ Sepolia |
 | API | Axios (hoặc native fetch) |
 | Blockchain | ethers.js (wagmi hooks) |
 | Storage | web3.storage (thông qua backend) |
@@ -13952,7 +13952,7 @@ Nhà tuyển dụng click verify → UI gọi /verify
 ### _flow_instructions\SmartContract Flow.md
 
 ```md
-# **⚙️ Smart Contract Development & Testing Flow (Remix \+ Base Sepolia)**
+# **⚙️ Smart Contract Development & Testing Flow (Remix \+ Sepolia)**
 
 ### **Dự án: *Blockchain-Backed Certificate Verification System (Hybrid Edition)***
 
@@ -13976,8 +13976,8 @@ Smart contract chịu trách nhiệm:
 | ----- | ----- |
 | IDE | [Remix IDE](https://remix.ethereum.org/) |
 | Compiler | Solidity ^0.8.20 |
-| Network | **Base Sepolia Testnet** |
-| Wallet | MetaMask (đã cấu hình mạng Base Sepolia) |
+| Network | **Sepolia Testnet** |
+| Wallet | MetaMask (đã cấu hình mạng Sepolia) |
 | Test faucet | [https://faucet.triangleplatform.com/base/sepolia](https://faucet.triangleplatform.com/base/sepolia) |
 | Explorer | [https://sepolia.basescan.org/](https://sepolia.basescan.org/) |
 
@@ -13992,7 +13992,7 @@ pragma solidity ^0.8.20;
 
 /// @title Certificate Registry for Educational Institutions  
 /// @notice Lưu thông tin chứng chỉ giáo dục (hash \+ CID IPFS) lên Blockchain  
-/// @dev Triển khai trên mạng Base Sepolia
+/// @dev Triển khai trên mạng Sepolia
 
 contract CertificateRegistry {
 
@@ -14216,7 +14216,7 @@ Sau khi compile trên Remix, mở tab “Compilation Details” → copy JSON AB
 
 * **Contract Address:** `0xABC...123`
 
-* **Network:** Base Sepolia
+* **Network:** Sepolia
 
 * **Explorer:** [https://sepolia.basescan.org/address/0xABC...123](https://sepolia.basescan.org/address/0xABC...123)
 
@@ -14231,7 +14231,7 @@ Sau khi compile trên Remix, mở tab “Compilation Details” → copy JSON AB
 | Giai đoạn | Hành động | Mục tiêu |
 | ----- | ----- | ----- |
 | 1️⃣ Code contract | Viết, compile trong Remix | Chuẩn cấu trúc |
-| 2️⃣ Deploy | Dùng MetaMask – Base Sepolia | Có contract address |
+| 2️⃣ Deploy | Dùng MetaMask – Sepolia | Có contract address |
 | 3️⃣ Test | Dùng hàm register / verify / isRegistered | Xác minh logic |
 | 4️⃣ Export ABI | Dán cho BE & FE team | Đồng bộ API |
 | 5️⃣ Ghi lại contract info | `.env` hoặc `README.md` | Team BE dùng deploy info |
@@ -14248,7 +14248,7 @@ Sau khi compile trên Remix, mở tab “Compilation Details” → copy JSON AB
     "studio": "NKD Studio",
     "version": "v1.0.0",
     "date": "2025-10-23",
-    "description": "CertiChain là hệ thống xác thực chứng chỉ dựa trên blockchain, kết hợp IPFS để lưu trữ và Base Sepolia để xác minh. Dự án gồm dashboard quản trị cho nhà trường, giao diện người dùng cho sinh viên, và trang xác minh công khai cho nhà tuyển dụng.",
+    "description": "CertiChain là hệ thống xác thực chứng chỉ dựa trên blockchain, kết hợp IPFS để lưu trữ và Sepolia để xác minh. Dự án gồm dashboard quản trị cho nhà trường, giao diện người dùng cho sinh viên, và trang xác minh công khai cho nhà tuyển dụng.",
     "objective": {
       "issuer": "Cung cấp giao diện cho Nhà trường để upload, tạo, đăng ký chứng chỉ on-chain",
       "holder": "Cung cấp giao diện công khai cho Sinh viên để xem & chia sẻ chứng chỉ",
@@ -14260,7 +14260,7 @@ Sau khi compile trên Remix, mở tab “Compilation Details” → copy JSON AB
     "framework": "Next.js 15 (App Router)",
     "ui": "Tailwind CSS + shadcn/ui + QRCode.react",
     "state": "React Query (TanStack Query) + Zustand",
-    "wallet": "wagmi + MetaMask + Base Sepolia",
+    "wallet": "wagmi + MetaMask + Sepolia",
     "api": "Axios + native fetch",
     "blockchain": "ethers.js (via wagmi hooks)",
     "storage": "web3.storage (thông qua backend)",
@@ -14417,7 +14417,7 @@ Sau khi compile trên Remix, mở tab “Compilation Details” → copy JSON AB
           "useContractWrite",
           "useContractRead"
         ],
-        "network": "Base Sepolia Testnet",
+        "network": "Sepolia Testnet",
         "config_file": "src/lib/wagmiConfig.ts"
       },
       "ipfs": {

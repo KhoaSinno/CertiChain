@@ -4,7 +4,7 @@
     "studio": "NKD Studio",
     "version": "v1.0.0",
     "date": "2025-10-23",
-    "description": "CertiChain là hệ thống xác thực chứng chỉ dựa trên blockchain, kết hợp IPFS để lưu trữ và Base Sepolia để xác minh. Dự án gồm dashboard quản trị cho nhà trường, giao diện người dùng cho sinh viên, và trang xác minh công khai cho nhà tuyển dụng.",
+    "description": "CertiChain là hệ thống xác thực chứng chỉ dựa trên blockchain, kết hợp IPFS để lưu trữ và Sepolia để xác minh. Dự án gồm dashboard quản trị cho nhà trường, giao diện người dùng cho sinh viên, và trang xác minh công khai cho nhà tuyển dụng.",
     "objective": {
       "issuer": "Cung cấp giao diện cho Nhà trường để upload, tạo, đăng ký chứng chỉ on-chain",
       "holder": "Cung cấp giao diện công khai cho Sinh viên để xem & chia sẻ chứng chỉ",
@@ -16,7 +16,7 @@
     "framework": "Next.js 15 (App Router)",
     "ui": "Tailwind CSS + shadcn/ui + QRCode.react",
     "state": "React Query (TanStack Query) + Zustand",
-    "wallet": "wagmi + MetaMask + Base Sepolia",
+    "wallet": "wagmi + MetaMask + Sepolia",
     "api": "Axios + native fetch",
     "blockchain": "ethers.js (via wagmi hooks)",
     "storage": "web3.storage (thông qua backend)",
@@ -71,17 +71,24 @@
   "actors": [
     {
       "name": "🏫 Nhà trường (Issuer)",
-      "routes": ["/dashboard", "/certificates/create"],
+      "routes": [
+        "/dashboard",
+        "/certificates/create"
+      ],
       "description": "Tạo chứng chỉ, upload, ghi on-chain"
     },
     {
       "name": "👩‍🎓 Sinh viên (Holder)",
-      "routes": ["/certificates/[id]"],
+      "routes": [
+        "/certificates/[id]"
+      ],
       "description": "Xem chi tiết, copy link, QR"
     },
     {
       "name": "🏢 Nhà tuyển dụng (Verifier)",
-      "routes": ["/verify/[hash]"],
+      "routes": [
+        "/verify/[hash]"
+      ],
       "description": "Quét QR / verify hash trực tiếp"
     }
   ],
@@ -173,7 +180,7 @@
           "useContractWrite",
           "useContractRead"
         ],
-        "network": "Base Sepolia Testnet",
+        "network": "Sepolia Testnet",
         "config_file": "src/lib/wagmiConfig.ts"
       },
       "ipfs": {
@@ -189,27 +196,37 @@
       {
         "name": "CertificateForm",
         "description": "Form upload, nhập thông tin chứng chỉ",
-        "props": ["onSubmit"]
+        "props": [
+          "onSubmit"
+        ]
       },
       {
         "name": "CertificateList",
         "description": "Danh sách chứng chỉ (table hoặc grid)",
-        "props": ["certificates[]"]
+        "props": [
+          "certificates[]"
+        ]
       },
       {
         "name": "CertificateCard",
         "description": "Thẻ hiển thị chứng chỉ riêng",
-        "props": ["certificate"]
+        "props": [
+          "certificate"
+        ]
       },
       {
         "name": "QRDisplay",
         "description": "Tạo mã QR cho link verify",
-        "props": ["value"]
+        "props": [
+          "value"
+        ]
       },
       {
         "name": "VerifyResult",
         "description": "Hiển thị kết quả xác thực on-chain",
-        "props": ["data"]
+        "props": [
+          "data"
+        ]
       }
     ],
     "react_query_hooks": [
@@ -260,7 +277,10 @@
         "API trả về → hiển thị preview + nút 'Ghi lên blockchain'",
         "Hiển thị: ✅ Certificate created (pending on-chain), File Hash: 0x123abc..."
       ],
-      "hooks": ["useCreateCertificate", "useMutation"]
+      "hooks": [
+        "useCreateCertificate",
+        "useMutation"
+      ]
     },
     "dashboard": {
       "path": "/dashboard",
@@ -272,7 +292,11 @@
         "Khi bấm: FE gọi POST /api/certificates/register với certificateId",
         "BE gọi smart contract → cập nhật trạng thái → FE refetch list"
       ],
-      "hooks": ["useCertificates", "useQuery", "useRegisterCertificate"]
+      "hooks": [
+        "useCertificates",
+        "useQuery",
+        "useRegisterCertificate"
+      ]
     },
     "register_blockchain": {
       "path": "Dashboard hoặc Certificate Detail",
@@ -283,7 +307,11 @@
         "Khi nhấn 'Register on-chain': gọi API /api/certificates/register → trả txHash",
         "Hiển thị toast: 🟢 Registered on Blockchain! Tx: 0xabc123... (View on BaseScan)"
       ],
-      "hooks": ["useAccount", "useWriteContract", "useBlockchain"]
+      "hooks": [
+        "useAccount",
+        "useWriteContract",
+        "useBlockchain"
+      ]
     },
     "certificate_detail": {
       "path": "/certificates/[id]",
@@ -295,7 +323,9 @@
         "Nút 'Tải QR Code' → lưu ảnh QR từ component QRCode.react",
         "Component: <QRCode value={`https://verify.edu.vn/verify/${fileHash}`} size={180} />"
       ],
-      "hooks": ["useQuery"]
+      "hooks": [
+        "useQuery"
+      ]
     },
     "verify_certificate": {
       "path": "/verify/[hash]",
@@ -307,7 +337,10 @@
         "Nút 'Xem giao dịch trên BaseScan' → https://basescan.org/tx/0xabc...",
         "Component: {data.verified ? <VerifiedBadge /> : <UnverifiedAlert />}"
       ],
-      "hooks": ["useVerify", "useQuery"]
+      "hooks": [
+        "useVerify",
+        "useQuery"
+      ]
     }
   },
   "react_query_mapping": {
@@ -331,7 +364,11 @@
   "wagmi_integration": {
     "config_file": "src/lib/wagmiConfig.ts",
     "example": "import { createConfig, http } from 'wagmi'; import { baseSepolia } from 'wagmi/chains'; import { metaMask } from 'wagmi/connectors'; export const config = createConfig({ chains: [baseSepolia], connectors: [metaMask()], transports: { [baseSepolia.id]: http('https://base-sepolia.g.alchemy.com/v2/yourKey') } });",
-    "hooks_usage": ["useAccount()", "useWriteContract()", "useContractRead()"]
+    "hooks_usage": [
+      "useAccount()",
+      "useWriteContract()",
+      "useContractRead()"
+    ]
   },
   "ui_state_flow": [
     "[Upload] → 'Đang xử lý hash & IPFS' → 'Đã tạo (pending)'",

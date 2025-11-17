@@ -10,7 +10,7 @@ Xây dựng backend phục vụ cho 3 nhiệm vụ chính:
     → Lưu thông tin sinh viên, hash, IPFS CID vào Postgres (qua Prisma).
 
 2. **Ghi chứng chỉ lên blockchain (on-chain proof)**  
-    → Gọi smart contract `registerCertificate()` trên mạng Base Sepolia.
+    → Gọi smart contract `registerCertificate()` trên mạng Sepolia.
 
 3. **Xác thực chứng chỉ công khai**  
     → Cung cấp API verify hash → so khớp dữ liệu blockchain.
@@ -24,7 +24,7 @@ Xây dựng backend phục vụ cho 3 nhiệm vụ chính:
 | Framework | Next.js 15 (App Router) – dùng chung cho FE & BE |
 | ORM & DB | Prisma \+ PostgreSQL |
 | Storage | IPFS (qua `web3.storage` SDK hoặc Pinata) |
-| Blockchain | Base Sepolia \+ `ethers.js` (qua wagmi hoặc viem) |
+| Blockchain | Sepolia \+ `ethers.js` (qua wagmi hoặc viem) |
 | Hashing | Node.js `crypto` (SHA-256) |
 | Auth (optional) | JWT hoặc Simple admin key |
 | Deployment | Docker Compose \+ Vercel / Railway |
@@ -282,7 +282,7 @@ Lưu DB (pending)
    ↓  
 Gọi contract registerCertificate(hash, CID, studentId)  
    ↓  
-Base Sepolia ghi proof  
+Sepolia ghi proof  
    ↓  
 DB update status \= verified  
    ↓  

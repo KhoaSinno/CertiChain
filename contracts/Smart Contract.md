@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 /**
  * @title CertificateVerifier
  * @dev Hợp đồng thông minh để đăng ký và xác minh chứng chỉ giáo dục sử dụng Blockchain và IPFS.
- * Được thiết kế để chạy trên mạng EVM (như Base Sepolia).
+ * Được thiết kế để chạy trên mạng EVM (như Sepolia).
  */
 contract CertificateVerifier {
     // Cấu trúc dữ liệu để lưu trữ thông tin chứng chỉ

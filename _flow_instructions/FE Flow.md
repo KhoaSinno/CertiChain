@@ -1,4 +1,4 @@
-**Next.js 15 (App Router) \+ Tailwind \+ wagmi \+ Prisma \+ Base Sepolia \+ IPFS**.
+**Next.js 15 (App Router) \+ Tailwind \+ wagmi \+ Prisma \+ Sepolia \+ IPFS**.
 
 ---
 
@@ -27,7 +27,7 @@ Frontend (Next.js) chịu trách nhiệm:
 | Framework | Next.js 15 (App Router) |
 | UI | Tailwind CSS \+ shadcn/ui \+ QRCode.react |
 | State | React Query (hoặc Zustand / useData store) |
-| Wallet | wagmi \+ MetaMask \+ Base Sepolia |
+| Wallet | wagmi \+ MetaMask \+ Sepolia |
 | API | Axios (hoặc native fetch) |
 | Blockchain | ethers.js (wagmi hooks) |
 | Storage | web3.storage (thông qua backend) |

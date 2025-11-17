@@ -82,7 +82,7 @@ Toàn bộ quy trình vận hành dựa trên **Blockchain (Base chain)** và **
 
    - Upload file lên **IPFS** → nhận **CID (Content Identifier)**.
 
-   - Gọi smart contract `registerCertificate(hash, CID, studentIdHash)` trên **mạng Base Sepolia**.
+   - Gọi smart contract `registerCertificate(hash, CID, studentIdHash)` trên **mạng Sepolia**.
 
 5. Smart contract lưu trữ:
 

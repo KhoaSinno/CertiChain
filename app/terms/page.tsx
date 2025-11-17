@@ -39,7 +39,7 @@ export default function TermsPage() {
         </h3>
         <p>All certificates issued through CertiChain are:</p>
         <ul className="list-disc pl-6 space-y-2">
-          <li>Registered on Base Sepolia blockchain</li>
+          <li>Registered on Sepolia blockchain</li>
           <li>Stored on IPFS for decentralized access</li>
           <li>Cryptographically verified for authenticity</li>
           <li>Immutable and tamper-proof</li>

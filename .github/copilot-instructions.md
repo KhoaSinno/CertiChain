@@ -2,14 +2,14 @@
 
 ## Architecture Overview
 
-CertiChain is a blockchain-based certificate verification system using **Next.js 15 App Router + Prisma + Base Sepolia + IPFS (Pinata)**. The system enables educational institutions to issue tamper-proof digital certificates that can be independently verified by employers.
+CertiChain is a blockchain-based certificate verification system using **Next.js 15 App Router + Prisma + Sepolia + IPFS (Pinata)**. The system enables educational institutions to issue tamper-proof digital certificates that can be independently verified by employers.
 
 ### Core Components
 
 - **Frontend**: Next.js 15 with App Router (`/app` directory structure)
 - **Backend**: Next.js API routes with service/repository pattern in `/core`
 - **Database**: PostgreSQL with Prisma ORM (custom output to `/app/generated/prisma`)
-- **Blockchain**: Base Sepolia network integration with ethers.js
+- **Blockchain**: Sepolia network integration with ethers.js
 - **Storage**: IPFS via Pinata SDK for decentralized file storage
 - **Auth**: Environment-based issuer wallet system
 
@@ -145,7 +145,7 @@ core/
 
 ### Blockchain Integration
 
-- Uses Base Sepolia testnet
+- Uses Sepolia testnet
 - Smart contract handles `registerCertificate()` and `verifyCertificate()`
 - Ethers.js for contract interaction (not wagmi hooks in backend)
 

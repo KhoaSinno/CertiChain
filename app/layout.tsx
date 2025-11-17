@@ -7,7 +7,7 @@ import { auth } from "@/lib/auth";
 export const metadata: Metadata = {
   title: "CertiChain - Hệ thống xác thực chứng chỉ dựa trên blockchain",
   description:
-    "CertiChain là hệ thống xác thực chứng chỉ dựa trên blockchain, kết hợp IPFS để lưu trữ và Base Sepolia để xác minh. Dự án gồm dashboard quản trị cho nhà trường, giao diện người dùng cho sinh viên, và trang xác minh công khai cho nhà tuyển dụng.",
+    "CertiChain là hệ thống xác thực chứng chỉ dựa trên blockchain, kết hợp IPFS để lưu trữ và Sepolia để xác minh. Dự án gồm dashboard quản trị cho nhà trường, giao diện người dùng cho sinh viên, và trang xác minh công khai cho nhà tuyển dụng.",
 };
 
 export default async function RootLayout({

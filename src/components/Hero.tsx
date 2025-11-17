@@ -24,7 +24,9 @@ export function Hero() {
           variant="secondary"
           className="mb-4 bg-primary text-primary-foreground shadow-primary"
         >
-          <span>🚀 Blockchain + IPFS + NFT 2025 | <b>by KDN Team</b></span>
+          <span>
+            🚀 Blockchain + IPFS + NFT 2025 | <b>by KDN Team</b>
+          </span>
         </Badge>
 
         <h1 className="text-4xl md:text-6xl font-bold mb-6 text-vietnamese leading-tight">
@@ -36,8 +38,8 @@ export function Hero() {
         </h1>
 
         <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-          CertiChain kết hợp IPFS để lưu trữ chứng chỉ và Base Sepolia
-          Blockchain để xác minh, đảm bảo tính minh bạch, bất biến và chống giả
+          CertiChain kết hợp IPFS để lưu trữ chứng chỉ, Sepolia Blockchain và
+          mint NFT để xác minh, đảm bảo tính minh bạch, bất biến và chống giả
           mạo tuyệt đối.
         </p>
 

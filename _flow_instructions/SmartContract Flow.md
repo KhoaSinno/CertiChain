@@ -1,4 +1,4 @@
-# **⚙️ Smart Contract Development & Testing Flow (Remix \+ Base Sepolia)**
+# **⚙️ Smart Contract Development & Testing Flow (Remix \+ Sepolia)**
 
 ### **Dự án: *Blockchain-Backed Certificate Verification System (Hybrid Edition)***
 
@@ -22,8 +22,8 @@ Smart contract chịu trách nhiệm:
 | ----- | ----- |
 | IDE | [Remix IDE](https://remix.ethereum.org/) |
 | Compiler | Solidity ^0.8.20 |
-| Network | **Base Sepolia Testnet** |
-| Wallet | MetaMask (đã cấu hình mạng Base Sepolia) |
+| Network | **Sepolia Testnet** |
+| Wallet | MetaMask (đã cấu hình mạng Sepolia) |
 | Test faucet | [https://faucet.triangleplatform.com/base/sepolia](https://faucet.triangleplatform.com/base/sepolia) |
 | Explorer | [https://sepolia.basescan.org/](https://sepolia.basescan.org/) |
 
@@ -38,7 +38,7 @@ pragma solidity ^0.8.20;
 
 /// @title Certificate Registry for Educational Institutions  
 /// @notice Lưu thông tin chứng chỉ giáo dục (hash \+ CID IPFS) lên Blockchain  
-/// @dev Triển khai trên mạng Base Sepolia
+/// @dev Triển khai trên mạng Sepolia
 
 contract CertificateRegistry {
 
@@ -262,7 +262,7 @@ Sau khi compile trên Remix, mở tab “Compilation Details” → copy JSON AB
 
 * **Contract Address:** `0xABC...123`
 
-* **Network:** Base Sepolia
+* **Network:** Sepolia
 
 * **Explorer:** [https://sepolia.basescan.org/address/0xABC...123](https://sepolia.basescan.org/address/0xABC...123)
 
@@ -277,7 +277,7 @@ Sau khi compile trên Remix, mở tab “Compilation Details” → copy JSON AB
 | Giai đoạn | Hành động | Mục tiêu |
 | ----- | ----- | ----- |
 | 1️⃣ Code contract | Viết, compile trong Remix | Chuẩn cấu trúc |
-| 2️⃣ Deploy | Dùng MetaMask – Base Sepolia | Có contract address |
+| 2️⃣ Deploy | Dùng MetaMask – Sepolia | Có contract address |
 | 3️⃣ Test | Dùng hàm register / verify / isRegistered | Xác minh logic |
 | 4️⃣ Export ABI | Dán cho BE & FE team | Đồng bộ API |
 | 5️⃣ Ghi lại contract info | `.env` hoặc `README.md` | Team BE dùng deploy info |
